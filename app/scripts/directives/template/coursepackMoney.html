@@ -1,0 +1,51 @@
+<div class="courses_box form-group col-lg-12" style="margin:10px 0;">
+    <div class="campaignDetails_box form-group col-lg-12">
+        <div class="campaignDetails form-group col-lg-12">
+            <div class="form-group col-lg-12">
+                <label class="col-md-1 text-right control-label">适用运动馆：</label>
+                <div class="form-group col-md-2" style="margin:0;">
+                    <ui-select ng-model="coursepackinfo.cityLevel" theme="bootstrap" required>
+                        <ui-select-match allow-clear="true" placeholder="全部" >{{$select.selected.value}}</ui-select-match>
+                        <ui-select-choices repeat="item.key as item in getDicItemOfCityList | filter: $select.search" value="{{$select.selected.value}}">
+                            <span ng-bind-html="item.value | highlight: $select.search"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="form-group col-md-2" style="margin:0;">
+                    <ui-select ng-model="coursepackinfo.lifeLevel" theme="bootstrap" required ng-disabled="!coursepackinfo.cityLevel">
+                        <ui-select-match allow-clear="true" placeholder="全部" >{{$select.selected.value}}</ui-select-match>
+                        <ui-select-choices repeat="item.key as item in getDicItemOfLifeList | filter: $select.search" value="{{$select.selected.value}}">
+                            <span ng-bind-html="item.value | highlight: $select.search"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="campaignPackageDetails_box">
+                <div class="campaignPackageDetail_box">
+                    <div class="campaignPackageDetails form-group col-lg-3" ng-repeat="coursePackage in coursepackinfo.coursePackages track by $index">
+                        <div class="form-group col-lg-12">
+                            <label class="col-md-4 text-right control-label">课时{{$index+1}}：</label>
+                            <div class="col-md-5">
+                                <label class="col-md-8 control-label" style="margin-bottom:7px;">{{coursePackage.courseCount}}节</label>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12">
+                            <label class="col-md-4 text-right control-label">市场价：</label>
+                            <div class="col-md-5">
+                                <input type="number" class="form-control" ng-model="coursePackage.coursePackagePrice"  style="text-align:center;">
+                            </div>
+                            <span style="line-height:42px;">元</span>
+                        </div>
+                        <div class="form-group col-lg-12">
+                            <label class="col-md-4 text-right control-label">有限期限：</label>
+                            <div class="col-md-5">
+                                <input type="number" class="form-control" ng-model="coursePackage.expiretime"  style="text-align:center;">
+                            </div>
+                            <span style="line-height:42px;">个月</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

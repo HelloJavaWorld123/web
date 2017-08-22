@@ -1,0 +1,819 @@
+<article ng-controller="memberCardController" class="complain container-fluid">
+    <section class="row">
+        <div class="memberCardWrapper col-lg-12">
+            <div class="userTab container-fluid" ng-controller="tabMember">
+                <div class="title">
+                    <ul class="row">
+                        <li class="col-md-2" ng-class="{cur:type=='01'}" ng-click="click('01')">会员信息管理</li>
+                        <li class="col-md-2" ng-class="{cur:type=='02'}" ng-click="click('02')">会员卡设置</li>
+                    </ul>
+                </div>
+
+                    <!--会员信息管理-->
+                    <div class="col-md-12" ng-show="type == '01'">
+                        <!--分页-->
+                        <section class="row conPanelLeft">
+                            <div class="userInfoWrapper  col-lg-12">
+                                <!--上部-查询表单-->
+                                <form action="{{api.memberCardFirstEportExcel}}" method="POST" ng-enter="query()" name="memberCardFirstDataFormName" id="memberCardFirst">
+
+
+                                    <section class="row">
+                                        <div class="form-group col-md-3">
+                                            <label class="col-md-3 text-right control-label" >猫号：</label>
+                                            <div class="col-md-8">
+                                                <input type="text" class="form-control" ng-model="data.mallId"  maxlength="20" name="mallId">
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group col-md-2">
+                                            <label class="col-md-4 control-label">购买时间：</label>
+                                            <div class="col-md-8">
+                                                <div class="dropdown">
+                                                    <input type="text" name="startTime" class="form-control" ng-model="data.startTime" datetime-transform format="yyyy-MM-dd" disabled>
+                                                    <i class="glyphicon glyphicon-calendar rili-icon dropdown-toggle" class="startTime" role="button" data-toggle="dropdown"></i>
+                                                    <ul class="dropdown-menu" role="menu" aria-labelledby="startTime">
+                                                        <datetimepicker ng-model="data.startTime" data-datetimepicker-config="{dropdownSelector: '.startTime',startView:'day',minView:'day'}" on-set-time="onEnrollstartSeleted(newDate, oldDate)"></datetimepicker>
+                                                    </ul>
+                                                </div>
+                                                <!--配合后端导出功能-->
+                                                <input type="hidden" name="startTime"
+                                                       value="{{data.startTime|date:'yyyy-MM-dd '}}">
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label class="col-md-4 control-label">至 </label>
+                                            <div class="col-md-8">
+                                                <div class="dropdown">
+                                                    <input type="text" name="endTime" class="form-control" ng-model="data.endTime" datetime-transform format="yyyy-MM-dd" disabled>
+                                                    <i class="glyphicon glyphicon-calendar rili-icon dropdown-toggle" class="endTime" role="button" data-toggle="dropdown"></i>
+                                                    <ul class="dropdown-menu" role="menu" aria-labelledby="endTime">
+                                                        <datetimepicker ng-model="data.endTime" data-datetimepicker-config="{dropdownSelector: '.endTime',startView:'day',minView:'day'}" on-set-time="onEnrollstartSeleted(newDate, oldDate)"></datetimepicker>
+                                                    </ul>
+                                                </div>
+                                                <!--配合后端导出功能-->
+                                                <input type="hidden" name="endTime"
+                                                       value="{{data.endTime|date:'yyyy-MM-dd '}}">
+
+                                            </div>
+                                        </div>
+                                    </section>
+                                    <section class="row">
+
+                                        <div class="form-group col-md-3">
+                                            <label class="col-md-3 text-right control-label" >用户手机号：</label>
+                                            <div class="col-md-8">
+                                                <input type="text" class="form-control" ng-model="data.mobile"  maxlength="20" name="mobile">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label class="col-md-3 text-right control-label" >会员卡号：</label>
+                                            <div class="col-md-8">
+                                                <input type="text" class="form-control" ng-model="data.vipAccount"  maxlength="20" name="vipAccount">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-md-2">
+                                            <label class="col-md-5 text-right control-label" >会员类型：</label>
+                                            <div class="col-md-7">
+                                                <ui-select ng-model="data.cardTypeId" theme="bootstrap" on-select="getMemberTypeData($item)">
+                                                    <ui-select-match allow-clear="true" placeholder="全部">{{$select.selected.dicValue}}</ui-select-match>
+
+
+                                                    <ui-select-choices
+                                                            repeat="item.dicKey as item in memberTypeData | orderBy:'dicKey' | filter: $select.search.dicValue">
+                                                        <span ng-bind-html="item.dicValue | highlight: $select.search"></span>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                                <input type="hidden"  value="{{data.cardTypeId}}" name="cardTypeId">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <label class="col-md-3 text-right control-label" >会员卡城市：</label>
+                                            <div class="col-md-4">
+                                                <div class="col-md-12">
+                                                    <ui-select ng-model="data.provinceId" theme="bootstrap" on-select="getCitys($item.id)" name="provinceId">
+                                                        <ui-select-match allow-clear="true" placeholder="省">{{$select.selected.name}}
+                                                        </ui-select-match>
+                                                        <ui-select-choices
+                                                                repeat="item.id as item in provinces | orderBy:'id' | filter: $select.search.id">
+                                                            <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <input type="hidden"  value="{{data.provinceId}}" name="provinceId">
+                                                </div>
+
+                                            </div>
+                                            <div class=" col-md-4">
+                                                <div class="col-md-12">
+                                                    <ui-select ng-model="data.cityId" theme="bootstrap" on-select="getCountys($item.id)" ng-disabled="data.provinceId==undefined?true:false" name="cityId">
+
+                                                        <ui-select-match allow-clear="true" placeholder="市">{{$select.selected.name}}
+                                                        </ui-select-match>
+                                                        <ui-select-choices
+                                                                repeat="item.id as item in citys | orderBy:'id' | filter: $select.search.id">
+                                                            <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <input type="hidden"  value="{{data.cityId}}" name="cityId">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                    <!--中部-点击搜索 点击重置-->
+                                    <div class="button-first">
+                                        <button type="button" class="btn btn-raised btn-info" ng-click="query()">搜索</button>
+
+                                        <button type="button" class="btn btn-raised btn-default" ng-click="reset()">重置</button>
+                                        <button type="submit" class="btn btn-raised btn-primary" >导出</button>
+                                    </div>
+                                </form>
+
+
+                                <!--下部-查询列表-->
+                                <section class="row conPanelLeft">
+                                    <div class="gymConfigWrapper  col-lg-12">
+                                        <!-- 下部分 -->
+                                        <section>
+                                            <div class="table-responsive">
+                                                <table class="table table-hover">
+                                                    <thead class="table-head">
+                                                    <tr class="active">
+                                                        <th>序号</th>
+                                                        <th>会员卡号</th>
+                                                        <th>会员卡类型</th>
+
+                                                        <th>用户猫号</th>
+                                                        <th>用户手机号</th>
+                                                        <th>购买时间</th>
+                                                        <th>城市</th>
+                                                        <th>购买金额</th>
+                                                        <th>激活日期</th>
+                                                        <th>有效期</th>
+                                                        <th>已使用会员卡次数</th>
+                                                        <th>会员卡状态</th>
+
+
+                                                    </tr>
+                                                    </thead>
+
+                                                    <tbody ng-repeat="item in memberCardData">
+                                                    <tr>
+                                                        <td>{{$index+1+(((PageIndex||1)-1)*PageSize)}}</td>
+                                                        <td>{{item.account}}</td>
+                                                        <td>{{item.cardTypeName}}</td>
+                                                        <td>{{item.mallId}}</td>
+
+                                                        <td>{{item.mobile}}</td>
+                                                        <td>{{tools.timeStampToDate(item.buyTime)}}</td>
+                                                        <td>{{item.cityName}}</td>
+                                                        <td>{{item.price}}</td>
+
+                                                        <td>{{tools.timeStampToDate(item.activeTime)}}</td>
+                                                        <td>{{tools.timeStampToDate(item.expireTime)}}</td>
+                                                        <td>{{item.useCount}}</td>
+                                                        <td>{{item.statusEnum.msg}}</td>
+
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                                <div ng-if="!memberCardData.length" class="noData ng-scope">暂无数据</div>
+                                            </div>
+                                            <div cg-busy="gymListPromise"></div>
+
+
+                                            <div class="row">
+                                                <div class="col-md-9">
+                                                    <select class="page-size" ng-model="PageSize" ng-change="pageChanged()">
+                                                        <option value="20" ng-selected="true">每页显示20条</option>
+                                                        <option value="40">每页显示40条</option>
+                                                        <option value="60">每页显示60条</option>
+                                                        <option value="80">每页显示80条</option>
+                                                        <option value="100">每页显示100条</option>
+                                                    </select>
+                                                    <uib-pagination ng-model="PageIndex" ng-change="pageChanged()" total-items="memberCardDataCount"
+                                                                    max-size="maxSize" items-per-page="PageSize" class="pagination-sm"
+                                                                    boundary-link-numbers="true" rotate="false" previous-text="上一页"
+                                                                    next-text="下一页"></uib-pagination>
+                                                </div>
+                                                <div class="col-md-3 text-right">
+                                                    <span>跳转到</span>
+                                                    <input type="text" onafterpaste="this.value=this.value.replace(/\D/g,'')"
+                                                           onkeyup="this.value=this.value.replace(/\D/g,'')" ng-model="toPageNum"
+                                                           class="variant-form-control">
+                                                    <button ng-click="setPage()" class="to-page-num">确定</button>
+                                                </div>
+                                            </div>
+                                        </section>
+                                    </div>
+
+                                </section>
+                            </div>
+
+
+                        </section>
+
+
+
+                    </div>
+                    <!--会员卡设置-->
+                    <div class="col-md-12" ng-show="type == '02'">
+                        <!--分页-->
+                        <section class="row conPanelLeft">
+                            <div class="userInfoWrapper  col-lg-12">
+                                <!--上部-查询表单-->
+                                <form action="" method="POST" ng-enter="query()">
+                                    <section class="row">
+
+
+                                        <div class="form-group col-md-4">
+                                            <label class="col-md-3 text-right control-label" >城市：</label>
+                                            <div class="col-md-4">
+                                                <div class="col-md-12">
+                                                    <ui-select ng-model="data.provinceId" theme="bootstrap" on-select="getCitys($item.id)" name="provinceId">
+                                                        <ui-select-match allow-clear="true" placeholder="省">{{$select.selected.name}}
+                                                        </ui-select-match>
+                                                        <ui-select-choices
+                                                                repeat="item.id as item in provinces | orderBy:'id' | filter: $select.search.id">
+                                                            <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                </div>
+                                            </div>
+                                            <div class=" col-md-4">
+                                                <div class="col-md-12">
+                                                    <ui-select ng-model="data.cityId" theme="bootstrap" on-select="getCountys($item.id)" ng-disabled="data.provinceId==undefined?true:false" name="cityId">
+                                                        <ui-select-match allow-clear="true" placeholder="市">{{$select.selected.name}}
+                                                        </ui-select-match>
+                                                        <ui-select-choices
+                                                                repeat="item.id as item in citys | orderBy:'id' | filter: $select.search.id">
+                                                            <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="button-first col-md-3 memberAdd">
+                                            <button type="button" class="btn btn-raised btn-info " ng-click="query('02')">搜索</button>
+                                            <button type="button" class="btn btn-raised btn-default" ng-click="reset('02')">重置</button>
+                                        </div>
+
+
+                                    </section>
+
+
+
+
+
+                                </form>
+
+                                <!--中部-新增按钮-->
+                                <div class="button-first">
+                                    <button type="button" class="btn btn-raised btn-info" ng-click="addMember()">新建会员卡</button>
+                                </div>
+                                <!--下部-查询列表-->
+                                <section class="row conPanelLeft">
+                                    <div class="gymConfigWrapper  col-lg-12">
+                                        <!-- 下部分 -->
+                                        <section>
+                                            <div class="table-responsive">
+                                                <table class="table table-hover">
+                                                    <thead class="table-head">
+                                                    <tr class="active">
+                                                        <th>序号</th>
+                                                        <th>城市</th>
+                                                        <th>名称</th>
+
+                                                        <th>价格</th>
+                                                        <th>使用次数</th>
+                                                        <th>使用频率</th>
+                                                        <th>每次使用时间</th>
+
+                                                        <th>有效期</th>
+                                                        <th>生效日期</th>
+                                                        <th>使用说明</th>
+                                                        <th>自动续费</th>
+                                                        <th>操作</th>
+                                                    </tr>
+                                                    </thead>
+
+                                                    <tbody ng-repeat="item in memberCardData">
+                                                    <tr>
+                                                        <td>{{$index+1+(((PageIndex||1)-1)*PageSize)}}</td>
+                                                        <td>{{item.cityNames}}</td>
+
+                                                        <td>{{item.cardTypeName}}</td>
+                                                        <td>{{item.price}}</td>
+                                                        <td>{{item.times}}</td>
+                                                        <td>{{item.frequency}}</td>
+                                                        <td>{{item.useTime}}</td>
+                                                        <td>{{item.effectiveDays}}</td>
+                                                        <td>{{item.startDateType}}</td>
+                                                        <td>{{item.description}}</td>
+                                                        <td>{{item.isAutoRenew}}</td>
+                                                        <td>
+                                                            <!--0.修改 1.删除 -->
+                                                            <a ng-click="compareCard(item)" class="pointer">修改</a>
+
+                                                            <a ng-click="deleteCard(item)"  class="pointer" ng-disabled="checklist" confirm="确定删除吗？" confirm-title="删除" confirm-ok="确定" confirm-cancel="取消">删除</a>
+
+
+
+
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                                <div ng-if="!memberCardData.length" class="noData ng-scope">暂无数据</div>
+                                            </div>
+                                            <div cg-busy="gymListPromise"></div>
+
+
+                                            <div class="row">
+                                                <div class="col-md-9">
+                                                    <select class="page-size" ng-model="PageSize" ng-change="pageChanged('02')">
+                                                        <option value="20" ng-selected="true">每页显示20条</option>
+                                                        <option value="40">每页显示40条</option>
+                                                        <option value="60">每页显示60条</option>
+                                                        <option value="80">每页显示80条</option>
+                                                        <option value="100">每页显示100条</option>
+                                                    </select>
+                                                    <uib-pagination ng-model="PageIndex" ng-change="pageChanged('02')" total-items="memberCardDataCount"
+                                                                    max-size="maxSize" items-per-page="PageSize" class="pagination-sm"
+                                                                    boundary-link-numbers="true" rotate="false" previous-text="上一页"
+                                                                    next-text="下一页"></uib-pagination>
+                                                </div>
+                                                <div class="col-md-3 text-right">
+                                                    <span>跳转到</span>
+                                                    <input type="text" onafterpaste="this.value=this.value.replace(/\D/g,'')"
+                                                           onkeyup="this.value=this.value.replace(/\D/g,'')" ng-model="toPageNum"
+                                                           class="variant-form-control">
+                                                    <button ng-click="setPage()" class="to-page-num">确定</button>
+                                                </div>
+                                            </div>
+                                        </section>
+                                    </div>
+
+                                </section>
+                            </div>
+
+                        </section>
+
+                    </div>
+
+            </div>
+        </div>
+
+
+    </section>
+</article>
+
+
+
+<!--蒙版-弹窗1-新建会员卡-->
+<script type="text/ng-template" id="memberViewAdd.html">
+    <div class="modal-header">
+        <h4>新建会员卡</h4>
+    </div>
+    <div class="modal-body">
+        <form name="gymViewAddForm">
+            <section class="row">
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label" >名称：</label>
+                    <div class="col-md-9">
+                        <ui-select ng-model="memberTypeDatas.dicKey" theme="bootstrap" on-select="getMemberTypeData($item)">
+                            <ui-select-match allow-clear="true" placeholder="点击选择">{{$select.selected.dicValue}}</ui-select-match>
+
+
+                            <ui-select-choices
+                                    repeat="item.dicKey as item in memberTypeData | orderBy:'dicKey' | filter: $select.search.dicValue">
+                                <span ng-bind-html="item.dicValue | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label" >价格（元）：</label>
+                    <div class="col-md-9">
+                        <input step="0.01" type="number" class="form-control" ng-model="data.price" required maxlength="8" oninput="if(value[0]=='-'||value[0]=='.'){value=value.slice(0,0)}else if(value.split('.')[1]&&value.split('.')[1].length>2||value>10000.00){value=value.slice(0,value.length-1)}
+" onafterpaste="if(value[0]=='-'||value[0]=='.'){value=value.slice(0,0)}else if(value.split('.')[1]&&value.split('.')[1].length>2||value>10000.00){value=value.slice(0,value.length-1)}">
+                    </div>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label" >使用次数：</label>
+                    <div class="col-md-3">
+                        <input type="text" id="timeSelect" class="form-control" ng-model="data.times" required maxlength="20" oninput="if(value[0]=='-'||value[0]=='0'){value=value.slice(0,0)}else if(value>10000){value=value.slice(0,value.length-1)}else{value=value.replace(/\D/g,'')}" onafterpaste="if(value[0]=='-'||value[0]=='0'){value=value.slice(0,0)}else if(value>10000){value=value.slice(0,value.length-1)}else{value=value.replace(/\D/g,'')}">
+                    </div>
+                    <label class="col-md-2 text-right control-label" >次</label>
+                    <div class="col-md-4 memberAdd">
+                        <input type="checkbox" ng-click="applyTime()">&nbsp;不限
+                    </div>
+
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label" >使用频率：</label>
+                    <div class="col-md-3">
+                        <input type="text" id="frequencySelect" class="form-control" ng-model="data.frequency" required maxlength="20" oninput="if(value[0]=='-'||value[0]=='0'){value=value.slice(0,0)}else if(value>10000){value=value.slice(0,value.length-1)}else{value=value.replace(/\D/g,'')}" onafterpaste="if(value[0]=='-'||value[0]=='0'){value=value.slice(0,0)}else if(value>10000){value=value.slice(0,value.length-1)}else{value=value.replace(/\D/g,'')}">
+                    </div>
+                    <label class="col-md-2 text-right control-label" >次/天</label>
+                    <div class="col-md-4 memberAdd">
+                        <input type="checkbox" ng-click="applyFrequency()">&nbsp;不限
+                    </div>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label" >每次使用时间：</label>
+                    <div class="col-md-3">
+                        <input type="text" id="useTimeSelect" class="form-control" ng-model="data.useTime" required maxlength="20" oninput="if(value[0]=='-'||value[0]=='0'){value=value.slice(0,0)}else if(value>10000){value=value.slice(0,value.length-1)}else{value=value.replace(/\D/g,'')}" onafterpaste="if(value[0]=='-'||value[0]=='0'){value=value.slice(0,0)}else if(value>10000){value=value.slice(0,value.length-1)}else{value=value.replace(/\D/g,'')}">
+                    </div>
+                    <label class="col-md-2 text-right control-label" >分钟</label>
+                    <div class="col-md-4 memberAdd">
+                        <input type="checkbox" ng-click="applyUseTime()">&nbsp;不限
+                    </div>
+                </div>
+
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label" >有效期：</label>
+                    <div class="col-md-2">
+                        <input type="text" class="form-control" ng-model="data.effectiveDays" required maxlength="20" oninput="if(value[0]=='-'||value[0]=='0'){value=value.slice(0,0)}else if(value>10000){value=value.slice(0,value.length-1)}else{value=value.replace(/\D/g,'')}" onafterpaste="if(value[0]=='-'||value[0]=='0'){value=value.slice(0,0)}else if(value>10000){value=value.slice(0,value.length-1)}else{value=value.replace(/\D/g,'')}">
+                    </div>
+                    <label class="col-md-2 text-right control-label" >天</label>
+                    <label class="col-md-2 text-right control-label" >生效日期</label>
+                    <div class="col-md-3">
+                        <ui-select ng-model="data.startDateType" theme="bootstrap"
+                                   on-select="getEffectiveDate($item)" name="" required>
+                            <ui-select-match allow-clear="true" placeholder="生效日期">{{$select.selected.name}}
+                            </ui-select-match>
+                            <ui-select-choices
+                                    repeat="item.effectiveDateId as item in effectiveDate | orderBy:'effectiveDateId' | filter: $select.search.effectiveDateId">
+                                <span ng-bind-html="item.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label" >会员卡说明：</label>
+                    <div class="col-md-9" >
+                        <textarea ng-model="data.description" required maxlength="50"  class="form-control"  style="height: 100px">
+                        </textarea>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group col-md-12">
+                    <label  class="col-md-3 control-label text-right">会员卡图片：</label>
+                    <div class="col-md-6">
+                        <div class="is-fileinput">
+                            <input type="file" ng-disabled="isHave_by_coach" ng-model="userIco" accept="image/jpeg,image/png,image/jpg" up-ico  imglength="1" imgsize="1" pic-index='4'>
+                            <input type="text" class="form-control" placeholder="支持jpg、png格式">
+                            <i ng-class="{'is-loading':isLoadingIco}" class="fa fa-spinner"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-offset-2 col-md-8">
+                        <div  ng-repeat="imgUrl in imgUrlIcoArr4"><img ng-src="{{tools.imgCompress(imgUrl.url,'345x175')}}" width="345" height="175">
+                            <span  ng-click="delIco($index,4)">取消上传</span>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <div class="form-group col-md-12">
+                    <label  class="col-md-3 control-label text-right">图标URL：</label>
+                    <div class="col-md-6">
+                        <div class="is-fileinput">
+                            <input type="file" ng-disabled="isHave_by_coach" ng-model="userIco" accept="image/jpeg,image/png,image/jpg" up-ico  imglength="1" imgsize="1" pic-index='5'>
+                            <input type="text" class="form-control" placeholder="支持jpg、png格式">
+                            <i ng-class="{'is-loading':isLoadingIco}" class="fa fa-spinner"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-offset-2 col-md-8">
+                        <div  ng-repeat="imgUrl in imgUrlIcoArr5"><img ng-src="{{tools.imgCompress(imgUrl.url,'345x175')}}" width="345" height="175">
+                            <span  ng-click="delIco($index,5)">取消上传</span>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label" >全国：</label>
+                    <div class="col-md-9 memberAdd">
+                        <input type="checkbox" ng-click="isChina()">
+                    </div>
+                </div>
+
+                <div class="form-group col-md-12" ng-show="data.isAllCountry ==0">
+                    <label class="col-md-3 control-label text-right">选择城市：</label>
+                    <div class="col-md-9">
+                        <section class="row">
+                            <div class="form-group col-md-4">
+                                <div class="col-md-12">
+                                    <ui-select ng-model="data.provinceId" theme="bootstrap" on-select="getCitys($item.id)" name="provinceId">
+                                        <ui-select-match allow-clear="true" placeholder="省">{{$select.selected.name}}
+                                        </ui-select-match>
+                                        <ui-select-choices
+                                                repeat="item.id as item in provinces | orderBy:'id' | filter: $select.search.id">
+                                            <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <div class="col-md-12">
+                                    <ui-select ng-model="data.cityId" theme="bootstrap" on-select="getCountys($item.id)"
+                                               name="cityId">
+                                        <!--ng-disabled="data.provinceId==undefined?true:false"-->
+                                        <ui-select-match allow-clear="true" placeholder="市">{{$select.selected.name}}
+                                        </ui-select-match>
+                                        <ui-select-choices
+                                                repeat="item.id as item in citys | orderBy:'id' | filter: $select.search.id">
+                                            <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <button type="button" class="btn withripple btn-raised btn-primary chooseCity" ng-click="chooseCity()">确定</button>
+                            </div>
+
+
+                        </section>
+                    </div>
+
+
+                </div>
+
+
+                <div class="form-group col-md-12" ng-show="data.isAllCountry ==0">
+                    <label class="col-md-3 text-right control-label" >有效城市：</label>
+                    <div class="col-md-9" >
+                        <p class="cityTag" ng-repeat="nameC in cityNameAll">{{nameC}}<span ng-click="delCity($index)">&times;</span></p>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label" >自动续费：</label>
+                    <div class="col-md-9 memberAdd">
+                        <input type="checkbox" ng-click="autoRenew()">
+                    </div>
+                </div>
+
+
+
+
+
+            </section>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn withripple btn-raised btn-primary" type="button" ng-click="save()"
+                            ng-disabled="!gymViewAddForm.$valid">确定
+                    </button>
+                    <button class="btn withripple btn-raised btn-warning" type="button" ng-click="close()">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</script>
+
+
+
+<!--蒙版-弹窗2-修改会员卡-->
+<script type="text/ng-template" id="compareCard.html">
+    <div class="modal-header">
+        <h4>修改会员卡</h4>
+    </div>
+    <div class="modal-body">
+        <form name="gymViewAddForm">
+            <section class="row">
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label" >名称：</label>
+                    <div class="col-md-9">
+                        <ui-select ng-model="memberTypeDatas.dicKey" theme="bootstrap" on-select="getMemberTypeData($item)">
+                            <ui-select-match allow-clear="true" placeholder='点击选择'>{{$select.selected.dicValue}}</ui-select-match>
+
+
+                            <ui-select-choices
+                                    repeat="item.dicKey as item in memberTypeData | orderBy:'dicKey' | filter: $select.search.dicValue">
+                                <span ng-bind-html="item.dicValue | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label" >价格（元）：</label>
+                    <div class="col-md-9">
+                        <input step="0.01" type="number" class="form-control" ng-model="data.price" required maxlength="8" oninput="if(value[0]=='-'||value[0]=='.'){value=value.slice(0,0)}else if(value.split('.')[1]&&value.split('.')[1].length>2||value>10000.00){value=value.slice(0,value.length-1)}
+" onafterpaste="if(value[0]=='-'||value[0]=='.'){value=value.slice(0,0)}else if(value.split('.')[1]&&value.split('.')[1].length>2||value>10000.00){value=value.slice(0,value.length-1)}">
+                    </div>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label" >使用次数：</label>
+                    <div class="col-md-3">
+                        <input type="text" id="timeSelect" class="form-control" ng-model="data.times" required maxlength="20" oninput="if(value[0]=='-'||value[0]=='0'){value=value.slice(0,0)}else if(value>10000){value=value.slice(0,value.length-1)}else{value=value.replace(/\D/g,'')}" onafterpaste="if(value[0]=='-'||value[0]=='0'){value=value.slice(0,0)}else if(value>10000){value=value.slice(0,value.length-1)}else{value=value.replace(/\D/g,'')}">
+                    </div>
+                    <label class="col-md-2 text-right control-label" >次</label>
+                    <div class="col-md-4 memberAdd">
+                        <input type="checkbox" ng-click="applyTime()">&nbsp;不限
+                    </div>
+
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label" >使用频率：</label>
+                    <div class="col-md-3">
+                        <input type="text" id="frequencySelect" class="form-control" ng-model="data.frequency" required maxlength="20" oninput="if(value[0]=='-'||value[0]=='0'){value=value.slice(0,0)}else if(value>10000){value=value.slice(0,value.length-1)}else{value=value.replace(/\D/g,'')}" onafterpaste="if(value[0]=='-'||value[0]=='0'){value=value.slice(0,0)}else if(value>10000){value=value.slice(0,value.length-1)}else{value=value.replace(/\D/g,'')}">
+                    </div>
+                    <label class="col-md-2 text-right control-label" >次/天</label>
+                    <div class="col-md-4 memberAdd">
+                        <input type="checkbox" ng-click="applyFrequency()">&nbsp;不限
+                    </div>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label" >每次使用时间：</label>
+                    <div class="col-md-3">
+                        <input type="text" id="useTimeSelect" class="form-control" ng-model="data.useTime" required maxlength="20" oninput="if(value[0]=='-'||value[0]=='0'){value=value.slice(0,0)}else if(value>10000){value=value.slice(0,value.length-1)}else{value=value.replace(/\D/g,'')}" onafterpaste="if(value[0]=='-'||value[0]=='0'){value=value.slice(0,0)}else if(value>10000){value=value.slice(0,value.length-1)}else{value=value.replace(/\D/g,'')}">
+                    </div>
+                    <label class="col-md-2 text-right control-label" >分钟</label>
+                    <div class="col-md-4 memberAdd">
+                        <input type="checkbox" ng-click="applyUseTime()">&nbsp;不限
+                    </div>
+                </div>
+
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label" >有效期：</label>
+                    <div class="col-md-2">
+                        <input type="text" class="form-control" ng-model="data.effectiveDays" required maxlength="20" oninput="if(value[0]=='-'||value[0]=='0'){value=value.slice(0,0)}else if(value>10000){value=value.slice(0,value.length-1)}else{value=value.replace(/\D/g,'')}" onafterpaste="if(value[0]=='-'||value[0]=='0'){value=value.slice(0,0)}else if(value>10000){value=value.slice(0,value.length-1)}else{value=value.replace(/\D/g,'')}">
+                    </div>
+                    <label class="col-md-2 text-right control-label" >天</label>
+                    <label class="col-md-2 text-right control-label" >生效日期</label>
+                    <div class="col-md-3">
+                        <ui-select ng-model="data.startDateType" theme="bootstrap"
+                                   on-select="getEffectiveDate($item)" name="" required>
+                            <ui-select-match allow-clear="true" placeholder="生效日期">{{$select.selected.name}}
+                            </ui-select-match>
+                            <ui-select-choices
+                                    repeat="item.effectiveDateId as item in effectiveDate | orderBy:'effectiveDateId' | filter: $select.search.effectiveDateId">
+                                <span ng-bind-html="item.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label" >会员卡说明：</label>
+                    <div class="col-md-9" >
+                        <textarea ng-model="data.description" required maxlength="50"  class="form-control"  style="height: 100px">
+                        </textarea>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group col-md-12">
+                    <label  class="col-md-3 control-label text-right">会员卡图片：</label>
+                    <div class="col-md-6">
+                        <div class="is-fileinput">
+                            <input type="file" ng-disabled="isHave_by_coach" ng-model="userIco" accept="image/jpeg,image/png,image/jpg" up-ico  imglength="1" imgsize="1" pic-index='4'>
+                            <input type="text" class="form-control" placeholder="支持jpg、png格式">
+                            <i ng-class="{'is-loading':isLoadingIco}" class="fa fa-spinner"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-offset-2 col-md-8">
+                        <div  ng-repeat="imgUrl in imgUrlIcoArr4"><img ng-src="{{tools.imgCompress(imgUrl.url,'345x175')}}" width="345" height="175">
+                            <span  ng-click="delIco($index,4)">取消上传</span>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <div class="form-group col-md-12">
+                    <label  class="col-md-3 control-label text-right">图标URL：</label>
+                    <div class="col-md-6">
+                        <div class="is-fileinput">
+                            <input type="file" ng-disabled="isHave_by_coach" ng-model="userIco" accept="image/jpeg,image/png,image/jpg" up-ico  imglength="1" imgsize="1" pic-index='5'>
+                            <input type="text" class="form-control" placeholder="支持jpg、png格式">
+                            <i ng-class="{'is-loading':isLoadingIco}" class="fa fa-spinner"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-offset-2 col-md-8">
+                        <div  ng-repeat="imgUrl in imgUrlIcoArr5"><img ng-src="{{tools.imgCompress(imgUrl.url,'345x175')}}" width="345" height="175">
+                            <span  ng-click="delIco($index,5)">取消上传</span>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label" >全国：</label>
+                    <div class="col-md-9 memberAdd">
+                        <input type="checkbox" ng-click="isChina()" ng-checked="data.isAllCountry==1">
+                    </div>
+                </div>
+
+                <div class="form-group col-md-12" ng-show="data.isAllCountry ==0">
+                    <label class="col-md-3 control-label text-right">选择城市：</label>
+                    <div class="col-md-9">
+                        <section class="row">
+                            <div class="form-group col-md-4">
+                                <div class="col-md-12">
+                                    <ui-select ng-model="data.provinceId" theme="bootstrap" on-select="getCitys($item.id)" name="provinceId">
+                                        <ui-select-match allow-clear="true" placeholder="省">{{$select.selected.name}}
+                                        </ui-select-match>
+                                        <ui-select-choices
+                                                repeat="item.id as item in provinces | orderBy:'id' | filter: $select.search.id">
+                                            <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <div class="col-md-12">
+                                    <ui-select ng-model="data.cityId" theme="bootstrap" on-select="getCountys($item.id)"
+                                               name="cityId">
+                                        <!--ng-disabled="data.provinceId==undefined?true:false"-->
+                                        <ui-select-match allow-clear="true" placeholder="市">{{$select.selected.name}}
+                                        </ui-select-match>
+                                        <ui-select-choices
+                                                repeat="item.id as item in citys | orderBy:'id' | filter: $select.search.id">
+                                            <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <button type="button" class="btn withripple btn-raised btn-primary chooseCity" ng-click="chooseCity()">确定</button>
+                            </div>
+
+
+                        </section>
+                    </div>
+
+
+                </div>
+
+
+                <div class="form-group col-md-12" ng-show="data.isAllCountry ==0">
+                    <label class="col-md-3 text-right control-label" >有效城市：</label>
+                    <div class="col-md-9" >
+                        <p class="cityTag" ng-repeat="nameC in cityNameAll">{{nameC}}<span ng-click="delCity($index)">&times;</span></p>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label" >自动续费：</label>
+                    <div class="col-md-9 memberAdd">
+                        <input type="checkbox" ng-checked="data.isAutoRenew==1" ng-click="autoRenew()">
+                    </div>
+                </div>
+
+
+
+
+            </section>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn withripple btn-raised btn-primary" type="button" ng-click="saveCompareCard()"
+                            ng-disabled="!gymViewAddForm.$valid">确定
+                    </button>
+                    <button class="btn withripple btn-raised btn-warning" type="button" ng-click="close()">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</script>

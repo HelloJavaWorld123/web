@@ -1,0 +1,535 @@
+@charset "UTF-8";
+/*
+* @Author: 郝晓波
+* @Date:   2017-5-4 13:26:20
+ * @Last Modified by:   haoxb
+ * @Last Modified time: 2017-05-11 10:46:27
+*/
+a, a:hover {
+  text-decoration: none;
+  display: inline-block;
+}
+
+b, u, i {
+  font-style: normal;
+  text-decoration: none;
+}
+
+input, select, option, textarea {
+  padding-left: 20px;
+  padding-right: 20px;
+  border: none;
+}
+
+button {
+  border: none;
+}
+
+/*select {
+  width: 120px;
+  height: 44px;
+  margin: 0 10px;
+  -webkit-appearance: none; !*for chrome*!
+  background: url("http://ourjs.github.io/static/2015/arrow.png") no-repeat scroll right center transparent;
+
+}*/
+option {
+  border: none;
+}
+
+option:hover {
+  background: #009688;
+}
+
+li {
+  list-style: none;
+}
+
+.saas-btn {
+  display: inline-block;
+  width: 100px;
+  height: 30px;
+  line-height: 30px;
+  padding: 0 12px;
+  margin: 10px;
+  background: #009688;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.saas-btn:hover {
+  background: #fff;
+  border: 1px solid #dbe1e4;
+  color: #009688;
+}
+
+b {
+  color: #999;
+}
+
+.fl {
+  float: left;
+}
+
+.fr {
+  float: right;
+}
+
+.unit {
+  padding-left: 8px;
+}
+
+.line {
+  height: 1px;
+  background: #999;
+  opacity: .5;
+}
+
+sup {
+  position: relative;
+  left: -3px;
+  top: -3px;
+  font-size: 12px;
+}
+
+.ml100 {
+  margin-left: 100px;
+}
+
+.formWindowCenter {
+  width: 300px;
+  margin: 0 auto;
+}
+
+.deviceInfoPanel {
+  padding: 20px;
+  userTab-shadow: 0 0 5px #999;
+  min-height: 500px;
+}
+
+.deviceInfoPanel .deviceInfoTip {
+  height: 50px;
+  padding: 25px 0 35px 25px;
+}
+
+.device-search {
+  height: 76px;
+  min-width: 855px;
+  padding-top: 18px;
+}
+
+.device-search > div {
+  width: 50%;
+  float: left;
+}
+
+.device-search .show-search-input > input {
+  width: 80%;
+  padding-left: 20px;
+  height: 44px;
+  border-radius: 4px;
+  vertical-align: middle;
+  border: 1px solid #dbe1e4;
+}
+
+.device-search .show-search-input > .btnSearch {
+  display: inline-block;
+  width: 44px;
+  height: 44px;
+  background: #fff;
+  border-radius: 4px;
+  margin-left: 8px;
+  text-align: center;
+  position: relative;
+  vertical-align: middle;
+  border: 1px solid #dbe1e4;
+}
+
+.device-search .show-search-input > .btnSearch i {
+  font-size: 30px;
+  color: #009688;
+  cursor: pointer;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -15px;
+  margin-top: -15px;
+}
+
+.device-search .show-other-button {
+  height: 44px;
+  line-height: 44px;
+  text-align: right;
+}
+
+.device-search .show-other-button > .button {
+  margin-left: 20px;
+  vertical-align: middle;
+}
+
+.show-list .show-title-background {
+  background-color: #eeeeee;
+  border-radius: 4px;
+  width: 100%;
+  min-width: 855px;
+  height: 44px;
+}
+
+.mask {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.mask .detail_content {
+  width: 500px;
+  background: #fff;
+  margin: 100px auto;
+  padding: 10px;
+}
+
+.detail_content .detail_header {
+  height: 44px;
+  line-height: 44px;
+  font-size: 14px;
+}
+
+.detail_content .detail_header .close {
+  float: right;
+  color: #009688;
+  font-size: 18px;
+  font-weight: normal;
+  opacity: 1;
+}
+
+.mask {
+  display: none;
+}
+
+.mask .detail_body .txtInput {
+  width: 300px;
+  padding-left: 10px;
+  height: 44px;
+  border-radius: 4px;
+  border: 1px solid #dbe1e4;
+}
+
+.mask .detail_body textarea {
+  width: 300px;
+  height: 130px;
+  border: 1px solid #dbe1e4;
+  resize: none;
+}
+
+.mask .detail_body button {
+  width: 100px;
+  height: 30px;
+  color: #fff;
+  margin-top: 10px;
+  margin-right: 10px;
+  background: #009688;
+  float: right;
+  border-radius: 5px;
+}
+
+.mask .detail_body input, .mask .detail_body textarea {
+  display: block;
+  margin: 0 auto;
+  margin-bottom: 30px;
+}
+
+.mask .detail_body select {
+  margin-bottom: 30px;
+}
+
+.selectResetCss {
+  padding-left: 90px;
+}
+
+.selectResetCss input[type=input] {
+  width: 100px;
+  border: none;
+  background: #000;
+}
+
+.selectResetCss .form-group {
+  padding-bottom: 0px;
+}
+
+.selectResetCss .dropdown-menu {
+  min-width: 70px;
+}
+
+.selectResetCss .ui-select-bootstrap .ui-select-choices-row > a {
+  padding: 3px 10px;
+}
+
+.show-list table {
+  width: 100%;
+  margin-top: -44px;
+}
+
+.show-list table .show-list-title {
+  height: 44px;
+}
+
+.show-list table .show-list-title .show-font-left {
+  padding-left: 30px;
+}
+
+.show-list table .show-list-title .show-font-center {
+  text-align: center;
+}
+
+.show-list table .show-device-item a {
+  color: #7a7e89;
+}
+
+.show-list table .show-device-item .device-item {
+  width: 100%;
+  margin-top: -5px;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.show-list table .show-device-item .device-item .step-line {
+  border-right: 1px solid #eeeeee;
+}
+
+.show-list table .show-device-item .device-item .step-line ul {
+  min-width: 360px;
+  width: 460px;
+  float: left;
+  padding-top: 20px;
+}
+
+.show-list table .show-device-item .device-item .step-line ul li {
+  color: #999999;
+  float: left;
+  list-style: outside none none;
+}
+
+.show-list table .show-device-item .device-item .step-line ul li.li-item {
+  width: 66%;
+  margin: 3px 0px 3px 20px;
+}
+
+.show-list table .show-device-item .device-item .step-line ul li.item-title {
+  color: black;
+  font-weight: bolder;
+}
+
+.show-list table .show-device-item .device-item .step-line ul li.item-title .offline {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  background: #eaeff1 none repeat scroll 0% 0%;
+  border-radius: 16px;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
+.show-list table .show-device-item .device-item .step-line ul li.devNote u {
+  display: inline-block;
+  width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.show-list table .show-device-item .device-item .step-line ul li .device-img {
+  width: 100px;
+  height: 100px;
+  border: 0px none;
+  overflow: hidden;
+  background-color: #eff1f5;
+  border-radius: 6px;
+}
+
+.show-list table .show-device-item .device-item .step-line ul li:nth-of-type(1) {
+  height: 160px;
+}
+
+.show-list table .show-device-item .device-item .step-a {
+  font-size: 20px;
+  color: #999999;
+}
+
+.show-list .show-device-item .device-item > td {
+  height: 164px;
+}
+
+/*
+-----------------
+sail begin
+-----------------
+*/
+/*datePicker插件-把选择的日期转化成时间放在input-隐藏*/
+.exportNone {
+  display: none;
+}
+
+.userTab {
+  width: 100%;
+  margin: 50px auto;
+}
+
+.userTab .title {
+  height: 88px;
+  font-size: 18px;
+}
+
+.userTab .title li.cur {
+  font-weight: bold;
+  color: #009688;
+}
+
+.userDetail .table > tbody > tr > td {
+  line-height: 50px;
+}
+
+.userBodyReport h3 {
+  background: #009a8b;
+  color: #fff;
+  font-size: 16px;
+  margin: 0;
+  padding: 8px 0px 8px 8px;
+  box-sizing: border-box;
+}
+
+.userBodyReport .bodyElement1 table tr td {
+  height: 65px;
+}
+
+.userBodyReport .bodyElement2 table tr td {
+  height: 43px;
+}
+
+table.baseInfo {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+table.baseInfo thead tr th {
+  text-align: center;
+}
+
+table.baseInfo tbody {
+  width: 100%;
+}
+
+table.baseInfo tbody tr {
+  width: 100%;
+}
+
+table.baseInfo tbody tr td {
+  text-align: center;
+  height: 40px;
+}
+
+table.baseInfo tbody tr td .item {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+table.baseInfo tbody tr td .item .item_L {
+  word-wrap: break-word;
+  display: inline-block;
+  text-align: right;
+  padding-right: 10px;
+}
+
+table.baseInfo tbody tr td .item .item_L span {
+  color: red;
+}
+
+table.baseInfo tbody tr td .item .item_R {
+  display: inline-block;
+  margin-top: -5px;
+}
+
+table.baseInfo tbody tr td .item .item_R input[type=radio], table.baseInfo tbody tr td .item .item_R input[type=checkbox] {
+  margin-left: 30px;
+  margin-right: 4px;
+  position: relative;
+  top: 3px;
+}
+
+table.baseInfo tbody tr td.noColumns {
+  width: 98rem;
+}
+
+.sportProgramViewAddForm input, .sportProgramViewAddForm select, .sportProgramViewAddForm option, .sportProgramViewAddForm textarea {
+  padding-left: 5px;
+  padding-right: 0px;
+}
+
+.sportProgramViewAddForm tr > td > p {
+  height: 38px;
+  line-height: 38px;
+}
+
+.sportProgramViewAddForm table {
+  border-collapse: separate !important;
+}
+
+.sportProgramViewEditForm table {
+  border-collapse: separate !important;
+}
+
+#l-map {
+  height: 300px;
+  width: 100%;
+}
+
+#r-result {
+  width: 100%;
+}
+
+.dn {
+  display: none;
+  background: #ccc;
+}
+
+.db {
+  display: block;
+  background: #ccc;
+}
+
+.hxbMadal {
+  margin-left: 200px;
+  box-shadow: 0 27px 24px 0 rgba(0, 0, 0, 0.2), 0 40px 77px 0 rgba(0, 0, 0, 0.22);
+}
+
+.hxbMadal .modaHd {
+  border-bottom: 1px solid #e5e5e5;
+  padding: 10px 15px;
+}
+
+.totalTxt {
+  display: inline-block;
+  font-size: 14px;
+  height: 30px;
+  line-height: 30px;
+}
+
+.memberAdd {
+  margin-top: 16px !important;
+}
+
+/*界面部分字段宽度限制*/
+.w300 {
+  width: 300px;
+}
+
+.w500 {
+  width: 500px;
+}
+
+.pt30 {
+  padding-top: 30px !important;
+  box-sizing: border-box;
+}

@@ -1,0 +1,23 @@
+<div class="well" ng-controller="UserLoginController" ng-init="load()">
+    <form name="loginForm" class="form-horizontal" focusOnFirstInvalidInput>
+        <fieldset>
+            <legend class="text-center">健康猫物联网启航后台管理系统</legend>
+            <div class="form-group">
+                <label for="inputEmail" class="col-md-2 control-label">账号</label>
+                <div class="col-md-10">
+                    <input type="account" class="form-control" id="inputaccount" required ng-model="credentials.account">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputpassWord" class="col-md-2 control-label">密码</label>
+                <div class="col-md-10">
+                    <input type="passWord" class="form-control" id="inputpassWord" required ng-model="credentials.passWord">
+                </div>
+            </div>
+            <span class="text-danger loginError" ng-bind="error"></span>
+            <button ng-click="loginForm.$valid && login(credentials)" promise-btn="loginPromise" class="btn btn-primary pull-right">登录 </button>
+        </fieldset>
+    </form>
+</div>
+
+

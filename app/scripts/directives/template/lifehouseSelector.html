@@ -1,0 +1,83 @@
+<div class="courses_box form-group col-lg-12" style="margin:10px 0;">
+    <div class="form-group col-lg-12" style="padding:15px;">
+        <div class="form-group col-lg-12">
+            <label class="col-md-1 text-right control-label"><span class="red">*</span>课程名称：</label>
+            <div class="col-md-2">
+                <ui-select ng-model="course.courseId" theme="bootstrap" required on-select="getCourseID(course)">
+                    <ui-select-match allow-clear="true" placeholder="课程名称" >{{$select.selected.courseName}}</ui-select-match>
+                    <ui-select-choices repeat="item.courseId as item in getCoursesList | filter: $select.search" value="{{$select.selected.courseName}}">
+                        <span ng-bind-html="item.courseName | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div class="form-group col-lg-12">
+            <label class="col-md-1 text-right control-label"><span class="red">*</span>活动期课程名称：</label>
+            <div class="col-md-2">
+                <input type="text" class="form-control" ng-model="course.campaignCourseName" required>
+            </div>
+        </div>
+    </div>
+    <div class="campaignDetails_box form-group col-lg-12">
+        <div ng-repeat="campaignDetail in course.campaignDetails">
+            <div class="campaignDetails form-group col-lg-12">
+                <div class="form-group col-lg-12">
+                    <label class="col-md-1 text-right control-label"><span class="red">*</span>适用运动馆：</label>
+                    <div class="form-group col-md-2" style="margin:0;">
+                        <ui-select ng-model="campaignDetail.citylevel" theme="bootstrap" required ng-disabled="!course.courseId"  on-select="resetId(campaignDetail)">
+                            <ui-select-match allow-clear="true" placeholder="全部" >{{$select.selected.value}}</ui-select-match>
+                            <ui-select-choices repeat="item.key as item in getDicItemOfCityList | filter: $select.search" value="{{$select.selected.value}}">
+                                <span ng-bind-html="item.value | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div class="form-group col-md-2" style="margin:0;">
+                        <ui-select ng-model="campaignDetail.lifelevel" theme="bootstrap" required ng-disabled="!campaignDetail.citylevel" on-select="getPackById($item,campaignDetail,course)" >
+                            <ui-select-match allow-clear="true" placeholder="全部" >{{$select.selected.value}}</ui-select-match>
+                            <ui-select-choices repeat="item.key as item in getDicItemOfLifeList | filter: $select.search" value="{{$select.selected.value}}">
+                                <span ng-bind-html="item.value | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="form-group col-lg-12">
+                    <label class="col-md-1 text-right control-label">适用运动馆：</label>
+                    <div class="form-group col-md-3" style="margin:0;">
+                        <ui-select ng-model="campaignDetail.lifeId" theme="bootstrap" ng-disabled="!campaignDetail.lifelevel">
+                            <ui-select-match allow-clear="true" placeholder="全部" >{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="item.id as item in getMyLifehouseList | filter: $select.search" value="{{$select.selected.name}}">
+                                <span ng-bind-html="item.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="campaignPackageDetails_box">
+                    <div ng-repeat="campaignPackageDetail in campaignDetail.campaignPackageDetails">
+                        <div class="form-group col-lg-3">
+                            <div class="form-group col-lg-12">
+                                <label class="col-md-4 text-right control-label">课时{{$index+1}}：</label>
+                                <label class="col-md-8 control-label">{{campaignPackageDetail.coursePackageCount}}节</label>
+                            </div>
+                            <div class="form-group col-lg-12">
+                                <label class="col-md-4 text-right control-label">市场价：</label>
+                                <label class="col-md-8 control-label">{{campaignPackageDetail.price}}元</label>
+                            </div>
+                            <div class="form-group col-lg-12">
+                                <label class="col-md-4 text-right control-label">活动价格：</label>
+                                <div class="col-md-5">
+                                    <input type="number" class="form-control" ng-model="campaignPackageDetail.campaignPrice" >
+                                </div>
+                                <span style="line-height:42px;">元</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group col-lg-12" style="padding:10px;">
+        <label class="col-md-1 text-right control-label"></label>
+        <a ng-href="javascript:;" class="btn withripple btn-raised btn-default pull-left" ng-click="addCampaignDetails()">+ 添加</a>
+        <label class="col-md-2 control-label" style="color: #bcbcbc;line-height: 26px;">其他适用运动馆</label>
+    </div>
+</div>

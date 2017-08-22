@@ -1,0 +1,132 @@
+﻿<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <title>启航后台管理系统</title>
+    <meta name="description" content="启航后台管理系统">
+    <meta name="viewport" content="width=device-width">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bower_components/bootstrap-material-design/dist/css/bootstrap-material-design.min.css" />
+    <link rel="stylesheet" href="bower_components/bootstrap-material-design/dist/css/ripples.min.css" />
+    <link rel="stylesheet" href="bower_components/components-font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="bower_components/ngprogress/ngProgress.css" />
+    <link rel="stylesheet" href="bower_components/ui-select/dist/select.min.css" />
+    <link rel="stylesheet" href="bower_components/angular-toastr/dist/angular-toastr.min.css" />
+    <link rel="stylesheet" href="bower_components/viewerjs/dist/viewer.min.css" />
+    <link rel="stylesheet" href="bower_components/ng-tags-input/ng-tags-input.min.css" />
+    <link rel="stylesheet" href="bower_components/ng-tags-input/ng-tags-input.bootstrap.min.css" />
+    <link rel="stylesheet" href="bower_components/angular-ui-tree/dist/angular-ui-tree.min.css" />
+    <link rel="stylesheet" href="bower_components/angular-bootstrap-datetimepicker/src/css/datetimepicker.css">
+    <link rel="stylesheet" href="bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+    <link rel="stylesheet" href="bower_components/fullcalendar/dist/fullcalendar.css"/>
+    <link href="bower_components/angular-xeditable/dist/css/xeditable.css" rel="stylesheet">
+    <!-- endbower -->
+    <!-- endbuild -->
+    <link href="assets/styles/angular-busy.min.css" rel="stylesheet" />
+    <!-- build:css(.) styles/main.css -->
+    <link rel="stylesheet" href="app/styles/main.concat.css">
+    <!-- endbuild -->
+</head>
+
+<body ng-app="HealthAdminFrontend">
+    <!--[if lte IE 8]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+    <!-- Add your site or application content here -->
+    <div class="container-fluid">
+        <div class="panel-left" ng-if="!isOwnPage">
+            <div ng-include="'app/components/sidenav/sidenav.view.html'"></div>
+        </div>
+        <div class="panel-right">
+            <div ng-include="'app/components/header/header.view.html'"></div>
+            <div ng-class="{'panel-login': isOwnPage}" ng-cloak="" class="no-print">
+                <div ui-view class="animate-fade-up"></div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="container">
+            <p></p>
+        </div>
+    </div>
+    <!-- build:js(.) scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/moment/min/moment.min.js"></script>
+    <script src="bower_components/moment/locale/zh-cn.js"></script>
+    <script src="bower_components/angular-moment/angular-moment.min.js"></script>
+    <script src="bower_components/angular-i18n/angular-locale_zh-cn.js"></script>
+    <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap.js"></script>
+    <!-- <script src="bower_components/angular-animate/angular-animate.js"></script> -->
+    <script src="bower_components/angular-aria/angular-aria.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="bower_components/angular-messages/angular-messages.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/angular-touch/angular-touch.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script src="bower_components/underscore/underscore-min.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script src="bower_components/bootstrap-material-design/dist/js/material.min.js"></script>
+    <script src="bower_components/bootstrap-material-design/dist/js/ripples.min.js"></script>
+    <script src="bower_components/ngprogress/build/ngprogress.min.js"></script>
+    <script src="bower_components/ui-select/dist/select.min.js"></script>
+    <script src="bower_components/checklist-model/checklist-model.js"></script>
+    <script src="bower_components/angular-socket-io/socket.min.js"></script>
+    <script src="bower_components/angular-promise-buttons/dist/angular-promise-buttons.min.js"></script>
+    <script src="bower_components/promise-tracker/promise-tracker.js"></script>
+    <script src="bower_components/promise-tracker/promise-tracker-http-interceptor.js"></script>
+    <script src="bower_components/ngstorage/ngStorage.min.js"></script>
+    <script src="bower_components/angular-confirm-modal/angular-confirm.min.js"></script>
+    <script src="bower_components/angular-toastr/dist/angular-toastr.tpls.js"></script>
+    <script src="bower_components/viewerjs/dist/viewer.min.js"></script>
+    <script src="bower_components/ng-tags-input/ng-tags-input.min.js"></script>
+    <script src="bower_components/angular-base64-upload/src/angular-base64-upload.js"></script>
+    <script src="bower_components/ngUpload/ng-upload.min.js"></script>
+    <script src="bower_components/angular-ui-tree/dist/angular-ui-tree.min.js"></script>
+    <script src="bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.js"></script>
+    <script src="bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.templates.js"></script>
+    <script src="bower_components/lrz/dist/lrz.bundle.js"></script>
+    <script src="bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="bower_components/ng-table-to-csv/dist/ng-table-to-csv.js"></script>
+    <script src="bower_components/angular-ui-calendar/src/calendar.js"></script>
+    <script src="bower_components/fullcalendar/dist/fullcalendar.min.js"></script>
+    <script src="bower_components/fullcalendar/dist/gcal.js"></script>
+    <script src="bower_components/angular-xeditable/dist/js/xeditable.js"></script>
+    <script src="https://api.map.baidu.com/api?v=2.0&ak=RaGTyrbG7s6F6aHrAdjd4AWr8hA9wtpH"></script>
+
+    <!-- endbower -->
+    <!-- endbuild -->
+    <script src="assets/scripts/socket.io.min.js"></script>
+    <script src="assets/scripts/angular-busy.min.js"></script>
+    <script src="assets/scripts/echarts-all.min.js"></script>
+    <!-- build:js({.tmp,.}) scripts/scripts.js -->
+    <script src="app/scripts/app.js"></script>
+    <script src="app/scripts/config.js"></script>
+    <!--controller，自动生成并且压缩-->
+    <script src="app/scripts/controller.js"></script>
+    <!-- filters -->
+    <script src="app/scripts/filters/filter.js"></script>
+    <script src="app/scripts/services/service.js"></script>
+    <script src="app/scripts/directives/directive.js"></script>
+    <!--components start-->
+    <script src="app/components/sidenav/sidenavController.js"></script>
+    <script src="app/components/header/headerController.js"></script>
+    <!--components end-->
+
+    <script>
+    $(document).ready(function($) {
+        setTimeout(function() {
+            //MD风格初始化
+            $.material.init();
+        });
+    });
+    </script>
+</body>
+
+</html>

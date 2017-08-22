@@ -1,0 +1,470 @@
+<article ng-controller=" DevConfigController" class="DevConfig container-fluid">
+    <!-- 上部分-联动 -->
+    <form action="" method="POST" ng-enter="query()">
+        <!--中部-点击弹窗-->
+        <div class="button-first">
+            <button type="button" class="btn btn-raised btn-info" ng-click="add()">新增</button>
+        </div>
+    </form>
+
+
+    <!--下部-查询列表-->
+    <section class="row conPanelLeft">
+        <div class="DevConfigWrapper  col-lg-12">
+            <!-- 下部分 -->
+            <section>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-head">
+                        <tr class="active">
+                            <th>序号</th>
+                            <th>设备类型</th>
+                            <th>设备号</th>
+
+                            <th>品牌</th>
+
+
+                            <th>添加日期</th>
+                            <th>设备型号</th>
+                            <th>出厂日期</th>
+
+                            <th>保修期</th>
+                            <th>绑定状态</th>
+
+                            <th>单次最长运行时间(min)</th>
+                            <th>运行状态</th>
+                            <th>操作</th>
+
+
+                        </tr>
+                        </thead>
+
+                        <tbody ng-repeat="item in DevListData">
+                        <tr>
+                            <td>{{$index+1+(((PageIndex||1)-1)*PageSize)}}</td>
+                            <td>{{item.productInfoName==null?"--":item.productInfoName}}</td>
+                            <td>{{item.deviceIdentity==null?"--":item.deviceIdentity}}</td>
+
+                            <td>{{item.manufacturerName==null?"--":item.manufacturerName}}</td>
+
+                            <td>{{item.createTime==null?"--":item.createTime|date:'yyyy-MM-dd'}}</td>
+                            <td>{{item.model==null?"--":item.model}}</td>
+                            <td>{{item.productionDate==null?"--":item.productionDate|date:'yyyy-MM-dd'}}</td>
+
+
+                            <td>{{item.warrantyStartDate==null?"--":item.warrantyStartDate|date:'yyyy-MM-dd'}}<br>
+                                {{item.warrantyEndDate==null?"--":item.warrantyEndDate|date:'yyyy-MM-dd'}}
+                            </td>
+                            <td>{{item.bindStatusName==null?"--":item.bindStatusName}}</td>
+
+                            <td ng-if="item.onceTime=='0'">不限</td>
+                            <td ng-if="item.onceTime!='0'">{{item.onceTime==null?"--":item.onceTime}}</td>
+                            <td>{{item.useStatusName==null?"--":item.useStatusName}}</td>
+                            <td>
+                                <!--0：在线；1：离线；  2:使用中；-->
+                                <a ng-click="switchDevStatus(item)" class="pointer"
+                                   ng-if="item.onlineStatus!=undefined&&item.onlineStatus==0" ng-disabled="checklist"
+                                   confirm="确定下线吗？" confirm-title="状态切换" confirm-ok="确定"
+                                   confirm-cancel="取消">{{item.onlineStatusName}} </a>
+
+
+                                <a ng-click="switchDevStatus(item)" class="pointer"
+                                   ng-if="item.onlineStatus!=undefined&&item.onlineStatus==1" ng-disabled="checklist"
+                                   confirm="确定上线吗？" confirm-title="状态切换" confirm-ok="确定"
+                                   confirm-cancel="取消">{{item.onlineStatusName}}</a>
+
+
+                                <a ng-click="DevEdit(item)" class="pointer">编辑</a>
+                                <a ng-click="DevDel(item)" class="pointer"
+                                   ng-disabled="checklist" confirm="确定删除吗？" confirm-title="删除" confirm-ok="确定"
+                                   confirm-cancel="取消">删除</a>
+                            </td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div ng-if="!DevListData.length" class="noData ng-scope">暂无数据</div>
+                </div>
+                <div cg-busy="DevListPromise"></div>
+
+
+                <div class="row">
+                    <div class="col-md-9">
+                        <select class="page-size" ng-model="PageSize" ng-change="pageChanged()">
+                            <option value="20" ng-selected="true">每页显示20条</option>
+                            <option value="40">每页显示40条</option>
+                            <option value="60">每页显示60条</option>
+                            <option value="80">每页显示80条</option>
+                            <option value="100">每页显示100条</option>
+                        </select>
+                        <uib-pagination ng-model="PageIndex" ng-change="pageChanged()" total-items="DevListDataCount"
+                                        max-size="maxSize" items-per-page="PageSize" class="pagination-sm"
+                                        boundary-link-numbers="true" rotate="false" previous-text="上一页"
+                                        next-text="下一页"></uib-pagination>
+                    </div>
+                    <div class="col-md-1"><span class="totalTxt">总计：{{totalCount==null?"--":totalCount }} 条</span>
+                    </div>
+                    <div class="col-md-2 text-right">
+                        <span>跳转到</span>
+                        <input type="text" onafterpaste="this.value=this.value.replace(/\D/g,'')"
+                               onkeyup="this.value=this.value.replace(/\D/g,'')" ng-model="toPageNum"
+                               class="variant-form-control">
+                        <button ng-click="setPage()" class="to-page-num">确定</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </section>
+
+</article>
+
+
+<!--蒙版-弹窗1-增加设备-->
+<script type="text/ng-template" id="DevViewAdd.html">
+    <div class="modal-header">
+        <h4>新增设备</h4>
+    </div>
+    <div class="modal-body">
+        <form name="DevViewAddForm">
+            <section class="row">
+                <div class="form-group col-md-12">
+                    <label ng-click="getDeviceKind($item)" class="col-md-3 text-right control-label">设备类型：</label>
+                    <div class="col-md-9">
+                        <!--后台对应的字段-->
+                        <ui-select ng-model="data.productInfoId" theme="bootstrap"
+                                   on-select="getDeviceKind($item)" name="">
+                            <ui-select-match allow-clear="true" >{{$select.selected.name}}
+                            </ui-select-match>
+                            <ui-select-choices
+                                    repeat="item.id as item in deviceKind | orderBy:'id' | filter: $select.search.name">
+                                <span ng-bind-html="item.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label">设备厂商：</label>
+                    <!--根据设备类型的值去决定哪部分显示-->
+                    <!--跑步机-->
+                    <div class="col-md-9" ng-if="data.productInfoId==0 ||data.productInfoId==undefined">
+                        <ui-select ng-model="data.manufacturer" theme="bootstrap" on-select="getDeviceKind($item)"
+                                   name="" ng-disabled="data.productInfoId==undefined?true:false">
+                            <ui-select-match allow-clear="true" >{{$select.selected.name}}
+                            </ui-select-match>
+                            <ui-select-choices
+                                    repeat="item.id as item in deviceTradeT1 | orderBy:'id' | filter: $select.search.name">
+                                <span ng-bind-html="item.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+
+                        </ui-select>
+                    </div>
+
+                    <!--非跑步机-->
+                    <div class="col-md-9" ng-if="data.productInfoId==1||data.productInfoId==2">
+                        <ui-select ng-model="data.manufacturer" theme="bootstrap" on-select="getDeviceTradeT2($item)"
+                                   name="" ng-disabled="data.productInfoId==undefined?true:false">
+                            <ui-select-match allow-clear="true" >{{$select.selected.name}}
+                            </ui-select-match>
+                            <ui-select-choices
+                                    repeat="item.id as item in deviceTradeT2 | orderBy:'id' | filter: $select.search.name">
+                                <span ng-bind-html="item.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+
+                        </ui-select>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label">设备编码：</label>
+                    <div class="col-md-9">
+                        <input type="text" ng-pattern="PATTERN_CONFIG.numAndCha" class="form-control"
+                               ng-model="data.deviceIdentity" name="deviceIdentity"  required
+                               maxlength="20" >
+                    </div>
+                    <div ng-show="DevViewAddForm.deviceIdentity.$error.pattern" class="col-lg-12">
+                        <label class="col-md-offset-3 col-md-9" style="color:red">只能输入数字、字母、下划线</label>
+                    </div>
+
+                </div>
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label">设备型号：</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control " ng-pattern="PATTERN_CONFIG.numAndCha"
+                               ng-model="data.model" name="model"  required
+                               maxlength="20">
+                    </div>
+                    <div ng-show="DevViewAddForm.model.$error.pattern" class="col-lg-12">
+                        <label class="col-md-offset-3 col-md-9" style="color:red">只能输入数字、字母、下划线</label>
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label">出厂日期：</label>
+                    <div class="col-md-4">
+                        <div class="col-md-12">
+                            <div class="dropdown">
+                                <input type="text" class="form-control" ng-model="data.productionDate"
+                                       datetime-transform
+                                       format="yyyy-MM-dd" name="productionDate" disabled>
+                                <i class="glyphicon glyphicon-calendar rili-icon dropdown-toggle" id="" role="button"
+                                   data-toggle="dropdown"></i>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="beginTime">
+                                    <datetimepicker ng-model="data.productionDate"
+                                                    data-datetimepicker-config="{dropdownSelector: '#beginTime',startView:'day',minView:'day'}"
+                                                    on-set-time="restRadio()"></datetimepicker>
+                                </ul>
+                            </div>
+                        </div>
+                        <input type="text" name="productionDate"
+                               value="{{data.todayStartTime?data.todayStartTime:tools.dateToTimeStamp(data.productionDate)}}"
+                               class="exportNone">
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label">保修期：</label>
+                    <div class="col-md-4">
+                        <div class="dropdown">
+                            <input type="text" class="form-control" ng-model="data.beginTime" datetime-transform
+                                   format="yyyy-MM-dd" name="beginTime" disabled>
+                            <i class="glyphicon glyphicon-calendar rili-icon dropdown-toggle" id="beginTime"
+                               role="button"
+                               data-toggle="dropdown"></i>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="beginTime">
+                                <datetimepicker ng-model="data.beginTime"
+                                                data-datetimepicker-config="{dropdownSelector: '#beginTime',startView:'day',minView:'day'}"
+                                                on-set-time="restRadio()"></datetimepicker>
+                            </ul>
+                        </div>
+                    </div>
+                    <input type="text" name="beginTime"
+                           value="{{data.todayStartTime?data.todayStartTime:tools.dateToTimeStamp(data.beginTime)}}"
+                           class="exportNone">
+                    <div class="col-md-4">
+                        <div class="dropdown">
+                            <input type="text" class="form-control" ng-model="data.endTime" datetime-transform
+                                   format="yyyy-MM-dd" name="endTime" disabled>
+                            <i class="glyphicon glyphicon-calendar rili-icon dropdown-toggle" id="endTime" role="button"
+                               data-toggle="dropdown"></i>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="endTime">
+                                <datetimepicker ng-model="data.endTime"
+                                                data-datetimepicker-config="{dropdownSelector: '#endTime',startView:'day',minView:'day'}"
+                                                on-set-time="restRadio()"></datetimepicker>
+                            </ul>
+                        </div>
+                    </div>
+                    <input type="text" name="endTime"
+                           value="{{data.todayEndTime?data.todayEndTime:tools.dateToTimeStamp(data.endTime)}}"
+                           class="exportNone">
+                </div>
+
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label">单次运行最长时间：</label>
+                    <div class="col-md-4">
+                        <input type="text" class="singleUseTime form-control ng-pristine ng-untouched ng-valid ng-empty"
+                               ng-model="data.onceTime" required
+                               maxlength="4"
+                               oninput="if(value[0]=='-'||value[0]=='0'){value=value.slice(0,0)}else{value=value.replace(/\D/g,'')}"
+                               onafterpaste="if(value[0]=='-'||value[0]=='0'){value=value.slice(0,0)}else{value=value.replace(/\D/g,'')}">
+                        <span ng-bind="txtError" style="color: red;line-height: 52px;margin-left: 15px;"></span>
+                    </div>
+                    <label class="col-md-1 control-label">分钟</label>
+                    <div class="col-md-2 memberAdd">
+                        <input type="checkbox" ng-click="singleUseTime()">&nbsp;不限
+                    </div>
+                </div>
+
+            </section>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn withripple btn-raised btn-primary" type="button" ng-click="save()"
+                            ng-disabled="!DevViewAddForm.$valid">确定
+                    </button>
+                    <button class="btn withripple btn-raised btn-warning" type="button" ng-click="close()">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</script>
+
+<!--蒙版-弹窗1-编辑设备-->
+<script type="text/ng-template" id="DevViewEdit.html">
+    <div class="modal-header">
+        <h4>编辑设备</h4>
+    </div>
+    <div class="modal-body">
+        <form name="DevViewEditForm">
+            <section class="row">
+                <div class="form-group col-md-12">
+                    <label ng-click="getDeviceKind($item)" class="col-md-3 text-right control-label">设备类型：</label>
+                    <div class="col-md-9">
+                        <ui-select ng-model="data.productInfoId" theme="bootstrap"
+                                   on-select="getDeviceKind($item)" name="">
+                            <ui-select-match allow-clear="true" >{{$select.selected.name}}
+                            </ui-select-match>
+                            <ui-select-choices
+                                    repeat="item.id as item in deviceKind | orderBy:'id' | filter: $select.search.name">
+                                <span ng-bind-html="item.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label">设备厂商：</label>
+                    <!--根据设备类型的值去决定哪部分显示-->
+                    <!--跑步机-->
+                    <div class="col-md-9" ng-if="data.productInfoId==0">
+                        <ui-select ng-model="data.manufacturer" theme="bootstrap" on-select="getDeviceKind($item)"
+                                   name="">
+                            <ui-select-match allow-clear="true" >{{$select.selected.name}}
+                            </ui-select-match>
+                            <ui-select-choices
+                                    repeat="item.id as item in deviceTradeT1 | orderBy:'id' | filter: $select.search.name">
+                                <span ng-bind-html="item.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+
+                        </ui-select>
+                    </div>
+
+                    <!--非跑步机-->
+                    <div class="col-md-9" ng-if="data.productInfoId==1||data.productInfoId==2">
+                        <ui-select ng-model="data.manufacturer" theme="bootstrap" on-select="getDeviceTradeT2($item)"
+                                   name="">
+                            <ui-select-match allow-clear="true" >{{$select.selected.name}}
+                            </ui-select-match>
+                            <ui-select-choices
+                                    repeat="item.id as item in deviceTradeT2 | orderBy:'id' | filter: $select.search.name">
+                                <span ng-bind-html="item.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+
+                        </ui-select>
+                    </div>
+                </div>
+
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label">设备编码：</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" ng-pattern="PATTERN_CONFIG.numAndCha"
+                               ng-model="data.deviceIdentity" name="deviceIdentity"  required
+                               maxlength="20">
+                    </div>
+                    <div ng-show="DevViewEditForm.deviceIdentity.$error.pattern" class="col-lg-12">
+                        <label class="col-md-offset-3 col-md-9" style="color:red">只能输入数字、字母、下划线</label>
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label">设备型号：</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" ng-pattern="PATTERN_CONFIG.numAndCha"
+                               ng-model="data.model" name="model"  required
+                               maxlength="20">
+                    </div>
+                    <div ng-show="DevViewEditForm.model.$error.pattern" class="col-lg-12">
+                        <label class="col-md-offset-3 col-md-9" style="color:red">只能输入数字、字母、下划线</label>
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label">投入使用日期：</label>
+                    <div class="col-md-4">
+                        <div class="col-md-12">
+                            <div class="dropdown">
+                                <input type="text" class="form-control" ng-model="data.productionDate"
+                                       datetime-transform
+                                       format="yyyy-MM-dd" name="productionDate" disabled>
+                                <i class="glyphicon glyphicon-calendar rili-icon dropdown-toggle" id="" role="button"
+                                   data-toggle="dropdown"></i>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="beginTime">
+                                    <datetimepicker ng-model="data.productionDate"
+                                                    data-datetimepicker-config="{dropdownSelector: '#beginTime',startView:'day',minView:'day'}"
+                                                    on-set-time="restRadio()"></datetimepicker>
+                                </ul>
+                            </div>
+                        </div>
+                        <input type="text" name="productionDate"
+                               value="{{data.todayStartTime?data.todayStartTime:tools.dateToTimeStamp(data.productionDate)}}"
+                               class="exportNone">
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label">保修期：</label>
+                        <div class="col-md-4">
+                            <div class="dropdown">
+                                <input type="text" class="form-control" ng-model="data.warrantyStartDate"
+                                       datetime-transform
+                                       format="yyyy-MM-dd" name="warrantyStartDate" disabled>
+                                <i class="glyphicon glyphicon-calendar rili-icon dropdown-toggle" id="beginTime"
+                                   role="button"
+                                   data-toggle="dropdown"></i>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="beginTime">
+                                    <datetimepicker ng-model="data.warrantyStartDate"
+                                                    data-datetimepicker-config="{dropdownSelector: '#beginTime',startView:'day',minView:'day'}"
+                                                    on-set-time="restRadio()"></datetimepicker>
+                                </ul>
+                            </div>
+                        </div>
+                        <input type="text" name="warrantyStartDate"
+                               value="{{data.todayStartTime?data.todayStartTime:tools.dateToTimeStamp(data.warrantyStartDate)}}"
+                               class="exportNone">
+                        <div class="col-md-4">
+                            <div class="dropdown">
+                                <input type="text" class="form-control" ng-model="data.warrantyEndDate"
+                                       datetime-transform
+                                       format="yyyy-MM-dd" name="warrantyEndDate" disabled>
+                                <i class="glyphicon glyphicon-calendar rili-icon dropdown-toggle" id="endTime"
+                                   role="button"
+                                   data-toggle="dropdown"></i>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="endTime">
+                                    <datetimepicker ng-model="data.warrantyEndDate"
+                                                    data-datetimepicker-config="{dropdownSelector: '#endTime',startView:'day',minView:'day'}"
+                                                    on-set-time="restRadio()"></datetimepicker>
+                                </ul>
+                            </div>
+                        </div>
+                        <input type="text" name="warrantyEndDate"
+                               value="{{data.todayEndTime?data.todayEndTime:tools.dateToTimeStamp(data.warrantyEndDate)}}"
+                               class="exportNone">
+
+
+                    <div class="form-group col-md-12">
+                        <label class="col-md-3 text-right control-label">单次运行最长时间：</label>
+                        <div class="col-md-4">
+                            <input type="text"
+                                   class="singleUseTime form-control "
+                                   ng-model="data.onceTime" required
+                                   maxlength="4"
+                                   oninput="if(value[0]=='-'||value[0]=='0'){value=value.slice(0,0)}else{value=value.replace(/\D/g,'')}"
+                                   onafterpaste="if(value[0]=='-'||value[0]=='0'){value=value.slice(0,0)}else{value=value.replace(/\D/g,'')}">
+                            <span ng-bind="txtError" style="color: red;line-height: 52px;margin-left: 15px;"></span>
+                        </div>
+                        <label class="col-md-1  control-label">分钟</label>
+                        <div class="col-md-2 memberAdd">
+                            <input type="checkbox" ng-click="singleUseTime()">&nbsp;不限
+                        </div>
+                    </div>
+
+
+            </section>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn withripple btn-raised btn-primary" type="button" ng-click="saveDevEdit()"
+                            ng-disabled="!DevViewEditForm.$valid">确定
+                    </button>
+                    <button class="btn withripple btn-raised btn-warning" type="button" ng-click="close()">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</script>

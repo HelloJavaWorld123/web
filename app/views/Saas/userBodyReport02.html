@@ -1,0 +1,323 @@
+<article ng-controller="userBodyReport02Controller" class="userBodyReport container-fluid">
+    <!--基本信息-->
+    <div class="col-md-12" style="padding: 0;"><h3>{{item.name==null?"--":item.name }}的人体成分分析报告</h3></div>
+    <table class="baseInfo col-md-12" border="" cellspacing="" cellpadding="">
+        <tbody>
+        <tr>
+            <td>测试时间</td>
+            <td>{{item.testDate==null?"--":item.testDate }}</td>
+            <td>健康评分</td>
+            <td>{{item.score==null?"--":item.score }}</td>
+            <td>身体年龄</td>
+            <td>{{item.bodyAge==null?"--":item.bodyAge }}</td>
+            <td>腰围</td>
+            <td>{{item.xxx==null?"--":item.xxx }}--</td>
+            <td>性别</td>
+            <td ng-if="item.sex==0">女</td>
+            <td ng-if="item.sex==1">男</td>
+        </tr>
+        <tr>
+            <td>编号</td>
+            <td>{{item.testID==null?"--":item.testID }}</td>
+            <td>昵称</td>
+            <td>{{item.name==null?"--":item.name }}</td>
+            <td>电话</td>
+            <td>{{item.phone==null?"--":item.phone }}</td>
+            <td>身高</td>
+            <td>{{item.height==null?"--":item.height }}</td>
+            <td></td>
+            <td></td>
+
+        </tr>
+        <tr>
+            <td>实际年龄</td>
+            <td>{{item.age==null?"--":item.age }}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
+    <!--第一排-->
+    <div class="row">
+        <div class="col-md-12"><h3>身体成分分析（单位：KG）</h3></div>
+        <div class="col-md-6 ">
+            <table class="baseInfo col-md-12" border="" cellspacing="" cellpadding="">
+                <thead class="table-head">
+                <tr class="active">
+                    <th>成分</th>
+                    <th>值</th>
+                    <th>正常范围</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>总水分</td>
+                    <td>{{item.water==null?"--":item.water }}</td>
+                    <td>{{item.waterRange==null?"--":item.waterRange }}</td>
+                </tr>
+                <tr>
+                    <td>蛋白质</td>
+                    <td>{{item.protein==null?"--":item.protein }}</td>
+                    <td>{{item.proteinRange==null?"--":item.proteinRange}}</td>
+                </tr>
+                <tr>
+                    <td>无机盐</td>
+                    <td>{{item.mineral==null?"--":item.mineral }}</td>
+                    <td>{{item.mineralRange==null?"--":item.mineralRange }}</td>
+                </tr>
+                <tr>
+                    <td>体脂肪</td>
+                    <td>{{item.fat==null?"--":item.fat }}</td>
+                    <td>{{item.fatRange==null?"--":item.fatRange }}</td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="baseInfo col-md-12" border="" cellspacing="cellspacing" cellpadding="cellpadding">
+                <tbody>
+                <tr>
+                    <td>体重（KG）</td>
+                    <td>{{item.weight==null?"--":item.weight }}</td>
+                    <td>去脂体重（KG）</td>
+                    <td>未知</td>
+                    <td>肌肉（KG）</td>
+                    <td>{{item.muscle==null?"--":item.muscle }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <table class="baseInfo col-md-12" border="" cellspacing="cellspacing" cellpadding="cellpadding">
+                <tbody>
+                <tr>
+                    <td>体型判定</td>
+                    <td>无脂肪无体重型</td>
+                </tr>
+                </tbody>
+            </table>
+            <h3 class=col-md-12>肌肉脂肪分析：</h3>
+            <table class="baseInfo col-md-12" border="" cellspacing="" cellpadding="">
+                <thead class="table-head">
+                <tr class="active">
+                    <th>分析项</th>
+                    <th>测量值</th>
+                    <th>结果</th>
+                    <th>正常范围</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>体重</td>
+                    <td>{{item.weight==null?"--":item.weight }}</td>
+                    <td>无</td>
+                    <td>{{item.weightRange==null?"--":item.weightRange }}</td>
+                </tr>
+                <tr>
+                    <td>骨骼肌肉量</td>
+                    <td>{{item.weight==null?"--":item.smm }}</td>
+                    <td>无</td>
+                    <td>{{item.smmRange==null?"--":item.smmRange }}</td>
+                </tr>
+                <tr>
+                    <td>体脂肪量</td>
+                    <td>{{item.fat==null?"--":item.fat }}</td>
+                    <td>无</td>
+                    <td>{{item.fatRange==null?"--":item.fatRange }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--第二排-->
+    <div class="row">
+        <div class="col-md-6 bodyElement2">
+            <h3 class=col-md-12>肥胖分析：</h3>
+            <table class="baseInfo col-md-12" border="" cellspacing="cellspacing" cellpadding="cellpadding">
+                <thead class="table-head">
+                <tr class="active">
+                    <th>测试项</th>
+                    <th>测量值</th>
+                    <th>结果（无、正常、高）</th>
+                    <th>正常范围</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>身体质量指数 KG/m²</td>
+                    <td>{{item.bmi==null?"--":item.bmi }}</td>
+                    <td>无</td>
+                    <td>{{item.bmiRange==null?"--":item.bmiRange }}</td>
+                </tr>
+                <tr>
+                    <td>脂肪百分比</td>
+                    <td>{{item.pbf==null?"--":item.pbf }}</td>
+                    <td>无</td>
+                    <td>{{item.pbfRange==null?"--":item.pbfRange }}</td>
+                </tr>
+                <tr>
+                    <td>腰臀比</td>
+                    <td>{{item.whr==null?"--":item.whr }}</td>
+                    <td>无</td>
+                    <td>{{item.whrRange==null?"--":item.whrRange }}</td>
+                </tr>
+                <tr>
+                    <td>内脏脂肪阶段 cm²</td>
+                    <td>{{item.vfa==null?"--":item.vfa }}</td>
+                    <td>高</td>
+                    <td>{{item.vfaRange==null?"--":item.vfaRange }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <h3 class=col-md-12>体重控制：</h3>
+            <table class="baseInfo col-md-12" border="" cellspacing="" cellpadding="">
+                <tbody>
+                <tr>
+                    <td>目标体重 KG</td>
+                    <td>{{item.standardWeight==null?"--":item.standardWeight }}</td>
+                </tr>
+                <tr>
+                    <td>体重控制 KG</td>
+                    <td>{{item.weightControl==null?"--":item.weightControl }}</td>
+                </tr>
+                <tr>
+                    <td>肌肉控制 KG</td>
+                    <td>{{item.fatControl==null?"--":item.fatControl }}</td>
+                </tr>
+                <tr>
+                    <td>脂肪控制 KG</td>
+                    <td>{{item.fatControl==null?"--":item.fatControl }}</td>
+                </tr>
+                <tr>
+                    <td>基础代谢 Kcal</td>
+                    <td>{{item.bmr==null?"--":item.bmr }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--第三排-->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="col-md-6" style="padding: 0;">
+                <h3 class=col-md-12>节段肌肉分析（单位：KG）：</h3>
+                <table class="baseInfo col-md-12" border="" cellspacing="" cellpadding="">
+                    <tbody>
+                    <tr>
+                        <td>左臂</td>
+                        <td>{{item.laMuscle==null?"--":item.laMuscle }}</td>
+                    </tr>
+                    <tr>
+                        <td>右臂</td>
+                        <td>{{item.raMuscle==null?"--":item.raMuscle }}</td>
+                    </tr>
+                    <tr>
+                        <td>躯干</td>
+                        <td>{{item.trMuscle==null?"--":item.trMuscle }}</td>
+                    </tr>
+                    <tr>
+                        <td>左腿</td>
+                        <td>{{item.llMuscle==null?"--":item.llMuscle }}</td>
+                    </tr>
+                    <tr>
+                        <td>右腿</td>
+                        <td>{{item.rlMuscle==null?"--":item.rlMuscle }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <h3 class=col-md-12>肌肉评估：</h3>
+                <table class="baseInfo col-md-12" border="" cellspacing="" cellpadding="">
+                    <tbody>
+                    <tr>
+                        <td>上肢均衡</td>
+                        <td>无</td>
+                    </tr>
+                    <tr>
+                        <td>下肢均衡</td>
+                        <td>无</td>
+                    </tr>
+                    <tr>
+                        <td>上肢发达</td>
+                        <td>无</td>
+                    </tr>
+                    <tr>
+                        <td>下肢发达</td>
+                        <td>无</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-6" style="padding: 0;">
+            <div class="col-md-6">
+                <h3 class=col-md-12>营养评估：</h3>
+                <table class="baseInfo col-md-12" border="" cellspacing="" cellpadding="">
+                    <tbody>
+                    <tr>
+                        <td>蛋白质</td>
+                        <td>无</td>
+                    </tr>
+                    <tr>
+                        <td>无机盐</td>
+                        <td>无</td>
+                    </tr>
+                    <tr>
+                        <td>体脂比</td>
+                        <td>无</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <h3 class=col-md-12>其他：</h3>
+                <table class="baseInfo col-md-12" border="" cellspacing="" cellpadding="">
+                    <thead class="table-head">
+                    <tr class="active">
+                        <th></th>
+                        <th>RA</th>
+                        <th>LA</th>
+                        <th>TR</th>
+                        <th>RL</th>
+                        <th>LL</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>5KHZ</td>
+                        <td>无</td>
+                        <td>无</td>
+                        <td>无</td>
+                        <td>无</td>
+                        <td>无</td>
+                    </tr>
+                    <tr>
+                        <td>50KHZ</td>
+                        <td>无</td>
+                        <td>无</td>
+                        <td>无</td>
+                        <td>无</td>
+                        <td>无</td>
+                    </tr>
+                    <tr>
+                        <td>500KHZ</td>
+                        <td>无</td>
+                        <td>无</td>
+                        <td>无</td>
+                        <td>无</td>
+                        <td>无</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    </div>
+</article>

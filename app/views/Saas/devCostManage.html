@@ -1,0 +1,366 @@
+<article ng-controller="devCostManageController" class="complain container-fluid">
+    <section class="row">
+        <div class="devCostManageWrapper col-lg-12">
+            <!--上部-查询表单-->
+            <form action="{{api.devCostExportExcel}}" method="POST" ng-enter="query()" name="devCostDataFormName" id="devCost">
+                <section class="row">
+
+
+                    <div class="form-group col-md-3">
+                        <label class="col-md-3 control-label">设备类型：</label>
+                        <div class="col-md-8">
+                            <ui-select ng-model="data.productId" theme="bootstrap" on-select="getDeviceKind($item)">
+                                <ui-select-match allow-clear="true" placeholder="全部">{{$select.selected.name}}</ui-select-match>
+
+
+                                <ui-select-choices
+                                        repeat="item.id as item in deviceKind | orderBy:'id' | filter: $select.search.name">
+                                    <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                            <input type="hidden"  value="{{data.productId}}" name="productId">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group col-md-4">
+                        <label class="col-md-3 text-right control-label" >城市：</label>
+                        <div class="col-md-4">
+                            <div class="col-md-12">
+                                <ui-select ng-model="data.provinceId" theme="bootstrap" on-select="getCitys($item.id)" name="provinceId">
+                                    <ui-select-match allow-clear="true" placeholder="省">{{$select.selected.name}}
+                                    </ui-select-match>
+                                    <ui-select-choices
+                                            repeat="item.id as item in provinces | orderBy:'id' | filter: $select.search.id">
+                                        <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                                <input type="hidden"  value="{{data.provinceId}}" name="provinceId">
+                            </div>
+                        </div>
+                        <div class=" col-md-4">
+                            <div class="col-md-12">
+                                <ui-select ng-model="data.cityId" theme="bootstrap" on-select="getCountys($item.id)" ng-disabled="data.provinceId==undefined?true:false" name="cityId">
+                                    <ui-select-match allow-clear="true" placeholder="市">{{$select.selected.name}}
+                                    </ui-select-match>
+                                    <ui-select-choices
+                                            repeat="item.id as item in citys | orderBy:'id' | filter: $select.search.id">
+                                        <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                                <input type="hidden"  value="{{data.cityId}}" name="cityId">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="button-first col-md-3 memberAdd">
+                        <button type="button" class="btn btn-raised btn-info " ng-click="query()">搜索</button>
+                        <button type="button" class="btn btn-raised btn-default" ng-click="reset()">重置</button>
+                        <button type="submit" class="btn btn-raised btn-primary" >导出</button>
+                    </div>
+
+
+                </section>
+
+
+
+
+
+            </form>
+            <!--中部-新建设备价格-->
+            <div class="button-first">
+                <button type="button" class="btn btn-raised btn-info" ng-click="addDevCost()">新建设备价格</button>
+            </div>
+            <!--下部-查询列表-->
+            <section class="row conPanelLeft">
+                <div class="gymConfigWrapper  col-lg-12">
+                    <!-- 下部分 -->
+                    <section>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-head">
+                                <tr class="active">
+                                    <th>序号</th>
+                                    <th>设备类型</th>
+                                    <th>城市</th>
+
+                                    <th>价格(元)/分钟</th>
+                                    <th>应用</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+
+                                <tbody ng-repeat="item in devCostListData">
+                                <tr>
+                                    <td>{{$index+1+(((PageIndex||1)-1)*PageSize)}}</td>
+                                    <td>{{item.deviceName}}</td>
+
+                                    <td>{{item.deviceScopeName}}</td>
+                                    <td>{{item.devicePrice}}</td>
+
+                                    <td>
+                                        <a ng-click="deviceUseSwitch(item)"  class="pointer" ng-if="item.deviceUse!=undefined&&item.deviceUse==0">应用</a>
+                                        <a ng-click="deviceUseSwitch(item)"  class="pointer" ng-if="item.deviceUse!=undefined&&item.deviceUse==1">取消应用</a>
+                                    </td>
+
+
+                                    <td>
+                                        <!--0.修改 1.删除 -->
+                                        <a ng-click="editDevCost(item)" class="pointer">修改</a>
+
+                                        <a ng-click="deleteDevCost(item)"  class="pointer" ng-disabled="checklist" confirm="确定删除吗？" confirm-title="删除" confirm-ok="确定" confirm-cancel="取消">删除</a>
+
+
+
+
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div ng-if="!devCostListData.length" class="noData ng-scope">暂无数据</div>
+                        </div>
+                        <div cg-busy="gymListPromise"></div>
+
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                <select class="page-size" ng-model="PageSize" ng-change="pageChanged()">
+                                    <option value="20" ng-selected="true">每页显示20条</option>
+                                    <option value="40">每页显示40条</option>
+                                    <option value="60">每页显示60条</option>
+                                    <option value="80">每页显示80条</option>
+                                    <option value="100">每页显示100条</option>
+                                </select>
+                                <uib-pagination ng-model="PageIndex" ng-change="pageChanged()" total-items="devCostListDataCount"
+                                                max-size="maxSize" items-per-page="PageSize" class="pagination-sm"
+                                                boundary-link-numbers="true" rotate="false" previous-text="上一页"
+                                                next-text="下一页"></uib-pagination>
+                            </div>
+                            <div class="col-md-1"><span class="totalTxt">总计：{{devCostListDataCount==null?"--":devCostListDataCount }} 条</span></div>
+                            <div class="col-md-3 text-right">
+                                <span>跳转到</span>
+                                <input type="text" onafterpaste="this.value=this.value.replace(/\D/g,'')"
+                                       onkeyup="this.value=this.value.replace(/\D/g,'')" ng-model="toPageNum"
+                                       class="variant-form-control">
+                                <button ng-click="setPage()" class="to-page-num">确定</button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+            </section>
+        </div>
+
+
+    </section>
+</article>
+
+
+
+<!--蒙版-弹窗1-新建设备费用-->
+<script type="text/ng-template" id="devCostViewAdd.html">
+    <div class="modal-header">
+        <h4>新建设备价格</h4>
+    </div>
+    <div class="modal-body">
+        <form name="gymViewAddForm">
+            <section class="row">
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label" >设备类型：</label>
+                    <div class="col-md-9">
+                        <ui-select ng-model="data.productId" theme="bootstrap" on-select="getDeviceKind($item)" required>
+                            <ui-select-match allow-clear="true" placeholder="全部">{{$select.selected.name}}</ui-select-match>
+
+
+                            <ui-select-choices
+                                    repeat="item.id as item in deviceKind | orderBy:'id' | filter: $select.search.name">
+                                <span ng-bind-html="item.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label" >价格(元)/分钟：</label>
+                    <div class="col-md-9">
+                        <input type="number" class="form-control" ng-model="data.devicePrice"  required oninput="if(value[0]=='-'||value[0]=='.'){value=value.slice(0,0)}else if(value.split('.')[1]&&value.split('.')[1].length>2||value>100.00){value=value.slice(0,value.length-1)}
+" onafterpaste="if(value[0]=='-'||value[0]=='.'){value=value.slice(0,0)}else if(value.split('.')[1]&&value.split('.')[1].length>2||value>10000.00){value=value.slice(0,value.length-1)}">
+                    </div>
+                </div>
+
+
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 control-label text-right">选择城市：</label>
+                    <div class="col-md-9">
+                        <section class="row">
+                            <div class="form-group col-md-4">
+                                <div class="col-md-12">
+                                    <ui-select ng-model="data.provinceId" theme="bootstrap" on-select="getCitys($item.id)" name="provinceId" required>
+                                        <ui-select-match allow-clear="true" placeholder="省">{{$select.selected.name}}
+                                        </ui-select-match>
+                                        <ui-select-choices
+                                                repeat="item.id as item in provinces | orderBy:'id' | filter: $select.search.id">
+                                            <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <div class="col-md-12">
+                                    <ui-select ng-model="data.cityId" theme="bootstrap" on-select="getCountys($item.id)"
+                                               name="cityId" required>
+                                        <!--ng-disabled="data.provinceId==undefined?true:false"-->
+                                        <ui-select-match allow-clear="true" placeholder="市">{{$select.selected.name}}
+                                        </ui-select-match>
+                                        <ui-select-choices
+                                                repeat="item.id as item in citys | orderBy:'id' | filter: $select.search.id">
+                                            <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <button type="button" class="btn withripple btn-raised btn-primary chooseCity" ng-click="chooseCity()">确定</button>
+                            </div>
+
+
+                        </section>
+                    </div>
+
+
+                </div>
+
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label" >应用城市：</label>
+                    <div class="col-md-9" >
+                        <p class="cityTag"   ng-repeat="nameC in cityNameAll">{{nameC}}<span ng-click="delCity($index)">&times;</span></p>
+                    </div>
+                </div>
+
+
+
+            </section>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn withripple btn-raised btn-primary" type="button" ng-click="save()"
+                            ng-disabled="!gymViewAddForm.$valid">发布
+                    </button>
+                    <button class="btn withripple btn-raised btn-warning" type="button" ng-click="close()">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</script>
+
+
+
+
+<!--蒙版-弹窗2-修改设备费用-->
+<script type="text/ng-template" id="editDevCost.html">
+    <div class="modal-header">
+        <h4>修改设备价格</h4>
+    </div>
+    <div class="modal-body">
+        <form name="gymViewAddForm">
+            <section class="row">
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label" >设备类型：</label>
+                    <div class="col-md-9">
+                        <ui-select ng-model="data.productId" theme="bootstrap" on-select="getDeviceKind($item)" required>
+                            <ui-select-match allow-clear="true" placeholder="全部">{{$select.selected.name}}</ui-select-match>
+
+
+                            <ui-select-choices
+                                    repeat="item.id as item in deviceKind | orderBy:'id' | filter: $select.search.name">
+                                <span ng-bind-html="item.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label" >价格(元)/分钟：</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" ng-model="data.devicePrice" required oninput="if(value[0]=='-'||value[0]=='.'){value=value.slice(0,0)}else if(value.split('.')[1]&&value.split('.')[1].length>2||value>10000.00){value=value.slice(0,value.length-1)}
+" onafterpaste="if(value[0]=='-'||value[0]=='.'){value=value.slice(0,0)}else if(value.split('.')[1]&&value.split('.')[1].length>2||value>100.00){value=value.slice(0,value.length-1)}">
+                    </div>
+                </div>
+
+
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 control-label text-right">选择城市：</label>
+                    <div class="col-md-9">
+                        <section class="row">
+                            <div class="form-group col-md-4">
+                                <div class="col-md-12">
+                                    <ui-select ng-model="data.provinceId" theme="bootstrap" on-select="getCitys($item.id)" name="provinceId" required>
+                                        <ui-select-match allow-clear="true" placeholder="省">{{$select.selected.name}}
+                                        </ui-select-match>
+                                        <ui-select-choices
+                                                repeat="item.id as item in provinces | orderBy:'id' | filter: $select.search.id">
+                                            <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <div class="col-md-12">
+                                    <ui-select ng-model="data.cityId" theme="bootstrap" on-select="getCountys($item.id)"
+                                               name="cityId" required>
+                                        <!--ng-disabled="data.provinceId==undefined?true:false"-->
+                                        <ui-select-match allow-clear="true" placeholder="市">{{$select.selected.name}}
+                                        </ui-select-match>
+                                        <ui-select-choices
+                                                repeat="item.id as item in citys | orderBy:'id' | filter: $select.search.id">
+                                            <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <button type="button" class="btn withripple btn-raised btn-primary chooseCity" ng-click="chooseCity()">确定</button>
+                            </div>
+
+
+                        </section>
+                    </div>
+
+
+                </div>
+
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label" >应用城市：</label>
+                    <div class="col-md-9" >
+                        <p class="cityTag" ng-repeat="nameC in cityNameAll">{{nameC}}<span ng-click="delCity($index)">&times;</span></p>
+                    </div>
+                </div>
+
+
+
+            </section>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn withripple btn-raised btn-primary" type="button" ng-click="save()"
+                            ng-disabled="!gymViewAddForm.$valid">发布
+                    </button>
+                    <button class="btn withripple btn-raised btn-warning" type="button" ng-click="close()">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</script>

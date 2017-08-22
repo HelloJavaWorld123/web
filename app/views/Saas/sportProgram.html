@@ -1,0 +1,490 @@
+<article ng-controller=" sportProgramController" class="sportProgram container-fluid">
+    <!-- 上部分-联动 -->
+    <form action="{{api.SportProgramEportExcel}}" method="POST" ng-enter="query()">
+        <section class="row">
+            <div class="form-group col-md-3">
+                <label class="col-md-3 text-right control-label">方案名称：</label>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" ng-model="data.schemeName" name="schemeName" maxlength="20">
+                </div>
+            </div>
+            <div class="form-group col-md-3">
+                <label class="col-md-3 control-label">性别：</label>
+                <div class="col-md-8">
+                    <ui-select ng-model="data.sex" theme="bootstrap" on-select="getSexStatus($item)">
+                        <ui-select-match allow-clear="true" placeholder="全部">{{$select.selected.name}}
+                        </ui-select-match>
+
+
+                        <ui-select-choices
+                                repeat="item.sexId as item in sexArr | orderBy:'sexId' | filter: $select.search.name">
+                            <span ng-bind-html="item.name | highlight: $select.search"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <input type="hidden" name="sex" value="{{data.sex}}">
+            </div>
+            <div class="form-group col-md-3">
+                <label class="col-md-3 text-right control-label">BMI范围：</label>
+                <div class="col-md-8 ">
+                    <input type="number" ng-model="data.minBmi" class="form-control "
+                           style="width: 80px;display: inline;" name="minBmi">至
+                    <input type="number" ng-model="data.maxBmi" class="form-control"
+                           style="width: 80px;display: inline;" name="maxBmi">
+                </div>
+            </div>
+
+        </section>
+
+
+        <!--中部-点击弹窗-->
+        <div class="button-first">
+            <button type="button" class="btn btn-raised btn-primary" ng-click="query()">查询</button>
+            <button type="button" class="btn btn-raised btn-default" ng-click="reset()">重置</button>
+            <button type="button" class="btn btn-raised btn-info" ng-click="sportProgramAdd()">新增</button>
+            <button type="submit" class="btn btn-raised btn-primary">导出</button>
+        </div>
+
+
+    </form>
+
+
+    <!--下部-查询列表-->
+    <section class="row conPanelLeft">
+        <div class="gymConfigWrapper  col-lg-12">
+            <!-- 下部分 -->
+            <section>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-head">
+                        <tr class="active">
+                            <th>序号</th>
+                            <th>方案名称</th>
+                            <th>方案说明</th>
+
+                            <th>性别</th>
+                            <th>BMI</th>
+                            <th>阶段数</th>
+
+                            <th>总时长(min)</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody ng-repeat="item in sportProgramData">
+                        <tr>
+                            <td>{{$index+1+(((PageIndex||1)-1)*PageSize)}}</td>
+                            <td>{{item.schemeName==null?"--":item.schemeName}}</td>
+                            <td>{{item.description==null?"--":item.description}}</td>
+
+                            <td>{{item.sex==null?"--":item.sex}}</td>
+                            <td>{{item.minBmi==null?"--":item.minBmi}}～{{item.maxBmi==null?"--":item.maxBmi}}</td>
+                            <td>{{item.detailCount==null?"--":item.detailCount}}</td>
+
+                            <td>{{item.execTime==null?"--":item.execTime}}</td>
+                            <td>
+                                <a ng-click="sportProgramEdit(item)" class="pointer">编辑</a>
+                                <a ng-click="sportProgramDel(item)" class="pointer"
+                                   ng-disabled="checklist" confirm="确定删除吗？" confirm-title="删除" confirm-ok="确定"
+                                   confirm-cancel="取消">删除</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div ng-if="!sportProgramData.length" class="noData ng-scope">暂无数据</div>
+                </div>
+                <div cg-busy="sportProgramListPromise"></div>
+
+
+                <div class="row">
+                    <div class="col-md-9">
+                        <select class="page-size" ng-model="PageSize" ng-change="pageChanged()">
+                            <option value="20" ng-selected="true">每页显示20条</option>
+                            <option value="40">每页显示40条</option>
+                            <option value="60">每页显示60条</option>
+                            <option value="80">每页显示80条</option>
+                            <option value="100">每页显示100条</option>
+                        </select>
+                        <uib-pagination ng-model="PageIndex" ng-change="pageChanged()" total-items="totalCount"
+                                        max-size="maxSize" items-per-page="PageSize" class="pagination-sm"
+                                        boundary-link-numbers="true" rotate="false" previous-text="上一页"
+                                        next-text="下一页"></uib-pagination>
+                    </div>
+                    <div class="col-md-1"><span class="totalTxt">总计：{{totalCount==null?"--":totalCount }} 条</span>
+                    </div>
+                    <div class="col-md-2 text-right">
+                        <span>跳转到</span>
+                        <input type="text" onafterpaste="this.value=this.value.replace(/\D/g,'')"
+                               onkeyup="this.value=this.value.replace(/\D/g,'')" ng-model="toPageNum"
+                               class="variant-form-control">
+                        <button ng-click="setPage()" class="to-page-num">确定</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </section>
+</article>
+
+
+<!--蒙版-弹窗1-新增运动方案-->
+<script type="text/ng-template" id="sportProgramViewAdd.html">
+    <div class="modal-header">
+        <h4>新增运动方案</h4>
+    </div>
+    <div class="modal-body">
+        <form name="sportProgramViewAddForm" class="sportProgramViewAddForm" ng-submit="save()">
+            <section class="row">
+                <div class="form-group col-md-12">
+                    <label class="col-md-1 text-right control-label">名称：</label>
+                    <div class="col-md-11">
+                        <input type="text" class="form-control" ng-model="data.schemeName" required maxlength="20"
+                               placeholder="请输入方案名">
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <label class="col-md-1 text-right control-label">方案说明：</label>
+                    <div class="col-md-11">
+                        <input type="text" class="form-control" ng-model="data.description" required maxlength="50"
+                               placeholder="请输入方案说明">
+                    </div>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-1 text-right control-label">适合性别：</label>
+                    <div class="col-md-11" style="margin-top: 10px;">
+                        <input type="radio" ng-model="data.sex" name="sex" value="0" required>女
+                        <input type="radio" ng-model="data.sex" name="sex" value="1" required
+                               style="margin-left: 30px;">男
+                        <input type="radio" ng-model="data.sex" name="sex" value="2" required
+                               style="margin-left: 30px;">不限
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <label class="col-md-1 text-right control-label">BMI范围：</label>
+                    <div class="col-md-11 ">
+                        <input type="number" ng-model="data.minBmi" required class="form-control "
+                               style="width: 80px;display: inline;">至
+                        <input type="number" ng-model="data.maxBmi" required class="form-control "
+                               style="width: 80px;display: inline;">
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <label class="col-md-1 text-right control-label">BMI说明：</label>
+                    <div class="col-md-5">
+                        <table class="table table-hover">
+                            <thead class="table-head">
+                            <tr class="active ">
+                                <th class="col-md-3">中国参考标准</th>
+
+                                <th class="col-md-4">相关疾病发病的危险性</th>
+                            </tr>
+                            </thead>
+                            <!-- -->
+                            <tbody>
+                            <tr class="">
+                                <td class="form-group col-md-3">
+                                    < 18.5
+                                </td>
+                                <td class="form-group col-md-4">
+                                    低（但其他疾病危险性增加）
+                                </td>
+                            </tr>
+                            <tr class="">
+                                <td class="form-group col-md-3">
+                                    18.5 ~23.9
+                                </td>
+                                <td class="form-group col-md-4">
+                                    平均水平
+                                </td>
+                            </tr>
+                            <tr class="">
+                                <td class="form-group col-md-3">
+                                    24~26.9
+                                </td>
+                                <td class="form-group col-md-4">
+                                    增加
+                                </td>
+                            </tr>
+                            <tr class="">
+                                <td class="form-group col-md-3">
+                                    27~29.9
+                                </td>
+                                <td class="form-group col-md-4">
+                                    中度增加
+                                </td>
+                            </tr>
+                            <tr class="">
+                                <td class="form-group col-md-3">
+                                    ≥30
+                                </td>
+                                <td class="form-group col-md-4">
+                                    严重增加
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="form-group  col-md-12">
+                    <label class="col-md-1 text-right control-label">详情：</label>
+                    <div class="col-md-11">
+                        <button type="button" class="btn btn-raised btn-info" ng-click="sportStageAdd()">新增</button>
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="table-head">
+                                    <tr class="active ">
+                                        <th class="col-md-1">序号</th>
+                                        <th class="col-md-2">名称</th>
+                                        <th class="col-md-2">时间（min）</th>
+                                        <th class="col-md-2">速度（km/h）</th>
+                                        <th class="col-md-2">坡度（°）</th>
+                                        <th class="col-md-3">操作</th>
+
+                                    </tr>
+                                    </thead>
+                                    <!-- -->
+                                    <!--ng-repeat="data in sportStageData"-->
+                                    <tbody ng-repeat="data in sportStageData">
+                                    <tr class="">
+                                        <td class="form-group col-md-1" id="sportStageIndex">
+                                            <!-- value="$index+1+(((PageIndex||1)-1)*PageSize)"-->
+                                            <!--{{$index+1+(((PageIndex||1)-1)*PageSize)}}-->
+                                            <!--readOnly="true"-->
+                                            <!--待处理-->
+                                            <input type="text" class="form-control" ng-model="data.sequence"
+                                                   readOnly="true" style="border: none;" disabled="false">
+                                        </td>
+                                        <td class="form-group col-md-2">
+                                            <input type="text" ng-model="data.name"
+                                                   class="form-control" placeholder="名称" maxlength="10" required>
+                                        </td>
+                                        <td class="form-group col-md-2">
+                                            <input type="number" ng-model="data.execTime"
+                                                   class="form-control" placeholder="请输入时间" required maxlength="10"
+                                                   required>
+                                        </td>
+
+                                        <td class="form-group col-md-2">
+                                            <input type="number" ng-model="data.treadmillSpeed"
+                                                   class="form-control" placeholder="请输入速度" required money max-number="100"
+                                                   step="0.1">
+                                        </td>
+                                        <td class="form-group col-md-2">
+                                            <input type="number" ng-model="data.treadmillSlop"
+                                                   class="form-control" placeholder="请输入坡度" required ng-maxlength="10">
+                                        </td>
+                                        <td class="form-group col-md-3" style="padding-top: 30px;">
+                                            <a ng-click="sportStageDel(item,$index)" class="pointer"
+                                               ng-disabled="checklist" confirm="确定删除吗？" confirm-title="删除"
+                                               confirm-ok="确定"
+                                               confirm-cancel="取消">删除</a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <!--<div ng-if="!sportStageData.length" class="noData ng-scope">点击新增</div>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div class="modal-footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn withripple btn-raised btn-primary" type="submit">确定
+                                <!--ng-disabled="!sportProgramViewAddForm.$valid"-->
+                            </button>
+                            <button class="btn withripple btn-raised btn-warning" type="button" ng-click="close()">取消
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    </div>
+
+</script>
+<!--蒙版-弹窗2-编辑运动方案-->
+<script type="text/ng-template" id="sportProgramViewEdit.html">
+    <div class="modal-header">
+        <h4>编辑运动方案</h4>
+    </div>
+    <div class="modal-body">
+        <form name="sportProgramViewEditForm" class="sportProgramViewEditForm" ng-submit="savesportProgramEdit()">
+            <section class="row">
+                <div class="form-group col-md-12">
+                    <label class="col-md-1 text-right control-label">名称：</label>
+                    <div class="col-md-11">
+                        <input type="text" class="form-control" ng-model="data.schemeName" required maxlength="20"
+                               placeholder="请输入方案名">
+                    </div>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-1 text-right control-label">方案说明：</label>
+                    <div class="col-md-11">
+                        <input type="text" class="form-control" ng-model="data.description" required maxlength="50"
+                               placeholder="方案说明">
+                    </div>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-1 text-right control-label">适合性别：</label>
+                    <div class="col-md-11" style="margin-top:15px;">
+                        <input type="radio" ng-model="data.sex" name="sex" value="0" required>女
+                        <input type="radio" ng-model="data.sex" name="sex" value="1" required>男
+                        <input type="radio" ng-model="data.sex" name="sex" value="2" required>不限
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <label class="col-md-1 text-right control-label">BMI范围：</label>
+                    <div class="col-md-11">
+                        <input type="number" ng-model="data.minBmi" required style="width: 80px;display: inline;"
+                               class="form-control "
+                               style="width: 80px;display: inline;">至
+                        <input type="number" ng-model="data.maxBmi" required style="width: 80px;display: inline;"
+                               class="form-control "
+                               style="width: 80px;display: inline;">
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <label class="col-md-1 text-right control-label">BMI说明：</label>
+                    <div class="col-md-5">
+                        <table class="table table-hover">
+                            <thead class="table-head">
+                            <tr class="active ">
+                                <th class="col-md-3">中国参考标准</th>
+
+                                <th class="col-md-4">相关疾病发病的危险性</th>
+                            </tr>
+                            </thead>
+                            <!-- -->
+                            <tbody>
+                            <tr class="">
+                                <td class="form-group col-md-3">
+                                    < 18.5
+                                </td>
+                                <td class="form-group col-md-4">
+                                    低（但其他疾病危险性增加）
+                                </td>
+                            </tr>
+                            <tr class="">
+                                <td class="form-group col-md-3">
+                                    18.5 ~23.9
+                                </td>
+                                <td class="form-group col-md-4">
+                                    平均水平
+                                </td>
+                            </tr>
+                            <tr class="">
+                                <td class="form-group col-md-3">
+                                    24~26.9
+                                </td>
+                                <td class="form-group col-md-4">
+                                    增加
+                                </td>
+                            </tr>
+                            <tr class="">
+                                <td class="form-group col-md-3">
+                                    27~29.9
+                                </td>
+                                <td class="form-group col-md-4">
+                                    中度增加
+                                </td>
+                            </tr>
+                            <tr class="">
+                                <td class="form-group col-md-3">
+                                    ≥30
+                                </td>
+                                <td class="form-group col-md-4">
+                                    严重增加
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="form-group  col-md-12">
+                    <label class="col-md-1 text-right control-label">详情：</label>
+                    <div class="col-md-11">
+                        <button type="button" class="btn btn-raised btn-info" ng-click="sportStageAdd()">新增</button>
+                    </div>
+                    <div class="col-md-11">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-head">
+                                <tr class="active row">
+                                    <th class="col-md-1">序号</th>
+                                    <th class="col-md-2">名称</th>
+                                    <th class="col-md-2">时间（min）</th>
+
+                                    <th class="col-md-2">速度（km/h）</th>
+                                    <th class="col-md-2">坡度（°）</th>
+                                    <th class="col-md-3">操作</th>
+                                </tr>
+                                </thead>
+                                <!--ng-repeat="data in sportStageData"-->
+                                <tbody ng-repeat="data in sportStageData">
+                                <tr class="row">
+                                    <td class="form-group col-md-1">
+                                        <!-- value="$index+1+(((PageIndex||1)-1)*PageSize)"-->
+                                        <!--{{$index+1+(((PageIndex||1)-1)*PageSize)}}-->
+                                        <input type="text" readOnly="true" class="form-control"
+                                               ng-model="data.sequence"><!---->
+                                    </td>
+                                    <td class="form-group col-md-2">
+                                        <input type="text" ng-model="data.name"
+                                               class="form-control" placeholder="名称" maxlength="10" required>
+                                    </td>
+                                    <td class="form-group col-md-2">
+                                        <input type="number" ng-model="data.execTime"
+                                               class="form-control" placeholder="请输入时间" required maxlength="10">
+
+                                    </td>
+
+                                    <td class="form-group col-md-2">
+                                        <input type="number" ng-model="data.treadmillSpeed"
+                                               class="form-control" placeholder="请输入速度" required  money max-number="100"
+                                               step="0.1">
+                                    </td>
+                                    <td class="form-group col-md-2">
+                                        <input type="number" ng-model="data.treadmillSlop"
+                                               class="form-control" placeholder="请输入坡度" ng-maxlength="10"
+                                               required>
+                                    </td>
+                                    <td class="form-group col-md-3" style="padding-top: 30px;">
+                                        <a ng-click="sportStageDel(item,$index)" class="pointer"
+                                           ng-disabled="checklist" confirm="确定删除吗？" confirm-title="删除" confirm-ok="确定"
+                                           confirm-cancel="取消">删除</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div class="modal-footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn withripple btn-raised btn-primary" type="submit"
+                            >确定
+                            </button><!---->
+                            <button class="btn withripple btn-raised btn-warning" type="button" ng-click="close()">取消
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    </div>
+</script>

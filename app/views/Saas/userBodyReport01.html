@@ -1,0 +1,358 @@
+<article ng-controller="userBodyReport01Controller" class="userBodyReport container-fluid">
+    <section class="row">
+        <div class="userBodyReport01Wrapper col-md-12">
+            <!--基本信息-->
+            <div class="col-md-12" style="padding: 0;"><h3>{{item.name}}的人体成分分析报告</h3></div>
+            <table class="baseInfo col-md-12" border="" cellspacing="" cellpadding="">
+                <tbody>
+                <tr >
+                    <td >测试时间</td>
+                    <td>{{item.testDate}}</td>
+                    <td>健康评分</td>
+                    <td>{{item.score}}</td>
+                    <td>身体年龄</td>
+                    <td>{{item.bodyAge}}</td>
+                    <td>性别</td>
+                    <td ng-if="item.sex==0">女</td>
+                    <td ng-if="item.sex==1">男</td>
+                </tr>
+                <tr>
+                    <td>编号</td>
+                    <td>{{item.testID}}</td>
+                    <td>昵称</td>
+                    <td>{{item.name}}</td>
+                    <td>电话</td>
+                    <td>{{item.phone}}</td>
+                    <td>身高</td>
+                    <td>{{item.height}}</td>
+                </tr>
+                <tr>
+                    <td>实际年龄</td>
+                    <td>{{item.age}}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+            <!--第一排-->
+            <div class="row">
+                <div class="col-md-12"><h3 >人体成分：</h3></div>
+                <div class="col-md-6 bodyElement1">
+
+                    <table class="baseInfo col-md-12" border="" cellspacing="" cellpadding="">
+                        <thead class="table-head">
+                        <tr class="active">
+                            <th>成分</th>
+                            <th>占比</th>
+
+                            <th>值</th>
+                            <th>正常范围</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr>
+                            <td>脂肪</td>
+                            <td>未知 %</td>
+
+                            <td>{{item.fat}}</td>
+                            <td>{{item.fatRange}}</td>
+                        </tr>
+                        <tr>
+                            <td>骨质</td>
+                            <td>未知 %</td>
+                            <td>{{item.bone}}</td>
+                            <td>未知</td>
+                        </tr>
+                        <tr>
+                            <td>蛋白质</td>
+                            <td>未知 %</td>
+                            <td>{{item.protein}}</td>
+                            <td>{{item.proteinRange}}</td>
+                        </tr>
+                        <tr>
+                            <td>水分</td>
+                            <td>未知 %</td>
+                            <td>{{item.water}}</td>
+                            <td>{{item.waterRange}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <!--<h3><br></h3>-->
+                    <table class="baseInfo col-md-12" border="" cellspacing="cellspacing" cellpadding="cellpadding">
+                        <tbody>
+                        <tr>
+                            <td>体重（KG）</td>
+                            <td>{{item.weight}}</td>
+                            <td>去脂体重（KG）</td>
+                            <td>未知</td>
+                            <td>肌肉（KG）</td>
+                            <td>{{item.muscle}}</td>
+                        </tr>
+                        <tr>
+                            <td>总水分（KG）</td>
+                            <td>{{item.water}}</td>
+                            <td>细胞外液</td>
+                            <td>{{item.ecw}}</td>
+                            <td>细胞内液</td>
+                            <td>{{item.icw}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <h3 class=col-md-12>水肿分析：</h3>
+                    <table class="baseInfo col-md-12" border="" cellspacing="" cellpadding="">
+                        <tbody>
+                        <tr>
+                            <td>身体水分率</td>
+                            <td>未知 %</td>
+                        </tr>
+                        <tr>
+                            <td>水肿系数（细胞外液/总水分）</td>
+                            <td>{{item.edema}}</td>
+                        </tr>
+                        <tr>
+                            <td>正常范围</td>
+                            <td>未知</td>
+                        </tr>
+                        <tr>
+                            <td>结果</td>
+                            <td>未知</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!--第二排-->
+            <div class="row">
+                <div class="col-md-6 bodyElement2">
+                    <h3 class=col-md-12>基本评估：</h3>
+                    <table class="baseInfo col-md-12" border="" cellspacing="cellspacing" cellpadding="cellpadding">
+                        <thead class="table-head">
+                        <tr class="active">
+                            <th>评估项</th>
+                            <th>值</th>
+
+                            <th>结果（低、正常、高）</th>
+                            <th>正常范围</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr>
+                            <td>体重KG</td>
+                            <td>{{item.weight}}</td>
+                            <td>做判断</td>
+                            <td>{{item.weightRange}}</td>
+                        </tr>
+                        <tr>
+                            <td>肌肉 KG</td>
+                            <td>{{item.muscle}}</td>
+                            <td></td>
+                            <td>未知</td>
+                        </tr>
+                        <tr>
+                            <td>体脂百分比 %</td>
+                            <td>{{item.pbf}}</td>
+                            <td>做判断</td>
+                            <td>{{item.pbfRange}}</td>
+                        </tr>
+                        <tr>
+                            <td>骨质 KG</td>
+                            <td>未知</td>
+                            <td></td>
+                            <td>未知</td>
+                        </tr>
+                        <tr>
+                            <td>总水分 TBW</td>
+                            <td>{{item.water}}</td>
+                            <td>做判断</td>
+                            <td>{{item.waterRange}}</td>
+                        </tr>
+                        <tr>
+                            <td>骨骼肌 SMM</td>
+                            <td>{{item.smm}}</td>
+                            <td>做判断</td>
+                            <td>{{item.smmRange}}</td>
+                        </tr>
+                        <tr>
+                            <td>体质指数BMI</td>
+                            <td>{{item.bmi}}</td>
+                            <td></td>
+                            <td>未知</td>
+                        </tr>
+                        <tr>
+                            <td>腰臀比%WHR</td>
+                            <td>{{item.whr}}</td>
+                            <td>做判断 </td>
+                            <td>{{item.whrRange}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                <div class="col-md-6">
+
+                    <h3 class=col-md-12>节段分析：</h3>
+                    <table class="baseInfo col-md-12" border="" cellspacing="" cellpadding="">
+                        <thead class="table-head">
+                        <tr class="active">
+                            <th>分析项</th>
+                            <th>水分（KG）</th>
+                            <th>脂肪（KG）</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>左上肢</td>
+                            <td>{{item.laWater}}</td>
+                            <td>{{item.laFat}}</td>
+                        </tr>
+                        <tr>
+                            <td>右上肢</td>
+                            <td>{{item.raWater}}</td>
+                            <td>{{item.raFat}}</td>
+                        </tr>
+                        <tr>
+                            <td>躯干</td>
+                            <td>{{item.trWater}}</td>
+                            <td>{{item.trFat}}</td>
+                        </tr>
+                        <tr>
+                            <td>左下肢</td>
+                            <td>{{item.llWater}}</td>
+                            <td>{{item.llFat}}</td>
+                        </tr>
+                        <tr>
+                            <td>右下肢</td>
+                            <td>{{item.rlWater}}</td>
+                            <td>{{item.rlFat}}</td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <h3 class=col-md-12>内脏脂肪分析：</h3>
+                    <table class="baseInfo col-md-12" border="" cellspacing="" cellpadding="">
+                        <thead class="table-head">
+                        <tr class="active">
+                            <th>分析项</th>
+                            <th>值（KG）</th>
+                            <th>正常范围</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>躯干脂肪总量</td>
+                            <td>未知</td>
+                            <td>未知</td>
+                        </tr>
+                        <tr>
+                            <td>内脏脂肪指数</td>
+                            <td>{{item.vfi}}</td>
+                            <td>未知</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!--第三排---数据都是未知-后台没有-->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-6" style="padding: 0;">
+                        <h3 class=col-md-12>体重管理（KG）：</h3>
+                        <table class="baseInfo col-md-12" border="" cellspacing="" cellpadding="">
+                            <tbody>
+                            <tr>
+                                <td>目标体重</td>
+                                <td>51.9</td>
+                            </tr>
+                            <tr>
+                                <td>体重控制</td>
+                                <td>+12.1</td>
+                            </tr>
+                            <tr>
+                                <td>脂肪控制量</td>
+                                <td>+3.1</td>
+                            </tr>
+                            <tr>
+                                <td>肌肉控制量</td>
+                                <td>+8.5</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h3 class=col-md-12>营养分析：</h3>
+                        <table class="baseInfo col-md-12" border="" cellspacing="" cellpadding="">
+                            <tbody>
+                            <tr>
+                                <td>蛋白质</td>
+                                <td>不足</td>
+                            </tr>
+                            <tr>
+                                <td>脂肪</td>
+                                <td>不足</td>
+                            </tr>
+                            <tr>
+                                <td>无机盐</td>
+                                <td>正常</td>
+                            </tr>
+                            <tr>
+                                <td>基础代谢</td>
+                                <td>1288Kcal</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-6" style="padding: 0;">
+                    <div class="col-md-6">
+                        <h3 class=col-md-12>肥胖分析：</h3>
+                        <table class="baseInfo col-md-12" border="" cellspacing="" cellpadding="">
+                            <tbody>
+                            <tr>
+                                <td>BMI等级</td>
+                                <td>体重较轻</td>
+                            </tr>
+                            <tr>
+                                <td>体重脂肪百分比</td>
+                                <td>低</td>
+                            </tr>
+                            <tr>
+                                <td>腰臀比</td>
+                                <td>2.正常</td>
+                            </tr>
+                            <tr>
+                                <td>基础代谢</td>
+                                <td>1288 Kcal</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h3 class=col-md-12>体型判定：</h3>
+                        <table class="baseInfo col-md-12" border="" cellspacing="" cellpadding="">
+                            <tbody>
+                            <tr>
+                                <td>消瘦型 <br> <br><br><br></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+
+</article>

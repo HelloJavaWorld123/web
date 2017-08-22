@@ -1,0 +1,10 @@
+<form name="uploadFileForm" ng-upload="uploadComplete(content)" action="{{api}}" class="form-inline" role="form">
+    <div class="form-group">
+        <input type="text" id="uploadFileName" readonly="" ng-model="fileName" class="form-control" placeholder="{{placeholder}}">
+        <input type="file" id="uploadFile" name="file" required accept="{{accept}}" title="点击选择文件" />
+        <button ng-if="auto" class="btn btn-primary">浏览</button>
+    </div>
+    <div class="form-group" ng-if="!auto">
+        <button type="submit" class="btn btn-primary" ng-disabled="$isUploading&&uploadFileForm.$valid">上传</button>
+    </div>
+</form>

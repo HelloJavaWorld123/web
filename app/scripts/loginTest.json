@@ -1,0 +1,21 @@
+{
+  "code": 2000,
+  "msg": "OK",
+  "data": {
+    "id": null,
+    "deleteFlag": 0,
+    "createTime": null,
+    "createBy": null,
+    "updateTime": 1495006979000,
+    "updateBy": "f1111ff",
+    "userId": "user123",
+    "name": "root",
+    "account": "root",
+    "model": "1",
+    "passWord": "e10adc3949ba59abbe56e057f20f883e",
+    "userType": 1,
+    "qrCode": 123456789,
+    "mobile": "13388822211",
+    "sex": true
+  }
+}

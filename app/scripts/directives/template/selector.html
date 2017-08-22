@@ -1,0 +1,6 @@
+<ui-select allow-clear ng-model="data.bannerType" theme="bootstrap">
+    <ui-select-match placeholder="请选择类型">{{$select.selected.stauts}}</ui-select-match>
+    <ui-select-choices repeat="item.status_id as item in bannerTypes | filter: $select.search" value="{{$select.selected.status_id}}">
+        <span ng-bind-html="item.stauts | highlight: $select.search"></span>
+    </ui-select-choices>
+</ui-select>
