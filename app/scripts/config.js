@@ -47,7 +47,7 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
         //测试的登录-本地json
         // login: "app/scripts/loginTest.json",
 
-        //启航登录
+        //物联网登录
         login: $rootScope.BASEURL + "sail/permission/login",
         logout: $rootScope.BASEURL + "sail/permission/logout",
 

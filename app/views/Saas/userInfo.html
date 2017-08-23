@@ -33,21 +33,7 @@
                 <input type="hidden" value="{{data.cityId}}" name="cityId">
             </div>
 
-            <div class="form-group col-md-3">
-                <label class="col-md-3 control-label">会员卡类型：</label>
-                <div class="col-md-8">
-                                       <ui-select ng-model="data.vipCard" theme="bootstrap" on-select="getMemberTypeData($item)">
-                        <ui-select-match allow-clear="true" placeholder="全部">{{$select.selected.dicValue}}</ui-select-match>
 
-
-                        <ui-select-choices
-                                repeat="item.dicKey as item in memberTypeData | orderBy:'dicKey' | filter: $select.search.dicValue">
-                            <span ng-bind-html="item.dicValue | highlight: $select.search"></span>
-                        </ui-select-choices>
-                    </ui-select>
-                </div>
-                <input type="hidden" value="{{data.vipCard}}" name="vipCard">
-            </div>
 
             <div class="form-group col-md-3">
                 <label class="col-md-3 text-right control-label">手机号：</label>
@@ -141,10 +127,8 @@
                             <th>是否已体测</th>
                             <th>是否已有跑步方案</th>
                             <th>是否已认证</th>
-                            <th>押金¥</th>
 
-                            <th>当前账户余额</th>
-                            <th>会员卡</th>
+
                             <th>注册时间</th>
                             <th>所在地（市）</th>
 
@@ -181,10 +165,6 @@
 
 
 
-                            <td>{{item.cashPledge}}</td>
-
-                            <td>{{item.wallet}}</td>
-                            <td>{{item.cardTypeName}}</td>
                             <td>{{item.createTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
                             <td>{{item.city}}</td>
                             <td>

@@ -113,11 +113,6 @@
                                     <th>场馆名称</th>
                                     <th>场馆类型</th>
 
-
-                                    <th>总部分成</th>
-                                    <th>省公司分成</th>
-                                    <th>场地方分成</th>
-                                    <th>私教分成</th>
                                     <th>创建时间</th>
                                     <th>经营状态</th>
 
@@ -140,10 +135,7 @@
                                     <td>{{item.name==null?"--":item.name}}</td>
                                     <td>{{item.typeName==typeName?"--":item.typeName}}</td>
 
-                                    <td>{{item.sharing1Percent==null?"--":item.sharing1Percent}}</td>
-                                    <td>{{item.sharing2Percent==null?"--":item.sharing2Percent}}</td>
-                                    <td>{{item.sharing3Percent==null?"--":item.sharing3Percent}}</td>
-                                    <td>{{item.sharing4Percent==null?"--":item.sharing4Percent}}</td>
+
                                     <td>{{item.createTime==null?"--":item.createTime|date:'yyyy-MM-dd HH:mm:ss'}}</td>
                                     <td>{{item.statusName==null?"--":item.statusName}}</td>
                                     <td>{{item.provinceName==null?"--":item.provinceName}}</td>
@@ -225,28 +217,6 @@
                         </div>
 
                     </div>
-                    <div class="form-group col-md-12">
-                        <label class="col-md-2 control-label text-right">经营时间：</label>
-                        <div class="col-md-2">
-                            <ui-select allow-clear ng-model="data.openTimeFormat" theme="bootstrap" required>
-                                <ui-select-match placeholder="开始时间">{{$select.selected.status}}</ui-select-match>
-                                <ui-select-choices repeat="item.status as item in beginTimeArr | filter: $select.search" value="{{$select.selected.status}}">
-                                    <span ng-bind-html="item.status | highlight: $select.search"></span>
-                                </ui-select-choices>
-                            </ui-select>
-                        </div>
-                        <div class="col-md-1">
-                            <div class="text-center" style="line-height: 45px;height: 45px;">—</div>
-                        </div>
-                        <div class="col-md-2">
-                            <ui-select allow-clear ng-model="data.endTimeFormat" theme="bootstrap" required>
-                                <ui-select-match placeholder="结束时间">{{$select.selected.status}}</ui-select-match>
-                                <ui-select-choices repeat="item.status as item in endTimeArr | filter: $select.search" value="{{$select.selected.status}}">
-                                    <span ng-bind-html="item.status | highlight: $select.search"></span>
-                                </ui-select-choices>
-                            </ui-select>
-                        </div>
-                    </div>
 
 
                     <!--5场馆类型-下拉-->
@@ -263,86 +233,8 @@
                             </ui-select>
                         </div>
                     </div>
-                    <div class="form-group col-md-12" ng-if="data.type==1">
-                        <label class="col-md-2 text-right control-label">角色分成：</label>
-                        <div class="col-md-9">
-                            <button type="button" class="btn btn-raised btn-info" ng-click="roleAdd()">新增</button>
-                        </div>
-                    </div>
-                    <div class="form-group col-md-12" ng-if="data.type==1">
-                        <label class="col-md-1 text-right control-label"></label>
-                        <div class="col-md-11">
-                            <div class="table-responsive" style="overflow: hidden">
-                                <table class="table table-hover">
-                                    <thead class="table-head">
-                                    <tr class="row">
-                                        <th class="col-md-2">角色</th>
-                                        <th class="col-md-2">名称</th>
-
-                                        <th class="col-md-1">负责人</th>
-                                        <th class="col-md-2">联系方式</th>
-                                        <th class="col-md-1">分成比(%)</th>
-
-                                        <th class="col-md-3">银行账户</th>
-                                        <th class="col-md-1">操作</th>
-                                    </tr>
-                                    </thead>
-                                    <!--ng-repeat="data in roleData"-->
-                                    <tbody ng-repeat="data in roleData">
-                                    <tr class="row">
-                                        <td class="form-group col-md-2" style="padding-bottom:75px;">
-
-                                            <ui-select ng-model="data.sharingRole" theme="bootstrap"
-                                                       on-select="getroleShareData($item)">
-                                                <ui-select-match allow-clear="true" placeholder="点击选择">
-                                                    {{$select.selected.dicValue}}
-                                                </ui-select-match>
 
 
-                                                <ui-select-choices
-                                                        repeat="item.dicKey as item in roleShareData | orderBy:'dicKey' | filter: $select.search.dicValue">
-                                                    <span ng-bind-html="item.dicValue | highlight: $select.search"></span>
-                                                </ui-select-choices>
-                                            </ui-select>
-                                        </td>
-                                        <td class="form-group col-md-2" >
-                                            <input type="text" ng-model="data.name"
-                                                   class="form-control" placeholder="" required maxlength="20" style="padding-left: 30px;">
-                                        </td>
-
-
-                                        <td class="form-group col-md-1">
-                                            <input type="text" ng-model="data.responsiblePerson"
-                                                   class="form-control" placeholder="" required maxlength="10">
-                                        </td>
-                                        <td class="form-group col-md-2">
-                                            <input type="text" class="form-control" ng-model="data.mobile" required
-                                                   name="mobile" required maxlength="11"
-                                                   oninput="if(value[0]=='-'){value=value.slice(0,0)}else{value=value.replace(/\D/g,'')}" onafterpaste="if(value[0]=='-'){value=value.slice(0,0)}else{value=value.replace(/\D/g,'')}"><!--js:整数限制-->
-                                        </td>
-                                        <td class="form-group col-md-1">
-                                            <input type="text" ng-model="data.percent"
-                                                   class="form-control" placeholder="" required maxlength="5" oninput="if(value[0]=='-'){value=value.slice(0,0)}else{value=value.replace(/\D/g,'')}" onafterpaste="if(value[0]=='-'){value=value.slice(0,0)}else{value=value.replace(/\D/g,'')}">
-                                        </td>
-
-
-                                        <td class="form-group col-md-3">
-                                            <input type="text" ng-model="data.account"
-                                                   class="form-control" placeholder="" required maxlength="20" oninput="if(value[0]=='-'){value=value.slice(0,0)}else{value=value.replace(/\D/g,'')}" onafterpaste="if(value[0]=='-'){value=value.slice(0,0)}else{value=value.replace(/\D/g,'')}">
-                                        </td>
-
-                                        <td class="form-group col-md-1 pt30">
-                                            <a ng-click="roleDel(item,$index)" class="pointer"
-                                               ng-disabled="checklist" confirm="确定删除吗？" confirm-title="删除"
-                                               confirm-ok="确定"
-                                               confirm-cancel="取消">删除</a>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
                     <div class="form-group col-md-12">
                         <label class="col-md-2 control-label text-right">所在区域：</label>
                         <div class="col-md-9">
@@ -388,22 +280,7 @@
                                    ng-model="data.address" name="address" placeholder="请输入详细地址" required maxlength="50">
                         </div>
                     </div>
-                    <div class="form-group col-md-12">
-                        <label class="col-md-2 text-right control-label">坐标：</label>
-                        <div class="col-md-9">
-                            <div id="r-result">
-                                <input type="text" id="suggestId" size="20" value="百度" placeholder="请输入地址或在地图标记"
-                                       class="form-control" ng-model="data.address"/>
-                                <input type="text" class="ng-pristine ng-untouched ng-valid ng-empty" name="pp"
-                                       placeholder="113.367865,23.015556" ng-model="positionLngAndLat" disabled>
-                            </div>
-                            <br/>
-                            <div id="searchResultPanel"
-                                 style="border:1px solid #C0C0C0;width:150px;height:auto;display:none;position: fixed;z-index: 9999"></div>
-                            <map></map>
-                            <!--地图组件-->
-                        </div>
-                    </div>
+
                 </section>
             </form>
         </div>
@@ -473,28 +350,6 @@
                         </div>
 
                     </div>
-                    <div class="form-group col-md-12">
-                        <label class="col-md-2 control-label text-right">经营时间：</label>
-                        <div class="col-md-2">
-                            <ui-select allow-clear ng-model="gymEditData.openTimeFormat" theme="bootstrap" required>
-                                <ui-select-match placeholder="开始时间">{{$select.selected.status}}</ui-select-match>
-                                <ui-select-choices repeat="item.status as item in beginTimeArr | filter: $select.search" value="{{$select.selected.status}}">
-                                    <span ng-bind-html="item.status | highlight: $select.search"></span>
-                                </ui-select-choices>
-                            </ui-select>
-                        </div>
-                        <div class="col-md-1">
-                            <div class="text-center" style="line-height: 45px;height: 45px;">—</div>
-                        </div>
-                        <div class="col-md-2">
-                            <ui-select allow-clear ng-model="gymEditData.endTimeFormat" theme="bootstrap" required>
-                                <ui-select-match placeholder="结束时间">{{$select.selected.status}}</ui-select-match>
-                                <ui-select-choices repeat="item.status as item in endTimeArr | filter: $select.search" value="{{$select.selected.status}}">
-                                    <span ng-bind-html="item.status | highlight: $select.search"></span>
-                                </ui-select-choices>
-                            </ui-select>
-                        </div>
-                    </div>
 
                     <!--5场馆类型-下拉-->
                     <div class="form-group col-md-12">
@@ -512,88 +367,6 @@
                         </div>
                     </div>
 
-                    <div class="form-group col-md-12" ng-if="gymEditData.type==1">
-                        <label class="col-md-2 text-right control-label">角色分成：</label>
-                        <div class="col-md-9">
-                            <button type="button" class="btn btn-raised btn-info" ng-click="roleAdd()">新增</button>
-                        </div>
-                    </div>
-                    <div class="form-group col-md-12" ng-if="gymEditData.type==1">
-                        <label class="col-md-1 text-right control-label"></label>
-                        <div class="col-md-11">
-                            <div class="table-responsive" style="overflow: hidden;">
-                                <table class="table table-hover">
-                                    <thead class="table-head">
-                                    <tr class="row">
-                                        <th class="col-md-2">角色</th>
-                                        <th class="col-md-2">名称</th>
-
-                                        <th class="col-md-1">负责人</th>
-                                        <th class="col-md-2">联系方式</th>
-                                        <th class="col-md-1">分成比(%)</th>
-
-                                        <th class="col-md-3">银行账户</th>
-                                        <th class="col-md-1">操作</th>
-                                    </tr>
-                                    </thead>
-                                    <!--ng-repeat="gymEditData in rolegymEditData"-->
-                                    <tbody ng-repeat="data in roleData">
-                                    <tr class="row">
-                                        <td class="form-group col-md-2" style="padding-bottom: 75px;">
-
-                                            <ui-select ng-model="data.sharingRole" theme="bootstrap"
-                                                       on-select="getroleShareData($item)">
-                                                <ui-select-match allow-clear="true" placeholder="点击选择">
-                                                    {{$select.selected.dicValue}}
-                                                </ui-select-match>
-
-
-                                                <ui-select-choices
-                                                        repeat="item.dicKey as item in roleShareData | orderBy:'dicKey' | filter: $select.search.dicValue">
-                                                    <span ng-bind-html="item.dicValue | highlight: $select.search"></span>
-                                                </ui-select-choices>
-                                            </ui-select>
-                                          <!--  <h1>{{data.sharingRole}}</h1>
-                                            <h1>{{data.sharingRoleName}}</h1>-->
-                                        </td>
-                                        <td class="form-group col-md-2" >
-                                            <input type="text" ng-model="data.name"
-                                                   class="form-control" placeholder="" required maxlength="20" style="padding-left: 30px;">
-                                        </td>
-
-
-                                        <td class="form-group col-md-1">
-                                            <input type="text" ng-model="data.responsiblePerson"
-                                                   class="form-control" placeholder="" required maxlength="10">
-                                        </td>
-                                        <td class="form-group col-md-2">
-                                            <input type="text" class="form-control" ng-model="data.mobile" required
-                                                   name="mobile" required maxlength="11"
-                                                   oninput="if(value[0]=='-'){value=value.slice(0,0)}else{value=value.replace(/\D/g,'')}" onafterpaste="if(value[0]=='-'){value=value.slice(0,0)}else{value=value.replace(/\D/g,'')}"><!--js:整数限制-->
-                                        </td>
-                                        <td class="form-group col-md-1">
-                                            <input type="text" ng-model="data.percent"
-                                                   class="form-control" placeholder="" required maxlength="5" oninput="if(value[0]=='-'){value=value.slice(0,0)}else{value=value.replace(/\D/g,'')}" onafterpaste="if(value[0]=='-'){value=value.slice(0,0)}else{value=value.replace(/\D/g,'')}">
-                                        </td>
-
-
-                                        <td class="form-group col-md-3">
-                                            <input type="text" ng-model="data.account"
-                                                   class="form-control" placeholder="" required maxlength="20" oninput="if(value[0]=='-'){value=value.slice(0,0)}else{value=value.replace(/\D/g,'')}" onafterpaste="if(value[0]=='-'){value=value.slice(0,0)}else{value=value.replace(/\D/g,'')}">
-                                        </td>
-
-                                        <td class="form-group col-md-1 pt30" >
-                                            <a ng-click="roleDel(item,$index)" class="pointer"
-                                               ng-disabled="checklist" confirm="确定删除吗？" confirm-title="删除"
-                                               confirm-ok="确定"
-                                               confirm-cancel="取消">删除</a>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
                     <div class="form-group col-md-12">
                         <label class="col-md-2 control-label text-right">所在区域：</label>
                         <div class="col-md-9">
@@ -643,25 +416,6 @@
                                    maxlength="30">
                         </div>
                     </div>
-                    <div class="form-group col-md-12">
-                        <label class="col-md-2 text-right control-label">坐标：</label>
-                        <div class="col-md-9">
-                            <div id="r-result">
-                                <input type="text" id="suggestId" class="form-control" size="40"
-                                       placeholder="请输入地址或在地图标记" ng-model="gymEditData.address"/>
-                                <input type="text" class=" ng-pristine ng-untouched ng-valid ng-empty" name="pp"
-                                       placeholder="1.0,1.0" ng-model="positionLngAndLat" disabled
-                                       style="width: 233px;"><!--placeholder="113.367865,23.015556"-->
-                            </div>
-                            <br/>
-                            <div id="searchResultPanel"
-                                 style="border:1px solid #C0C0C0;width:150px;height:auto;display:none;position: fixed;z-index: 9999"></div>
-                            <!--地图数据的回绑-positionLngAndLatObj-->
-                            <map positionLngAndLatObj="{{positionLngAndLatObj}}"></map>
-
-                            <!--地图组件-->
-                        </div>
-                    </div>
                 </section>
             </form>
         </div>
@@ -671,7 +425,7 @@
                     <button class="btn withripple btn-raised btn-warning" type="button" ng-click="closeGymEdit()"
                             style="float: right;">取消
                     </button>
-                    <button class="btn withripple btn-raised btn-primary" type="button" ng-click="saveGymEdit(positionLngAndLat)"
+                    <button class="btn withripple btn-raised btn-primary" type="button" ng-click="saveGymEdit()"
                             ng-disabled="!gymViewAddForm.$valid" style="float: right;margin-right: 6px;">确定
                     </button>
                 </div>

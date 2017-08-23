@@ -31,8 +31,7 @@
                                                 <th>账号</th>
 
                                                 <th>昵称</th>
-                                                <th>会员卡</th>
-                                                <th>押金¥</th>
+
                                                 <th>性别</th>
 
                                                 <th>年龄</th>
@@ -54,8 +53,8 @@
                                                 <td>{{item.account==null?"--":item.account}}</td>
 
                                                 <td>{{item.nickname==null?"--":item.nickname }}</td>
-                                                <td >{{item.cardTypeName==null||item.cardTypeName==undefined?"--":item.cardTypeName}}</td>
-                                                <td>{{item.cashPledge==null?"--":item.cashPledge }}</td>
+
+
                                                 <td ng-if="item.sex==0">女</td>
                                                 <td ng-if="item.sex==1">男</td>
 
@@ -244,7 +243,7 @@
                                                 <th>序号</th>
                                                 <th>充值日期</th>
 
-                                                <th>金额</th>
+
                                                 <th>充值后账户余额</th>
                                             </tr>
                                             </thead>
@@ -254,7 +253,7 @@
                                                 <td>{{$index+1+(((PageIndex||1)-1)*PageSize)}}</td>
                                                 <td>{{item.createTime ==null?"--":item.createTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
 
-                                                <td>{{item.chargeAmount==null?"--":item.chargeAmount }}</td>
+
                                                 <td>{{item.accountBalance==null?"--":item.accountBalance }}</td>
 
                                             </tr>

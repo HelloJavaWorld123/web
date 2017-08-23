@@ -28,35 +28,7 @@ App.controller('userInfoController', ['$scope', '$state', '$rootScope', '$http',
     }
     //*************************数据定义begin***********************************
 
-    //会员卡类型
-    $scope.memberTypeDatas = {};
-    $scope.memberTypeData = [];
 
-
-    $scope.memberTypePromise = $http({
-        url: $rootScope.api.getDicList,
-        method: 'post',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        data: {
-            "typeCode": "CARD_TYPE"
-        }
-    }).then(function (res) {
-        if (res.data.code == 2000) {
-            $scope.memberTypeData = res.data.data;
-            console.log($scope.memberTypeData);
-
-
-            $scope.getMemberTypeData = function (item) {
-                $scope.memberTypeDatas.dicKey = item.dicKey;
-                /*视图中绑定的，为了和后台接口字段一致，分2个接口处理；一个叫：dicKey另一个叫vipCard*/
-                $scope.data.vipCard = item.dicKey;
-
-            };
-
-        }
-    });
 
 
     //*************************数据定义end***********************************

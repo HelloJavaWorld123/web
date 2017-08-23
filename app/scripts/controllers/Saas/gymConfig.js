@@ -136,21 +136,7 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
         $item = {};
         $scope.runStatusId = $item.runStatusId;
     };
-    //初始化开始时间和结束时间
-    $scope.beginTimeArr = CommonData.hourArr();
-    $scope.endTimeArr = CommonData.hourArr();
-    $scope.$watch('data.openTimeFormat', function (newValue, oldValue) {
-        //监听开始时间被选择后，结束时间自动截取到之后的时间
-        if (newValue != oldValue) {
-            $scope.endTimeArr = CommonData.hourArr().splice(newValue + 1, 48);
-        }
-    })
-    $scope.$watch('data.endTimeFormat', function (newValue, oldValue) {
-        //监听结束时间被选择后，开始时间只能小于结束时间
-        if (newValue != oldValue) {
-            $scope.beginTimeArr = CommonData.hourArr().splice(0, newValue);
-        }
-    });
+
     //*************************分割线结束***********************************
     $rootScope.query = function () {
         var params = {
@@ -226,27 +212,15 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
                 console.log(res.data, "编辑弹窗里绑定的数据res.data：");
                 for (var key in res.data) {
                     $scope.gymEditData[key] = res.data[key];
-                    $scope.gymEditData.openTimeFormat = res.data.openTime.substring(0, 5);
-                    $scope.gymEditData.endTimeFormat = res.data.endTime.substring(0, 5);
-                    /*后台返回来的是多了秒，截掉才能和我们自己定义的字典对应才能渲染出来*/
                 }
-                $scope.roleData = res.data.sharingList;
 
-                $scope.roleShareDatas.dicKey = $scope.data.sharingRole;
-                $scope.roleShareDatas.dicValue = $scope.data.sharingRoleName;
 
                 $scope.getCitys(res.data.provinceId);
                 $scope.getCountys(res.data.cityId);
 
 
                 $scope.gymEditData.cityId = res.data.cityId;
-                $scope.positionLngAndLat = res.data.longitude + "," + res.data.latitude;
-                /*编辑地图反绑：*/
-                $scope.positionLngAndLatObj={
-                    longitude:res.data.longitude,
-                    latitude:res.data.latitude
-                };
-                console.log($scope.positionLngAndLat, '$scope.positionLngAndLat:');
+
             } else {
                 toastr.error(res.msg);
             }
@@ -332,22 +306,7 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
 
     //2：编辑好后提交场馆的信息
 
-    $scope.saveGymEdit = function (position) {
-
-   /*     $scope.$watch('position', function () {
-            debugger;
-            console.log(position);
-        }, true)
-*/
-
-        console.log(position,"position:坐标信息");
-        var positionArr=position.split(",");
-        if (position) {
-            /* toastr.info('当前选中的经纬度' + position.lng + "，" + position.lat)*/
-        } else {
-            toastr.error("定位失败，请重新定位！");
-            return;
-        }
+    $scope.saveGymEdit = function () {
         var params = {
             "id": $rootScope.gymId,
             "name": $scope.gymEditData.name,
@@ -358,11 +317,6 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
             "linkedMan": $scope.gymEditData.linkedMan,
             "phone": $scope.gymEditData.phone,
             "type": $scope.gymEditData.type,
-            "longitude":positionArr[0],
-            "latitude": positionArr[1],
-            "sharingList": $scope.gymEditData.sharingList,
-            "openTime": $scope.gymEditData.openTimeFormat + ":00",
-            "endTime": $scope.gymEditData.endTimeFormat + ":00",
             "status": $scope.gymEditData.status
         };
         console.log("编辑场馆要丢给后台的字段");
@@ -403,61 +357,6 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
      编辑场馆 end
      -----------------
      */
-    //分成角色
-    $scope.roleShareDatas = {};
-    $scope.roleShareData = [];
-    $http({
-        url: $rootScope.api.getDicList,
-        method: 'post',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        data: {
-            "typeCode": "SHARING_ROLE"
-        }
-    }).then(function (res) {
-        if (res.data.code == 2000) {
-            $scope.roleShareData = res.data.data;
-        }
-    });
-    $scope.getroleShareData = function (item) {
-        $scope.roleShareDatas.dicKey = item.dicKey;
-        $scope.roleShareDatas.dicValue = item.dicValue;
-    };
-
-    //丢给后台的数据
-    $scope.roleData = [];
-
-
-    //新增阶段
-    $scope.roleAdd = function () {
-        $scope.roleData.push(
-            {
-                "sharingRole": $scope.roleShareDatas.dicKey,
-                "sharingRoleName": $scope.roleShareDatas.dicValue,
-                "name": $scope.data.name ? $scope.data.name : null,
-                "responsiblePerson": $scope.data.responsiblePerson ? $scope.data.responsiblePerson : null,
-                "mobile": $scope.data.mobile ? $scope.data.mobile : null,
-                "percent": $scope.data.percent ? $scope.data.percent : null,
-                "account": $scope.data.account ? $scope.data.account : null
-            }
-        );
-        for (var i = 0; i < $scope.roleData.length; i++) {
-            $scope.roleData[i].sequence = i + 1;
-
-        }
-
-    };
-    //删除阶段
-    $scope.roleDel = function (item, $index) {
-        $scope.roleData.splice($index, 1);
-        //删除后再次读取数组的索引做界面上以及数据上顺序的更新
-        for (var i = 0; i < $scope.roleData.length; i++) {
-            $scope.roleData[i].sequence = i + 1;
-
-        }
-
-    };
 
     /*
      -----------------
@@ -504,12 +403,6 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
         $scope.runKindId = $item.runKindId;
     };
     $scope.save = function (item, $index) {
-        if ($scope.position) {
-            $scope.ppstr = $scope.position.lng + "," + $scope.position.lat;
-            //toastr.info('当前选中的经纬度' + $scope.position.lng + "，" + $scope.position.lat)
-        } else {
-            toastr.error("定位失败，请重新定位！");
-        }
         var params = {
             "name": $scope.data.gymName,
             "provinceId": $scope.data.provinceId,
@@ -519,11 +412,6 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
             "linkedMan": $scope.data.linkedMan,
             "phone": $scope.data.phone,
             "type": $scope.data.type,
-            "longitude": $scope.position.lng,
-            "latitude": $scope.position.lat,
-            "sharingList": $scope.roleData,
-            "openTime": $scope.data.openTimeFormat + ":00",
-            "endTime": $scope.data.endTimeFormat + ":00",
             "status": $scope.data.status
         }
         console.log(params, "添加场馆要丢给后台的字段:");
@@ -549,7 +437,7 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
         } else { // 非新增或编辑
             $rootScope.allShowOrHidden = 1;//非模态都显示
         }
-        ;
+
 
     };
 
@@ -584,70 +472,6 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
         }
 
     };
-    //分成角色
-    $scope.roleShareDatas = {};
-    $scope.roleShareData = [];
-    $http({
-        url: $rootScope.api.getDicList,
-        method: 'post',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        data: {
-            "typeCode": "SHARING_ROLE"
-        }
-    }).then(function (res) {
-        if (res.data.code == 2000) {
-            $scope.roleShareData = res.data.data;
-            console.log($scope.roleShareData, "分成角色:");
-
-
-        }
-    });
-    $scope.getroleShareData = function (item) {
-        $scope.roleShareDatas.dicKey = item.dicKey;
-        $scope.roleShareDatas.dicValue = item.dicValue;
-        console.log($scope.roleShareDatas.dicKey, "key");
-        console.log($scope.roleShareDatas.dicValue, "dicValue");
-
-    };
-
-
-    $scope.roleData = [];
-    //新增阶段
-    $scope.roleAdd = function () {
-        $scope.roleData.push(
-            {
-                "sharingRole": $scope.roleShareDatas.dicKey,
-                "sharingRoleName": $scope.roleShareDatas.dicValue,
-                "name": $scope.data.name ? $scope.data.name : null,
-                "responsiblePerson": $scope.data.responsiblePerson ? $scope.data.responsiblePerson : null,
-                "mobile": $scope.data.mobile ? $scope.data.mobile : null,
-                "percent": $scope.data.percent ? $scope.data.percent : null,
-                "account": $scope.data.account ? $scope.data.account : null
-
-            }
-        );
-        for (var i = 0; i < $scope.roleData.length; i++) {
-            $scope.roleData[i].sequence = i + 1;
-
-        }
-        ;
-        console.log($scope.roleData.length, "roleData.length:");
-        console.log($scope.roleData, "roleData:");
-    };
-    //删除阶段
-    $scope.roleDel = function (item, $index) {
-        $scope.roleData.splice($index, 1);
-        //删除后再次读取数组的索引做界面上以及数据上顺序的更新
-        for (var i = 0; i < $scope.roleData.length; i++) {
-            $scope.roleData[i].sequence = i + 1;
-
-        }
-        ;
-    };
-
-
 }]);
 
 
