@@ -47,9 +47,9 @@ App.controller('userDetailController', ['$scope', '$stateParams', '$state', '$ro
         if (type == "03") {
             $scope.switchgetUserDetailDetailApi = $rootScope.api.getUserDetail03;
         }
-        if (type == "04") {
+    /*    if (type == "04") {
             $scope.switchgetUserDetailDetailApi = $rootScope.api.getUserDetail04;
-        }
+        }*/
         if (type == "05") {
             $scope.switchgetUserDetailDetailApi = $rootScope.api.getUserDetail05;
         }

@@ -73,7 +73,6 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
         delGym: $rootScope.BASEURL + "api/devMgmt/gym/del",
         EditGym: $rootScope.BASEURL + "api/devMgmt/gym/alter",
         getGymById: $rootScope.BASEURL + "api/devMgmt/gym/getid",
-        GymEportExcel: $rootScope.BASEURL + "api/devMgmt/gym/exportExcel",
         // 设备
         getDevList: $rootScope.BASEURL + "api/devMgmt/device/getAllByPage",
         addDev: $rootScope.BASEURL + "api/devMgmt/device/add",
@@ -83,7 +82,6 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
         switchDevStatus: $rootScope.BASEURL + "api/devMgmt/device/alterOnlineStatus",
         //用户信息
         getUserList: $rootScope.BASEURL + "api/memberMgmt/member/list",
-        UserListEportExcel: $rootScope.BASEURL + "api/memberMgmt/member/exportExcel",
 
         /*用户详情begin*/
         //基本信息
@@ -93,7 +91,7 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
         //跑步方案
         getUserDetail03: $rootScope.BASEURL + "api/memberMgmt/member/getMemberScheme",
         //充值记录
-        getUserDetail04: $rootScope.BASEURL + "api/memberMgmt/wallet/getAccountCharge",
+    /*    getUserDetail04: $rootScope.BASEURL + "api/memberMgmt/wallet/getAccountCharge",*/
         //活动记录
         getUserDetail05: $rootScope.BASEURL + "api/sailMgmt/sportRecord/getlist",
         /*用户详情end*/
@@ -110,65 +108,6 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
         addSportProgram: $rootScope.BASEURL + "api/sailMgmt/motionScheme/addScheme",
         SportProgramEportExcel: $rootScope.BASEURL + "api/sailMgmt/motionScheme/exportExcel",
 
-
-        // 订单
-        getOrderInfo: $rootScope.BASEURL + "api/report/orderInfo",
-        OrderInfoEportExcel: $rootScope.BASEURL + "api/report/exportExcel",
-
-        // 充值
-        getAccountCharge: $rootScope.BASEURL + "api/memberMgmt/wallet/getAccountChargeByPage",
-        AccountChargeEportExcel: $rootScope.BASEURL + "api/memberMgmt/wallet/exportExcel",
-
-        //预约
-        getMakeOrder: $rootScope.BASEURL + "api/mgmt/bespeak/getList",
-        getMakeOrderEportExcel: $rootScope.BASEURL + "api/mgmt/bespeak/exportExcel",
-
-        //报障
-        getReportFaultList: $rootScope.BASEURL + "api/devMgmt/malfunction/getAllByPage",
-        changeProgress: $rootScope.BASEURL + "api/devMgmt/malfunction/alterProcess",
-        reportFaultExportExcel: $rootScope.BASEURL + "api/devMgmt/malfunction/exportExcel",
-
-        //押金
-        cashPledgeOrder: $rootScope.BASEURL + "api/memberMgmt/wallet/getDepositChargeByPage",
-        cashPledgeSetting: $rootScope.BASEURL + "api/memberMgmt/wallet/getCityToDeposit",
-        cashPledgeRefund: $rootScope.BASEURL + "api/memberMgmt/wallet/getDepositRefundByPage",
-
-
-        cashPledgeSwitch: $rootScope.BASEURL + "api/memberMgmt/wallet/alterDepositStatus",
-        getDepositAmount: $rootScope.BASEURL + "api/memberMgmt/wallet/getDepositAmount",
-        alterDepositAmount: $rootScope.BASEURL + "api/memberMgmt/wallet/alterDepositAmount",
-        decideToRefund: $rootScope.BASEURL + "api/memberMgmt/wallet/decideToRefund",
-
-
-
-        //会员卡
-        getvipinfos: $rootScope.BASEURL + "api/vipinfo/getVipList",
-        getDicList: $rootScope.BASEURL + "api/common/getDicList",
-        getList: $rootScope.BASEURL + "api/cardtype/getList",
-        addMember: $rootScope.BASEURL + "api/cardtype/add",
-        getbyId: $rootScope.BASEURL + "api/cardtype/getbyId",
-        alter: $rootScope.BASEURL + "api/cardtype/alter",
-        del: $rootScope.BASEURL + "api/cardtype/del",
-        multiFileUpload: $rootScope.BASEURL + "api/upload/multiFileUpload",
-        memberCardFirstEportExcel: $rootScope.BASEURL + "api/vipinfo/exportExcel",
-
-
-        //活动
-        activityList: $rootScope.BASEURL + "api/devMgmt/activity/getlist",
-        activityDel: $rootScope.BASEURL + "api/devMgmt/activity/del",
-        activityAdd: $rootScope.BASEURL + "api/devMgmt/activity/add",
-        activityGetid: $rootScope.BASEURL + "api/devMgmt/activity/getid",
-        update: $rootScope.BASEURL + "api/devMgmt/activity/update",
-
-
-        //设备费用管理
-        devCostList: $rootScope.BASEURL + "api/devMgmt/devicePrice/getlist",
-        devCostDel: $rootScope.BASEURL + "api/devMgmt/devicePrice/del",
-        devCostGetid: $rootScope.BASEURL + "api/devMgmt/devicePrice/getid",
-        devCostUpdate: $rootScope.BASEURL + "api/devMgmt/devicePrice/update",
-        updateUse: $rootScope.BASEURL + "api/devMgmt/devicePrice/updateUse",
-        devCostAdd: $rootScope.BASEURL + "api/devMgmt/devicePrice/add",
-        devCostExportExcel: $rootScope.BASEURL + "api/devMgmt/devicePrice/exportExcel",
 
 
         //跑步机管理员管理
@@ -199,22 +138,6 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
         fileUpload: $rootScope.BASEURL + "api/upload/fileUpload",
 
 
-        //卡券
-        sendDiscount: $rootScope.BASEURL + "api/mgmt/reward/getList",
-        sendDiscountEportExcel: $rootScope.BASEURL + "api/mgmt/reward/exportExcel",
-
-        //充值金额设置
-        chargeList: $rootScope.BASEURL + "api/chargeAmount/getList",
-        chargeDel: $rootScope.BASEURL + "api/chargeAmount/del",
-        chargeAdd: $rootScope.BASEURL + "api/chargeAmount/add",
-        chargeGetid: $rootScope.BASEURL + "api/chargeAmount/getbyId",
-        chargeUpdate: $rootScope.BASEURL + "api/chargeAmount/alter",
-
-
-        //排行榜
-        findRank: $rootScope.BASEURL + "api/memberMgmt/ranking/findRankDistanceByType",
-
-        rankListExportExcel: $rootScope.BASEURL + "api/memberMgmt/ranking/exportExcel",
 
     };
 }]);

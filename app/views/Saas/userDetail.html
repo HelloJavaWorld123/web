@@ -7,7 +7,7 @@
                         <li class="col-md-2" ng-class="{cur:type=='01'}" ng-click="click('01')">基本资料</li>
                         <li class="col-md-2" ng-class="{cur:type=='02'}" ng-click="click('02')">体测报告</li>
                         <li class="col-md-2" ng-class="{cur:type=='03'}" ng-click="click('03')">跑步方案</li>
-                        <li class="col-md-2" ng-class="{cur:type=='04'}" ng-click="click('04')">充值记录</li>
+                        <!--<li class="col-md-2" ng-class="{cur:type=='04'}" ng-click="click('04')">充值记录</li>-->
                         <li class="col-md-2" ng-class="{cur:type=='05'}" ng-click="click('05')">运动记录</li>
                     </ul>
                 </div>
@@ -229,11 +229,11 @@
                         </section>
                     </div>
                     <!--充值记录-->
-                    <div class="col-md-12" ng-show="type=='04'">
-                        <!--分页-->
+                   <!-- <div class="col-md-12" ng-show="type=='04'">
+                        &lt;!&ndash;分页&ndash;&gt;
                         <section class="row conPanelLeft">
                             <div class="userInfoWrapper  col-lg-12">
-                                <!-- 下部分 -->
+                                &lt;!&ndash; 下部分 &ndash;&gt;
                                 <section>
                                     <div class="table-responsive">
                                         <table class="table table-hover">
@@ -251,10 +251,10 @@
                                             <tbody ng-repeat="item in item">
                                             <tr>
                                                 <td>{{$index+1+(((PageIndex||1)-1)*PageSize)}}</td>
-                                                <td>{{item.createTime ==null?"--":item.createTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                                                <td>{{item.createTime ==null?"&#45;&#45;":item.createTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
 
 
-                                                <td>{{item.accountBalance==null?"--":item.accountBalance }}</td>
+                                                <td>{{item.accountBalance==null?"&#45;&#45;":item.accountBalance }}</td>
 
                                             </tr>
                                             </tbody>
@@ -294,7 +294,7 @@
                             </div>
 
                         </section>
-                    </div>
+                    </div>-->
                     <!--活动记录-->
                     <div class="col-md-12" ng-show="type=='05'">
                         <!--分页-->

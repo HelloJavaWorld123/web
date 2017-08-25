@@ -142,9 +142,6 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
         var params = {
             "currentPage": parseInt($scope.PageIndex) - 1,
             "pageSize": parseInt($scope.PageSize),
-            "type": $scope.data.type,
-            "status": $scope.data.status,
-            "name": $scope.data.name,
             "provinceId": $scope.data.provinceId == "" ? undefined : Number($scope.data.provinceId),
             "cityId": $scope.data.cityId == "" ? undefined : Number($scope.data.cityId),
             "regionId": $scope.data.regionId == "" ? undefined : Number($scope.data.regionId)
@@ -316,8 +313,7 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
             "address": $scope.gymEditData.address,
             "linkedMan": $scope.gymEditData.linkedMan,
             "phone": $scope.gymEditData.phone,
-            "type": $scope.gymEditData.type,
-            "status": $scope.gymEditData.status
+
         };
         console.log("编辑场馆要丢给后台的字段");
         console.log(params);
@@ -410,10 +406,8 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
             "regionId": $scope.data.regionId,
             "address": $scope.data.address,
             "linkedMan": $scope.data.linkedMan,
-            "phone": $scope.data.phone,
-            "type": $scope.data.type,
-            "status": $scope.data.status
-        }
+            "phone": $scope.data.phone
+        };
         console.log(params, "添加场馆要丢给后台的字段:");
 
         restful.fetch($rootScope.api.addGym, "POST", params).then(function (res) {
