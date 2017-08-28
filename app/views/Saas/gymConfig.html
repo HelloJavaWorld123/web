@@ -49,6 +49,13 @@
                         <input type="hidden" name="regionId" value="{{data.regionId}}">
                     </div>
 
+                    <div class="form-group col-md-3">
+                        <label class="col-md-3 text-right control-label">场馆名称：</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" ng-model="data.name" name="name" maxlength="100">
+                        </div>
+                    </div>
+
                 </section>
 
 
@@ -73,6 +80,10 @@
                                     <th>序号</th>
                                     <th>场馆名称</th>
 
+
+
+                                    <th>创建时间</th>
+
                                     <th>省份</th>
                                     <th>城市</th>
                                     <th>区域</th>
@@ -89,6 +100,10 @@
                                 <tr>
                                     <td>{{$index+1+(((PageIndex||1)-1)*PageSize)}}</td>
                                     <td>{{item.name==null?"--":item.name}}</td>
+
+
+
+                                    <td>{{item.createTime==null?"--":item.createTime|date:'yyyy-MM-dd HH:mm:ss'}}</td>
 
                                     <td>{{item.provinceName==null?"--":item.provinceName}}</td>
                                     <td>{{item.cityName==null?"--":item.cityName}}</td>
@@ -253,7 +268,10 @@
                         </div>
                     </div>
 
+
+
                     <div class="form-group col-md-12">
+
                         <label class="col-md-2 control-label text-right">所在区域：</label>
                         <div class="col-md-9">
                             <div class="col-md-4">

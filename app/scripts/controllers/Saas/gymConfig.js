@@ -102,46 +102,13 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
     };
 
 
-    //经营类型
-    $scope.runKind = [
-        {
-            runKindId: 0,
-            name: "自营"
-        }, {
-            runKindId: 1,
-            name: "合作"
-        },
-    ];
-
-    $scope.getRunKind = function ($item) {
-        $item = {};
-        $scope.runKindId = $item.runKindId;
-    }
-
-    //经营状态
-    $scope.runStatus = [
-        {
-            runStatusId: 0,
-            name: "正常营业"
-        }, {
-            runStatusId: 1,
-            name: "歇业"
-        }, {
-            runStatusId: 2,
-            name: "关闭"
-        }
-    ];
-
-    $scope.getRunStatus = function ($item) {
-        $item = {};
-        $scope.runStatusId = $item.runStatusId;
-    };
 
     //*************************分割线结束***********************************
     $rootScope.query = function () {
         var params = {
             "currentPage": parseInt($scope.PageIndex) - 1,
             "pageSize": parseInt($scope.PageSize),
+            "name": $scope.data.name,
             "provinceId": $scope.data.provinceId == "" ? undefined : Number($scope.data.provinceId),
             "cityId": $scope.data.cityId == "" ? undefined : Number($scope.data.cityId),
             "regionId": $scope.data.regionId == "" ? undefined : Number($scope.data.regionId)
@@ -285,22 +252,6 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
      -----------------
      */
 
-    //声明变量
-    $scope.gymEditData = {};
-    $scope.runKind = [
-        {
-            runKindId: 0,
-            name: "自营"
-        }, {
-            runKindId: 1,
-            name: "合作"
-        }
-    ];
-    $scope.getRunKind = function ($item) {
-        $scope.runKindId = $item.runKindId;
-    };
-
-
     //2：编辑好后提交场馆的信息
 
     $scope.saveGymEdit = function () {
@@ -313,7 +264,6 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
             "address": $scope.gymEditData.address,
             "linkedMan": $scope.gymEditData.linkedMan,
             "phone": $scope.gymEditData.phone,
-
         };
         console.log("编辑场馆要丢给后台的字段");
         console.log(params);
@@ -365,39 +315,7 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
     //丢给后台的数据
     $scope.roleData = [];
 
-    //经营状态
-    $scope.runStatus = [
-        {
-            runStatusId: 0,
-            name: "正常营业"
-        }, {
-            runStatusId: 1,
-            name: "歇业"
-        }, {
-            runStatusId: 2,
-            name: "关闭"
-        }
-    ];
 
-    $scope.getRunStatus = function ($item) {
-        $item = {};
-        $scope.runStatusId = $item.runStatusId;
-    };
-
-    $scope.runKind = [
-        {
-            runKindId: 0,
-            name: "自营"
-        }, {
-            runKindId: 1,
-            name: "合作"
-        },
-    ];
-
-    $scope.getRunKind = function ($item) {
-        $item = {};
-        $scope.runKindId = $item.runKindId;
-    };
     $scope.save = function (item, $index) {
         var params = {
             "name": $scope.data.gymName,
@@ -407,7 +325,7 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
             "address": $scope.data.address,
             "linkedMan": $scope.data.linkedMan,
             "phone": $scope.data.phone
-        };
+        }
         console.log(params, "添加场馆要丢给后台的字段:");
 
         restful.fetch($rootScope.api.addGym, "POST", params).then(function (res) {
