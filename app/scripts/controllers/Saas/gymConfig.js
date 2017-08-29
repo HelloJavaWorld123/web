@@ -150,7 +150,7 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
         }
 
     };
-
+    $scope.gymEditData={};
     //弹窗编辑
     $rootScope.modalEditShowOrHidden = 0;
     $scope.gymEdit = function (gym) {

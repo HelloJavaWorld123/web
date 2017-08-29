@@ -69,8 +69,11 @@ App.controller('userDetailController', ['$scope', '$stateParams', '$state', '$ro
             }
         }).then(function (res) {
             if (res.data.code == 2000) {
+                if(!res.data.page_info){
+                    res.data.page_info={};
+                }
                 $scope.item = res.data.data;
-                $scope.totalCount=res.page_info.total.
+                $scope.totalCount=res.data.page_info.total;
 
                 console.log(res.data, "用户基本信息：");
             } else {
