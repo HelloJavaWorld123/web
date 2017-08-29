@@ -39,7 +39,6 @@ App.controller('userInfoController', ['$scope', '$state', '$rootScope', '$http',
             "count": parseInt($scope.PageSize),
             "cityId": $scope.data.cityId,
             "phone": $scope.data.phone,
-            "vipCard": $scope.data.vipCard,
             "mallId": $scope.data.mallId,
             "startTime": $rootScope.tools.dateToTimeStamp13Bit($scope.data.startTime),
             "endTime": $rootScope.tools.dateToTimeStamp13Bit($scope.data.endTime)

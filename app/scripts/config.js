@@ -83,18 +83,18 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
         switchDevStatus: $rootScope.BASEURL + "api/devMgmt/device/alterOnlineStatus",
         //用户信息
         getUserList: $rootScope.BASEURL + "api/memberMgmt/member/list",
-
+        UserListEportExcel: $rootScope.BASEURL + "api/memberMgmt/member/exportExcel",
         /*用户详情begin*/
         //基本信息
         getUserDetail01: $rootScope.BASEURL + "api/memberMgmt/member/getDetailById",
         //检测报告
-        getUserDetail02: $rootScope.BASEURL + "api/sailMgmt/bodyReportView/getListByMemId",
+        getUserDetail02: $rootScope.BASEURL + "api/memberMgmt/member/getBodyReportById",
         //跑步方案
-        getUserDetail03: $rootScope.BASEURL + "api/memberMgmt/member/getMemberScheme",
+        getUserDetail03: $rootScope.BASEURL + "api/memberMgmt/member/getMotionSchemeListById",
         //充值记录
     /*    getUserDetail04: $rootScope.BASEURL + "api/memberMgmt/wallet/getAccountCharge",*/
         //活动记录
-        getUserDetail05: $rootScope.BASEURL + "api/sailMgmt/sportRecord/getlist",
+        getUserDetail05: $rootScope.BASEURL + "api/memberMgmt/member/getSportRecordListById",
         /*用户详情end*/
 
         //体测报告-东华原

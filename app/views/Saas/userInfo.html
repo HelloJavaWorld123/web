@@ -1,9 +1,9 @@
 <article ng-controller="userInfoController" class="userInfo container-fluid">
     <!-- 上部分-联动 -->
-    <form action="" method="POST" ng-enter="query()" name="userInfoDataFormName">
+    <form action="{{api.UserListEportExcel}}" method="POST" ng-enter="query()" name="userInfoDataFormName">
         <section class="row">
             <div class="form-group col-md-2">
-                <label class="col-md-4 control-label">省份：</label>
+                <label class="col-md-3 control-label">省份：</label>
                 <div class="col-md-8">
                     <ui-select ng-model="data.provinceId" theme="bootstrap" on-select="getCitys($item)"
                                name="provinceId">
@@ -18,7 +18,7 @@
                 <input type="hidden" value="{{data.provinceId}}" name="provinceId">
             </div>
             <div class="form-group col-md-2">
-                <label class="col-md-4 control-label">城市：</label>
+                <label class="col-md-3 control-label">城市：</label>
                 <div class="col-md-8">
                     <ui-select ng-model="data.cityId" theme="bootstrap" on-select="getCountys($item)"
                                ng-disabled="data.provinceId==undefined?true:false" name="cityId">
@@ -48,9 +48,9 @@
                         </ul>
                     </div>
                 </div>
-             <!--   <input type="hidden" name="startTime"
-                       value="{{tools.dateToTimeStamp13Bit(data.startTime)}}"
-                      >-->
+                <!--   <input type="hidden" name="startTime"
+                          value="{{tools.dateToTimeStamp13Bit(data.startTime)}}"
+                         >-->
                 <input type="hidden" name="startTime"
                        value="{{data.startTime|date:'yyyy-MM-dd '}}"
                 >
@@ -70,9 +70,7 @@
                         </ul>
                     </div>
                 </div>
-               <!-- <input type="text" name="endTime"
-                       value="{{tools.dateToTimeStamp13Bit(data.endTime)}}"
-                       class="exportNone">-->
+
                 <input type="hidden" name="endTime"
                        value="{{data.endTime|date:'yyyy-MM-dd '}}"
                 >
@@ -80,11 +78,18 @@
             </div>
             <div class="form-group col-md-3">
                 <label class="col-md-3 text-right control-label">手机号：</label>
-                <div class="col-md-8">
-                    <input type="text" class="form-control" ng-model="data.phone"  name="phone" ng-pattern="PATTERN_CONFIG.TEL">
+                <div class="col-md-9">
+                    <input type="text" class="form-control" ng-model="data.phone" name="phone"
+                           ng-pattern="PATTERN_CONFIG.TEL">
                 </div>
                 <div ng-show="userInfoDataFormName.phone.$error.pattern" class="col-lg-12">
                     <label class="col-md-offset-3 col-md-9" style="color:red">请输入正确的手机号码或固话</label>
+                </div>
+            </div>
+            <div class="form-group col-md-3">
+                <label class="col-md-3 text-right control-label">猫号：</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" ng-model="data.mallId" name="mallId" maxlength="20">
                 </div>
             </div>
 
@@ -95,6 +100,7 @@
         <div class="button-first">
             <button type="button" class="btn btn-raised btn-primary" ng-click="query()">查询</button>
             <button type="button" class="btn btn-raised btn-default" ng-click="reset()">重置</button>
+            <button type="submit" class="btn btn-raised btn-primary">导出</button>
         </div>
 
 
@@ -127,16 +133,19 @@
 
                         <tbody ng-repeat="item in userInfoListData">
                         <tr>
-                            <td>{{item.mallId}}</td>
-                            <td>{{item.mobile}}</td>
+                            <td>{{item.mallId==null?"--":item.mallId}}</td>
+                            <td>{{item.mobile==null?"--":item.mobile}}</td>
 
-                            <td>{{item.nickname}}</td>
+                            <td>{{item.nickname==null?"--":item.nickname}}</td>
 
                             <td ng-if="item.hasAnalyze==true">
                                 <i class="fa fa-check" aria-hidden="true"></i>
                             </td>
                             <td ng-if="item.hasAnalyze==false">
                                 <i class="fa fa-close" aria-hidden="true"></i>
+                            </td>
+                            <td ng-if="item.hasAnalyze==null">
+                                --
                             </td>
 
                             <td ng-if="item.hasScheme==true">
@@ -145,11 +154,12 @@
                             <td ng-if="item.hasScheme==false">
                                 <i class="fa fa-close" aria-hidden="true"></i>
                             </td>
+                            <td ng-if="item.hasScheme==null">
+                                --
+                            </td>
 
-
-
-                            <td>{{item.createTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
-                            <td>{{item.city}}</td>
+                            <td>{{item.createTime==null?"--":item.createTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                            <td>{{item.city==null?"--":item.city}}</td>
                             <td>
                                 <a ng-click="getUserDetail(item.id)" class="pointer">详情</a>
                             </td>
