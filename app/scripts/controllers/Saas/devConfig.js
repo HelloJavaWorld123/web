@@ -4,7 +4,7 @@
  * @Last Modified by:   haoxb
  * @Last Modified time: 2017-06-07 14:32:33
  */
-//场馆设置
+//设备设置
 'use strict';
 App.controller('DevConfigController', ['$scope', '$stateParams', '$rootScope', '$http', '$uibModal', 'restful', 'ngProgressFactory', 'lifeHouseAreaSelector', 'toastr', function ($scope, $stateParams, $rootScope, $http, $uibModal, restful, ngProgressFactory, lifeHouseAreaSelector, toastr) {
 
@@ -28,21 +28,6 @@ App.controller('DevConfigController', ['$scope', '$stateParams', '$rootScope', '
         $scope.query();
     }
 
-    //经营类型
-    $scope.runKind = [
-        {
-            runKindId: 0,
-            name: "自营"
-        }, {
-            runKindId: 1,
-            name: "合作"
-        },
-    ];
-
-    $scope.getRunKind = function ($item) {
-        $item = {};
-        $scope.runKindId = $item.runKindId;
-    }
 
 
     //弹窗新增
@@ -115,8 +100,7 @@ App.controller('DevConfigController', ['$scope', '$stateParams', '$rootScope', '
             onlineStatus: item.onlineStatus == 1 ? item.onlineStatus = 0 : 1
 
         };
-        console.log(param.onlineStatus, "状态切换onlineStatus参数类型：");
-        console.log(param.onlineStatusName, "状态切换onlineStatusName参数类型：");
+
         restful.fetch($rootScope.api.switchDevStatus, "POST", param).then(function (res) {
             if (res.code == 2000) {
                 console.log(res, "状态切换返回：");
@@ -184,59 +168,56 @@ App.controller('DevConfigController', ['$scope', '$stateParams', '$rootScope', '
         }, {
             id: 2,
             name: "分析仪"
+        }, {
+            id: 3,
+            name: "AR"
         }
     ];
     $scope.getDeviceKind = function (item) {
         $scope.deviceKinds.id = item.id;
+        console.log($scope.deviceKinds.id);
     };
+
     //设备厂商-跑步机
+    $scope.deviceTradeT1s = {};
     $scope.deviceTradeT1 = [
         {
-            deviceTradeId: 0,
+            id: 0,
             name: "好家庭"
         }, {
-            deviceTradeId: 1,
+            id: 1,
             name: "汇祥"
         }
     ];
+    $scope.getDeviceTradeT1 = function (item) {
+        $scope.$scope.deviceTradeT1s.id = item.id;
+    };
     //设备厂商-椭圆机+分析仪
+    $scope.deviceTradeT2s = {};
     $scope.deviceTradeT2 = [
         {
-            deviceTradeId: 2,
+            id: 2,
             name: "清华同方"
         }, {
-            deviceTradeId: 3,
+            id: 3,
             name: "东华原"
         }
     ];
-
-
-    $scope.deviceToTradeFn = function (e) {
-        var isFlagSelect = 0;
-        if ($scope.addDev.kind == 0) {
-            //显示的跑步机的供应商F
-            return isFlagSelect = 1;
+    $scope.getDeviceTradeT2 = function (item) {
+        $scope.deviceTradeT2s.id = item.id;
+    };
+    //设备厂商-AR
+    $scope.deviceTradeT3 = [
+        {
+            id: 4,
+            name: "中大AR实验室"
         }
-        //显示的非跑步机的供应商
-        return isFlagSelect = 0;
+    ];
+    $scope.deviceTradeT3s = {};
+    $scope.getDeviceTradeT3 = function (item) {
+        $scope.deviceTradeT3s.id = item.id;
+    };
 
-    }
-
-    //根据第一个框的选项获取第二个下拉框的可选值
-    function getItemsToAppend(selectedValue) {
-        var options = new Array();
-        if (selectedValue == "1") {
-            options.push("11", "12");
-        }
-        else if (selectedValue == "2") {
-            options.push("21", "22");
-        }
-        else {
-            options.push("31", "32");
-        }
-        return options;
-
-    }
 
 
 }]);
@@ -288,7 +269,6 @@ App.controller("DevAddController", ['$scope', '$stateParams', '$uibModalInstance
     $scope.close = function () {
         $uibModalInstance.dismiss('close');
     };
-
     //设备类型
     $scope.deviceKinds = {};
     $scope.deviceKind = [
@@ -301,6 +281,9 @@ App.controller("DevAddController", ['$scope', '$stateParams', '$uibModalInstance
         }, {
             id: 2,
             name: "分析仪"
+        }, {
+            id: 3,
+            name: "AR"
         }
     ];
     $scope.getDeviceKind = function (item) {
@@ -336,6 +319,18 @@ App.controller("DevAddController", ['$scope', '$stateParams', '$uibModalInstance
     $scope.getDeviceTradeT2 = function (item) {
         $scope.deviceTradeT2s.id = item.id;
     };
+    //设备厂商-AR
+    $scope.deviceTradeT3 = [
+        {
+            id: 4,
+            name: "中大AR实验室"
+        }
+    ];
+    $scope.deviceTradeT3s = {};
+    $scope.getDeviceTradeT3 = function (item) {
+        $scope.deviceTradeT3s.id = item.id;
+    };
+
     //单次运行最长时间
     $scope.singleUseTime = function () {
         $scope.data.onceTime = $scope.data.onceTime == 0 ? null : 0;
@@ -403,6 +398,9 @@ App.controller("DevEditController", ['$scope', '$http', '$uibModalInstance', 're
         }, {
             id: 2,
             name: "分析仪"
+        }, {
+            id: 3,
+            name: "AR"
         }
     ];
     $scope.getDeviceKind = function (item) {
@@ -425,6 +423,7 @@ App.controller("DevEditController", ['$scope', '$http', '$uibModalInstance', 're
         $scope.$scope.deviceTradeT1s.id = item.id;
     };
     //设备厂商-椭圆机+分析仪
+    $scope.deviceTradeT2s = {};
     $scope.deviceTradeT2 = [
         {
             id: 2,
@@ -434,9 +433,19 @@ App.controller("DevEditController", ['$scope', '$http', '$uibModalInstance', 're
             name: "东华原"
         }
     ];
-    $scope.deviceTradeT2s = {};
     $scope.getDeviceTradeT2 = function (item) {
         $scope.deviceTradeT2s.id = item.id;
+    };
+    //设备厂商-AR
+    $scope.deviceTradeT3 = [
+        {
+            id: 4,
+            name: "中大AR实验室"
+        }
+    ];
+    $scope.deviceTradeT3s = {};
+    $scope.getDeviceTradeT3 = function (item) {
+        $scope.deviceTradeT3s.id = item.id;
     };
 
 
