@@ -1,7 +1,7 @@
 <article ng-controller=" gymConfigController" class="gymConfig container-fluid">
         <div class="unModalView " ng-if="allShowOrHidden==1">
             <!-- 上部分-联动 -->
-            <form action="" method="POST" ng-enter="query()">
+            <form action="{{api.GymEportExcel}}" method="POST" ng-enter="query()">
                 <section class="row">
                     <div class="form-group col-md-2">
                         <label class="col-md-4 control-label">省份：</label>
@@ -64,6 +64,7 @@
                     <button type="button" class="btn btn-raised btn-primary" ng-click="query()">查询</button>
                     <button type="button" class="btn btn-raised btn-default" ng-click="reset()">重置</button>
                     <button type="button" class="btn btn-raised btn-info" ng-click="addGym()">新增</button>
+                    <button type="submit" class="btn btn-raised btn-primary">导出</button>
                 </div>
 
 
@@ -89,7 +90,7 @@
                                     <th>区域</th>
                                     <th>详细地址</th>
 
-
+                                    <th>设备数量</th>
                                     <th>联系人</th>
 
                                     <th>操作</th>
@@ -109,6 +110,7 @@
                                     <td>{{item.cityName==null?"--":item.cityName}}</td>
                                     <td>{{item.regionName==null?"--":item.regionName}}</td>
                                     <td class="w300">{{item.address==null?"--":item.address}}</td>
+                                    <td>{{item.deviceCount==null?"--":item.deviceCount}}</td>
                                     <td>{{item.linkedMan==null?"--":item.linkedMan}} <br>{{item.phone==null?"--":item.phone}}</td>
 
                                     <td>

@@ -73,6 +73,7 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
         delGym: $rootScope.BASEURL + "api/devMgmt/gym/del",
         EditGym: $rootScope.BASEURL + "api/devMgmt/gym/alter",
         getGymById: $rootScope.BASEURL + "api/devMgmt/gym/getid",
+        GymEportExcel: $rootScope.BASEURL + "api/devMgmt/gym/exportExcel",
         // 设备
         getDevList: $rootScope.BASEURL + "api/devMgmt/device/getAllByPage",
         addDev: $rootScope.BASEURL + "api/devMgmt/device/add",
