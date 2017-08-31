@@ -12,6 +12,8 @@
                         </div>
                     </div>
 
+
+
                     <div class="form-group col-md-2">
                         <label class="col-md-4 control-label">时间：</label>
                         <div class="col-md-8">
@@ -37,6 +39,23 @@
                         </div>
                     </div>
 
+
+                    <div class="form-group col-md-3">
+                        <label class="col-md-3 control-label">文件类型：</label>
+                        <div class="col-md-8">
+                            <ui-select ng-model="data.type" theme="bootstrap" on-select="getFileType($item)">
+                                <ui-select-match allow-clear="true" placeholder="全部">{{$select.selected.name}}</ui-select-match>
+
+
+                                <ui-select-choices
+                                        repeat="item.id as item in fileType | orderBy:'id' | filter: $select.search.name">
+                                    <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+
+                        </div>
+                    </div>
+
                 </section>
 
                 <!--中部-点击搜索-->
@@ -51,7 +70,7 @@
     </section>
 
     <div class="button-first">
-        <button type="button" class="btn btn-raised btn-info" ng-click="addApk()">上传apk</button>
+        <button type="button" class="btn btn-raised btn-info" ng-click="addApk()">上传文件</button>
     </div>
 
 
@@ -66,6 +85,7 @@
                         <tr class="active">
                             <th>序号</th>
                             <th>软件版本</th>
+                            <th>文件类型</th>
 
                             <th>版本说明</th>
                             <th>上传时间</th>
@@ -79,6 +99,9 @@
                             <td>{{$index+1+(((PageIndex||1)-1)*PageSize)}}</td>
 
                             <td>{{item.version}}</td>
+                            <td ng-if="item.type==null">"--"</td>
+                            <td ng-if="item.type==0">{{fileType[0].name}}</td>
+                            <td ng-if="item.type==1">{{fileType[1].name}}</td>
                             <td width="700">{{item.description}}</td>
                             <td>{{tools.timeStampToDate(item.apkUpdateTime)}}</td>
                             <td ng-if="item.state==0">{{progress[0].name}}</td>
@@ -140,27 +163,45 @@
 <!--蒙版-弹窗1-上传apk-->
 <script type="text/ng-template" id="apkViewAdd.html">
     <div class="modal-header">
-        <h4>上传apk</h4>
+        <h4>上传文件</h4>
     </div>
     <div class="modal-body">
         <form name="gymViewAddForm">
             <section class="row">
+
+
                 <div class="form-group col-md-12">
-                    <label class="col-md-3 text-right control-label" >上传apk：</label>
+                    <label class="col-md-3 text-right control-label">文件类型：</label>
+                    <div class="col-md-9">
+                        <ui-select ng-model="data.type" theme="bootstrap" on-select="getFileType($item)">
+                            <ui-select-match allow-clear="true" placeholder="请先输入上传文件的类型">{{$select.selected.name}}</ui-select-match>
+
+
+                            <ui-select-choices
+                                    repeat="item.id as item in fileType | orderBy:'id' | filter: $select.search.name">
+                                <span ng-bind-html="item.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+
+                    </div>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label" >上传文件：</label>
                     <div class="col-md-4">
                         <div class="is-fileinput">
-                            <input type="file" ng-disabled="isHave_by_coach" ng-model="userIco"  my-file-up  imglength="1"  pic-index='1'>
+                            <input type="file"  ng-model="userIco"  my-file-up  imglength="1"  pic-index='1'  ng-disabled="data.type==null">
                             <input type="text" class="form-control" >
                             <i ng-class="{'is-loading':isLoadingIco}" class="fa fa-spinner"></i>
                         </div>
                     </div>
                     <div class="col-md-offset-3 col-md-9">
-                    <div  ng-repeat="imgUrl in imgUrlIcoArr1">
-                        <img ng-src="{{tools.imgCompress(imgUrl.appUrl,'345x175')}}" width="1" height="1">
-                        <img src="app/images/apk.png" width="48" height="48">
-                        <span   ng-click="delIco($index,1)">取消上传</span>
+                        <div  ng-repeat="imgUrl in imgUrlIcoArr1">
+                            <img ng-src="{{tools.imgCompress(imgUrl.appUrl,'345x175')}}" width="1" height="1">
+                            <img src="app/images/apk.png" width="48" height="48">
+                            <span   ng-click="delIco($index,1)">取消上传</span>
+                        </div>
                     </div>
-                </div>
                 </div>
 
                 <div class="form-group col-md-12">
@@ -205,25 +246,47 @@
 <!--蒙版-弹窗2-上传apk编辑-->
 <script type="text/ng-template" id="editApk.html">
     <div class="modal-header">
-        <h4>上传apk编辑</h4>
+        <h4>上传文件编辑</h4>
     </div>
     <div class="modal-body">
         <form name="gymViewAddForm">
             <section class="row">
+
                 <div class="form-group col-md-12">
-                    <label  class="col-md-3 control-label text-right">上传apk：</label>
-                    <div class="col-md-6">
+                    <label class="col-md-3 text-right control-label">文件类型：</label>
+                    <div class="col-md-9">
+                        <ui-select ng-model="data.type" theme="bootstrap" on-select="getFileType($item)">
+                            <ui-select-match allow-clear="true" placeholder="请先输入上传文件的类型">{{$select.selected.name}}</ui-select-match>
+
+
+                            <ui-select-choices
+                                    repeat="item.id as item in fileType | orderBy:'id' | filter: $select.search.name">
+                                <span ng-bind-html="item.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <label  class="col-md-3 control-label text-right">上传文件：</label>
+                    <div class="col-md-4">
                         <div class="is-fileinput">
-                            <input type="file" ng-disabled="isHave_by_coach" ng-model="userIco"  my-file-up  imglength="1"  pic-index='1'>
+                            <input type="file" ng-disabled="data.type==null" ng-model="userIco"  my-file-up  imglength="1"  pic-index='1'>
                             <input type="text" class="form-control" >
                             <i ng-class="{'is-loading':isLoadingIco}" class="fa fa-spinner"></i>
                         </div>
                     </div>
-                    <div  ng-repeat="imgUrl in imgUrlIcoArr1">
-                        <img ng-src="{{tools.imgCompress(imgUrl.url,'345x175')}}" width="1" height="1">
-                        <img src="app/images/apk.png" width="48" height="48">
-                        <span   ng-click="delIco($index,1)">取消上传</span>
+
+                    <div class="col-md-offset-3 col-md-9">
+                        <div ng-repeat="imgUrl in imgUrlIcoArr1" >
+
+                            <img src="app/images/apk.png" width="48" height="48" >
+                            <img ng-src="{{tools.imgCompress(imgUrl.url,'345x175')}}" width="1" height="1">
+
+                            <span   ng-click="delIco($index,1)">取消上传</span>
+                        </div>
                     </div>
+
                 </div>
 
                 <div class="form-group col-md-12">

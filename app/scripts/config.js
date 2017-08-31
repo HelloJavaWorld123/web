@@ -136,7 +136,7 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
         gymUpgradeUpdate: $rootScope.BASEURL + "api/devMgmt/apkUploadManage/update",
         findApkPushState: $rootScope.BASEURL + "api/devMgmt/apkUploadManage/findApkPushState",
         pushApk: $rootScope.BASEURL + "api/devMgmt/apkUploadManage/pushApk",
-        fileUpload: $rootScope.BASEURL + "api/upload/fileUpload",
+        fileUpload: $rootScope.BASEURL + "api/upload/fileUpload/false",
 
 
 

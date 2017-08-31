@@ -790,6 +790,7 @@ App.directive('myFileUp', ['$http', 'toastr', '$rootScope', function($http, toas
 				var scale = parseInt(attr.imgwidth) / parseInt(attr.imgheight);
 			}
 			element.on('change', function() {
+
 				console.log(this);
 				var initLength = 0;
 				if(this.files.length == 0) {
@@ -810,39 +811,53 @@ App.directive('myFileUp', ['$http', 'toastr', '$rootScope', function($http, toas
 				} else {
 					scope.isLoadingIco = true;
 				}
-				var fd = new FormData();
-				for(var i = this.files.length; i >= 0; i--) {
-					fd.append('file', this.files[i]);
-				}
-				for(var i = 0; i < this.files.length; i++) {
 
-					$http({
-						method: 'POST',
-						url: $rootScope.api.fileUpload,
-						data: fd,
-						headers: {
-							'Content-Type': undefined
-						},
-						transformRequest: angular.identity
-					})
-						.success(function(response) {
-							//上传成功的操作
-							$(".imgArr").remove();
-							console.log("上传成功返回的数据：", response.data);
 
-							scope[key].push(response.data);
+                var fileObj = this.files[0];
+                console.log("11111111",fileObj);
+                var fileExt = fileObj.name.substring(fileObj.name.lastIndexOf("."),fileObj.name.length);//获得文件后缀名
+                console.log(fileExt);
 
-							console.log(scope[key]);
-							scope.isLoadingIco = false;
-						});
+                if(scope.data.type==0&&fileExt!='.apk') {
+                    toastr.error("请上传后缀名为apk的文件！");
+                    scope.isLoadingIco = false;
+                    return;
+                }else if(scope.data.type==1&&fileExt!='.bin'){
+                    toastr.error("请上传后缀名为bin的文件！");
+                    scope.isLoadingIco = false;
+                    return;
+                } else{
+                    var fd = new FormData();
+                    console.log(fd,"fd:");
+                    for(var i = this.files.length; i >= 0; i--) {
+                        fd.append('file', this.files[i]);
+                    }
+                    for(var i = 0; i < this.files.length; i++) {
+                        $http({
+                            method: 'POST',
+                            url: $rootScope.api.fileUpload,
+                            data: fd,
+                            headers: {
+                                'Content-Type': undefined
+                            },
+                            transformRequest: angular.identity
+                        })
+                            .success(function(response) {
+                                //上传成功的操作
+                                $(".imgArr").remove();
+                                console.log("上传成功返回的数据：", response.data);
 
-					var imageObj = this.files[i];
-					if(this.files[i].size > imgsize * 1024 * 1024) {
-						toastr.error("你的文件超过了" + imgsize + "M，请重新选择图片上传！");
-						scope.isLoadingIco = false;
-						return;
-					} else {
-						$http({
+                                scope[key].push(response.data);
+
+                                console.log(scope[key]);
+                                scope.isLoadingIco = false;
+                            });
+                }
+
+
+
+
+						/*$http({
 							method: 'POST',
 							url: $rootScope.api.multiFileUpload,
 							data: fd,
@@ -869,8 +884,8 @@ App.directive('myFileUp', ['$http', 'toastr', '$rootScope', function($http, toas
 								}
 								console.log(scope[key]);
 								scope.isLoadingIco = false;
-							});
-					}
+							});*/
+
 				}
 			});
 		}

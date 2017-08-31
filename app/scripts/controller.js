@@ -1080,6 +1080,7 @@ App.controller('gymUpgradeController', ['$scope','$state', '$rootScope', '$http'
     $scope.reset = function () {
         $scope.data = {};
         $scope.memberTypeDatas = {};
+        $scope.query();
     }
 
 
@@ -1099,6 +1100,20 @@ App.controller('gymUpgradeController', ['$scope','$state', '$rootScope', '$http'
         $scope.id = item.id;
     };
 
+    //类型
+    $scope.fileType = [
+        {
+            id: 0,
+            name: "apk"
+        }, {
+            id: 1,
+            name: "bin"
+        }
+    ];
+    $scope.getFileType = function (item) {
+        $scope.id = item.id;
+    };
+
     //发布
     $scope.publish = function (itemId) {
         var param = {
@@ -1113,7 +1128,7 @@ App.controller('gymUpgradeController', ['$scope','$state', '$rootScope', '$http'
                 toastr.error("发布失败", res.msg);
             }
         }, function (rej) {
-            toastr.error("发布失败", res.msg);
+            toastr.error("发布失败");
         });
     }
 
@@ -1207,6 +1222,7 @@ App.controller('gymUpgradeController', ['$scope','$state', '$rootScope', '$http'
                 "createTime": $scope.data.startTime,
                 "endTime": $scope.data.endTime,
                 "version": $scope.data.version,
+                "type": $scope.data.type,
             }
         }).then(function (res) {
             if (res.data.code == 2000) {
@@ -1242,8 +1258,9 @@ App.controller("apkAddController", ['$scope', '$uibModalInstance', 'restful', '$
         var params = {
             "version": $scope.data.version,
             "apkUpdateTime": $scope.data.apkUpdateTime,
-            "url": $scope.imgUrlIcoArr1[0].appUrl,
+            "url": $scope.imgUrlIcoArr1[0].serverFileName,
             "description": $scope.data.description,
+            "type": $scope.data.type,
 
         }
 
@@ -1271,6 +1288,21 @@ App.controller("apkAddController", ['$scope', '$uibModalInstance', 'restful', '$
         $scope[key].splice(index,1);
     }
 
+
+    //类型
+    $scope.fileType = [
+        {
+            id: 0,
+            name: "apk"
+        }, {
+            id: 1,
+            name: "bin"
+        }
+    ];
+    $scope.getFileType = function (item) {
+        $scope.id = item.id;
+    };
+
 }]);
 
 
@@ -1295,9 +1327,8 @@ App.controller("editApkController", ['$scope', '$uibModalInstance', 'restful', '
              }*/
             $scope.data = res.data;
 
+            $scope.imgUrlIcoArr1 = [{serverFileName:$scope.data.url}];
             console.log($scope.data,"$scope.data:");
-
-
 
         } else {
             toastr.error(res.msg);
@@ -1313,8 +1344,9 @@ App.controller("editApkController", ['$scope', '$uibModalInstance', 'restful', '
 
             "version": $scope.data.version,
             "apkUpdateTime": $scope.data.apkUpdateTime,
-            "url": $scope.imgUrlIcoArr1[0].appUrl,
+            "url": $scope.imgUrlIcoArr1[0].serverFileName,
             "description": $scope.data.description,
+            "type": $scope.data.type,
 
 
 
@@ -1345,6 +1377,21 @@ App.controller("editApkController", ['$scope', '$uibModalInstance', 'restful', '
         var key = 'imgUrlIcoArr' + picIndex
         $scope[key].splice(index,1);
     }
+
+
+    //类型
+    $scope.fileType = [
+        {
+            id: 0,
+            name: "apk"
+        }, {
+            id: 1,
+            name: "bin"
+        }
+    ];
+    $scope.getFileType = function (item) {
+        $scope.id = item.id;
+    };
 }]);
 
 
