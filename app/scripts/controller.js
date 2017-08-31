@@ -1943,7 +1943,6 @@ App.controller('userInfoController', ['$scope', '$state', '$rootScope', '$http',
         var params = {
             "page": parseInt($scope.PageIndex) - 1,
             "count": parseInt($scope.PageSize),
-            "provinceId": $scope.data.provinceId,
             "cityId": $scope.data.cityId,
             "phone": $scope.data.phone,
             "mallId": $scope.data.mallId,
