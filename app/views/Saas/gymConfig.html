@@ -174,7 +174,7 @@
                         <div class="col-md-9">
                             <div class="col-md-4">
                                 <ui-select ng-model="data.provinceId" theme="bootstrap" on-select="getCitys($item.id)"
-                                           name="provinceId">
+                                           name="provinceId" required>
                                     <ui-select-match allow-clear="true" placeholder="省">{{$select.selected.name}}
                                     </ui-select-match>
                                     <ui-select-choices
@@ -185,7 +185,7 @@
                             </div>
                             <div class="col-md-4">
                                 <ui-select ng-model="data.cityId" theme="bootstrap" on-select="getCountys($item.id)"
-                                           name="cityId">
+                                           name="cityId" required>
                                     <ui-select-match allow-clear="true" placeholder="市">{{$select.selected.name}}
                                     </ui-select-match>
                                     <ui-select-choices
@@ -196,7 +196,7 @@
                             </div>
                             <div class="col-md-4">
                                 <ui-select ng-model="data.regionId" theme="bootstrap"
-                                           ng-disabled="data.cityId==undefined?true:false" name="regionId">
+                                           ng-disabled="data.cityId==undefined?true:false" name="regionId" required>
                                     <ui-select-match allow-clear="true" placeholder="区">{{$select.selected.name}}
                                     </ui-select-match>
                                     <ui-select-choices
@@ -279,7 +279,7 @@
                             <div class="col-md-4">
                                 <ui-select ng-model="gymEditData.provinceId" theme="bootstrap"
                                            on-select="getCitys($item.id)"
-                                           name="provinceId">
+                                           name="provinceId" required>
                                     <ui-select-match allow-clear="true" placeholder="省">{{$select.selected.name}}
                                     </ui-select-match>
                                     <ui-select-choices
@@ -291,7 +291,7 @@
                             <div class="col-md-4">
                                 <ui-select ng-model="gymEditData.cityId" theme="bootstrap"
                                            on-select="getCountys($item.id)"
-                                           name="cityId">
+                                           name="cityId" required>
                                     <ui-select-match allow-clear="true" placeholder="市">{{$select.selected.name}}
                                     </ui-select-match>
                                     <ui-select-choices
@@ -302,7 +302,7 @@
                             </div>
                             <div class="col-md-4">
                                 <ui-select ng-model="gymEditData.regionId" theme="bootstrap"
-                                           ng-disabled="gymEditData.cityId==undefined?true:false" name="regionId">
+                                           ng-disabled="gymEditData.cityId==undefined?true:false" name="regionId" required>
                                     <ui-select-match allow-clear="true" placeholder="区">{{$select.selected.name}}
                                     </ui-select-match>
                                     <ui-select-choices
