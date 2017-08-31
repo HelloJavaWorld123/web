@@ -133,7 +133,7 @@
                     <div class="col-md-9">
                         <!--后台对应的字段-->
                         <ui-select ng-model="data.productInfoId" theme="bootstrap"
-                                   on-select="getDeviceKind($item)" name="">
+                                   on-select="getDeviceKind($item)" name="" required>
                             <ui-select-match allow-clear="true" >{{$select.selected.name}}
                             </ui-select-match>
                             <ui-select-choices
@@ -149,7 +149,7 @@
                     <!--跑步机-->
                     <div class="col-md-9" ng-if="data.productInfoId==0 ||data.productInfoId==undefined">
                         <ui-select ng-model="data.manufacturer" theme="bootstrap" on-select="getDeviceKind($item)"
-                                   name="" ng-disabled="data.productInfoId==undefined?true:false">
+                                   name="" ng-disabled="data.productInfoId==undefined?true:false" required>
                             <ui-select-match allow-clear="true" >{{$select.selected.name}}
                             </ui-select-match>
                             <ui-select-choices
@@ -163,7 +163,7 @@
                     <!--非跑步机-->
                     <div class="col-md-9" ng-if="data.productInfoId==1||data.productInfoId==2">
                         <ui-select ng-model="data.manufacturer" theme="bootstrap" on-select="getDeviceTradeT2($item)"
-                                   name="" ng-disabled="data.productInfoId==undefined?true:false">
+                                   name="" ng-disabled="data.productInfoId==undefined?true:false" required>
                             <ui-select-match allow-clear="true" >{{$select.selected.name}}
                             </ui-select-match>
                             <ui-select-choices
@@ -176,7 +176,7 @@
                     <!--AR-->
                     <div class="col-md-9" ng-if="data.productInfoId==3">
                         <ui-select ng-model="data.manufacturer" theme="bootstrap" on-select="getDeviceTradeT3($item)"
-                                   name="" ng-disabled="data.productInfoId==undefined?true:false">
+                                   name="" ng-disabled="data.productInfoId==undefined?true:false" required>
                             <ui-select-match allow-clear="true" >{{$select.selected.name}}
                             </ui-select-match>
                             <ui-select-choices
@@ -218,7 +218,7 @@
                             <div class="dropdown">
                                 <input type="text" class="form-control" ng-model="data.productionDate"
                                        datetime-transform
-                                       format="yyyy-MM-dd" name="productionDate" disabled>
+                                       format="yyyy-MM-dd" name="productionDate" disabled required>
                                 <i class="glyphicon glyphicon-calendar rili-icon dropdown-toggle" id="" role="button"
                                    data-toggle="dropdown"></i>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="beginTime">
@@ -238,7 +238,7 @@
                     <div class="col-md-4">
                         <div class="dropdown">
                             <input type="text" class="form-control" ng-model="data.beginTime" datetime-transform
-                                   format="yyyy-MM-dd" name="beginTime" disabled>
+                                   format="yyyy-MM-dd" name="beginTime" disabled required>
                             <i class="glyphicon glyphicon-calendar rili-icon dropdown-toggle" id="beginTime"
                                role="button"
                                data-toggle="dropdown"></i>
@@ -255,7 +255,7 @@
                     <div class="col-md-4">
                         <div class="dropdown">
                             <input type="text" class="form-control" ng-model="data.endTime" datetime-transform
-                                   format="yyyy-MM-dd" name="endTime" disabled>
+                                   format="yyyy-MM-dd" name="endTime" disabled required>
                             <i class="glyphicon glyphicon-calendar rili-icon dropdown-toggle" id="endTime" role="button"
                                data-toggle="dropdown"></i>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="endTime">
@@ -317,7 +317,7 @@
                     <label ng-click="getDeviceKind($item)" class="col-md-3 text-right control-label">设备类型：</label>
                     <div class="col-md-9">
                         <ui-select ng-model="data.productInfoId" theme="bootstrap"
-                                   on-select="getDeviceKind($item)" name="">
+                                   on-select="getDeviceKind($item)" name="" required>
                             <ui-select-match allow-clear="true" >{{$select.selected.name}}
                             </ui-select-match>
                             <ui-select-choices
@@ -335,7 +335,7 @@
                     <!--跑步机-->
                     <div class="col-md-9" ng-if="data.productInfoId==0">
                         <ui-select ng-model="data.manufacturer" theme="bootstrap" on-select="getDeviceKind($item)"
-                                   name="">
+                                   name="" required>
                             <ui-select-match allow-clear="true" >{{$select.selected.name}}
                             </ui-select-match>
                             <ui-select-choices
@@ -349,7 +349,7 @@
                     <!--非跑步机-->
                     <div class="col-md-9" ng-if="data.productInfoId==1||data.productInfoId==2">
                         <ui-select ng-model="data.manufacturer" theme="bootstrap" on-select="getDeviceTradeT2($item)"
-                                   name="">
+                                   name="" required>
                             <ui-select-match allow-clear="true" >{{$select.selected.name}}
                             </ui-select-match>
                             <ui-select-choices
@@ -362,7 +362,7 @@
                     <!--AR-->
                     <div class="col-md-9" ng-if="data.productInfoId==3">
                         <ui-select ng-model="data.manufacturer" theme="bootstrap" on-select="getDeviceTradeT3($item)"
-                                   name="" ng-disabled="data.productInfoId==undefined?true:false">
+                                   name="" ng-disabled="data.productInfoId==undefined?true:false" required>
                             <ui-select-match allow-clear="true" >{{$select.selected.name}}
                             </ui-select-match>
                             <ui-select-choices
@@ -404,7 +404,7 @@
                             <div class="dropdown">
                                 <input type="text" class="form-control" ng-model="data.productionDate"
                                        datetime-transform
-                                       format="yyyy-MM-dd" name="productionDate" disabled>
+                                       format="yyyy-MM-dd" name="productionDate" disabled required>
                                 <i class="glyphicon glyphicon-calendar rili-icon dropdown-toggle" id="" role="button"
                                    data-toggle="dropdown"></i>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="beginTime">
@@ -425,7 +425,7 @@
                             <div class="dropdown">
                                 <input type="text" class="form-control" ng-model="data.warrantyStartDate"
                                        datetime-transform
-                                       format="yyyy-MM-dd" name="warrantyStartDate" disabled>
+                                       format="yyyy-MM-dd" name="warrantyStartDate" disabled required>
                                 <i class="glyphicon glyphicon-calendar rili-icon dropdown-toggle" id="beginTime"
                                    role="button"
                                    data-toggle="dropdown"></i>
@@ -443,7 +443,7 @@
                             <div class="dropdown">
                                 <input type="text" class="form-control" ng-model="data.warrantyEndDate"
                                        datetime-transform
-                                       format="yyyy-MM-dd" name="warrantyEndDate" disabled>
+                                       format="yyyy-MM-dd" name="warrantyEndDate" disabled required>
                                 <i class="glyphicon glyphicon-calendar rili-icon dropdown-toggle" id="endTime"
                                    role="button"
                                    data-toggle="dropdown"></i>
