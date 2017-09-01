@@ -88,7 +88,7 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
         //基本信息
         getUserDetail01: $rootScope.BASEURL + "api/memberMgmt/member/getDetailById",
         //检测报告
-        getUserDetail02: $rootScope.BASEURL + "api/memberMgmt/member/getBodyReportById",
+        getUserDetail02: $rootScope.BASEURL + "api/memberMgmt/member/getBodyReportListByMemId",
         //跑步方案
         getUserDetail03: $rootScope.BASEURL + "api/memberMgmt/member/getMotionSchemeListById",
         //充值记录
