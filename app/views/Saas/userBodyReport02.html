@@ -17,7 +17,7 @@
             <td ng-if="item.sex==1">男</td>
         </tr>
         <tr>
-            <td>编号</td>
+            <td>猫号</td>
             <td>{{item.testID==null?"--":item.testID }}</td>
             <td>昵称</td>
             <td>{{item.name==null?"--":item.name }}</td>
@@ -84,7 +84,7 @@
                     <td>体重（KG）</td>
                     <td>{{item.weight==null?"--":item.weight }}</td>
                     <td>去脂体重（KG）</td>
-                    <td>未知</td>
+                    <td>{{item.lbm==null?"--":item.lbm }}</td>
                     <td>肌肉（KG）</td>
                     <td>{{item.muscle==null?"--":item.muscle }}</td>
                 </tr>
@@ -150,25 +150,25 @@
                 <tr>
                     <td>身体质量指数 KG/m²</td>
                     <td>{{item.bmi==null?"--":item.bmi }}</td>
-                    <td>无</td>
+                    <td>{{item.bmiRangeState==null?"--":item.bmiRangeState }}</td>
                     <td>{{item.bmiRange==null?"--":item.bmiRange }}</td>
                 </tr>
                 <tr>
                     <td>脂肪百分比</td>
                     <td>{{item.pbf==null?"--":item.pbf }}</td>
-                    <td>无</td>
+                    <td>{{item.pbfRangeState==null?"--":item.pbfRangeState }}</td>
                     <td>{{item.pbfRange==null?"--":item.pbfRange }}</td>
                 </tr>
                 <tr>
                     <td>腰臀比</td>
                     <td>{{item.whr==null?"--":item.whr }}</td>
-                    <td>无</td>
+                    <td>{{item.whrRangeState==null?"--":item.whrRangeState }}</td>
                     <td>{{item.whrRange==null?"--":item.whrRange }}</td>
                 </tr>
                 <tr>
                     <td>内脏脂肪阶段 cm²</td>
                     <td>{{item.vfa==null?"--":item.vfa }}</td>
-                    <td>高</td>
+                    <td>{{item.vfaRangeState==null?"--":item.vfaRangeState }}</td>
                     <td>{{item.vfaRange==null?"--":item.vfaRange }}</td>
                 </tr>
                 </tbody>
@@ -179,11 +179,11 @@
             <table class="baseInfo col-md-12" border="" cellspacing="" cellpadding="">
                 <tbody>
                 <tr>
-                    <td>目标体重 KG</td>
+                    <td class="col-md-4">目标体重 KG</td>
                     <td>{{item.standardWeight==null?"--":item.standardWeight }}</td>
                 </tr>
                 <tr>
-                    <td>体重控制 KG</td>
+                    <td class="col-md-4">体重控制 KG</td>
                     <td>{{item.weightControl==null?"--":item.weightControl }}</td>
                 </tr>
                 <tr>
@@ -270,7 +270,7 @@
                         <td>无</td>
                     </tr>
                     <tr>
-                        <td>体脂比</td>
+                        <td>体脂肪</td>
                         <td>无</td>
                     </tr>
                     </tbody>
