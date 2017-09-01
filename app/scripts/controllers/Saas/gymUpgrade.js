@@ -166,8 +166,8 @@ App.controller('gymUpgradeController', ['$scope','$state', '$rootScope', '$http'
             data: {
                 "page": parseInt($scope.PageIndex) - 1,
                 "count": parseInt($scope.PageSize),
-                "createTime": $scope.data.startTime,
-                "endTime": $scope.data.endTime,
+                "createTime": $rootScope.tools.dateToTimeStamp13Bit($scope.data.startTime),
+                "endTime": $rootScope.tools.dateToTimeStamp13Bit($scope.data.endTime),
                 "version": $scope.data.version,
                 "type": $scope.data.type,
             }
@@ -204,7 +204,7 @@ App.controller("apkAddController", ['$scope', '$uibModalInstance', 'restful', '$
     $scope.save = function () {
         var params = {
             "version": $scope.data.version,
-            "apkUpdateTime": $scope.data.apkUpdateTime,
+
             "url": $scope.imgUrlIcoArr1[0].serverFileName,
             "description": $scope.data.description,
             "type": $scope.data.type,
@@ -290,7 +290,7 @@ App.controller("editApkController", ['$scope', '$uibModalInstance', 'restful', '
             "id": item.id,
 
             "version": $scope.data.version,
-            "apkUpdateTime": $scope.data.apkUpdateTime,
+
             "url": $scope.imgUrlIcoArr1[0].serverFileName,
             "description": $scope.data.description,
             "type": $scope.data.type,

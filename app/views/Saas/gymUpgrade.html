@@ -103,7 +103,7 @@
                             <td ng-if="item.type==0">{{fileType[0].name}}</td>
                             <td ng-if="item.type==1">{{fileType[1].name}}</td>
                             <td width="700">{{item.description}}</td>
-                            <td>{{tools.timeStampToDate(item.apkUpdateTime)}}</td>
+                            <td>{{tools.timeStampToDate(item.createTime)}}</td>
                             <td ng-if="item.state==0">{{progress[0].name}}</td>
                             <td ng-if="item.state==1">{{progress[1].name}}</td>
 
