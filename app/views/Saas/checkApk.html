@@ -138,7 +138,7 @@
                         <tbody ng-repeat="item in detailsData">
                         <tr>
                             <td>{{$index+1+(((PageIndex||1)-1)*PageSize)}}</td>
-                            <td>{{tools.timeStampToDate(item.apkUpdateTime)}}</td>
+                            <td>{{tools.timeStampToDate(item.createTime)}}</td>
 
                             <td>{{item.cityName}}</td>
                             <td>{{item.manufacturer}}</td>
