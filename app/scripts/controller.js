@@ -13,6 +13,40 @@ App.controller('MainController',['$scope', '$state', 'AuthService', function($sc
     }
 }]);
 
+/*
+ * @Author: 唐文雍
+ * @Date:   2016-05-04 17:26:02
+ * @Last Modified by:   snoob
+ * @Last Modified time: 2017-1-4 18:18:35
+ */
+'use strict';
+App.controller('UserLoginController', ['$scope', '$rootScope', '$state', 'AuthService', 'Session', 'msgBus', '$http', 'restful', '$interval', '$cookies', '$location', 'toastr', function($scope, $rootScope, $state, AuthService, Session, msgBus, $http, restful, $interval, $cookies, $location, toastr) {
+    //初始时将之前登录过的信息清空
+    $scope.load = function() {
+        Session.destroy();
+    };
+    $scope.credentials = {};
+    $scope.error = "";
+
+    $scope.login = function(credentials) {
+        $scope.loginPromise = AuthService.login(credentials).then(function(res) {
+            if (res.code == 1) {
+                toastr.error(res.msg);
+                return;
+            }
+            if (res.data.account) {
+                msgBus.emitMsg("login");
+
+                $state.go('dashboard');
+            } else {
+                $scope.error = data.msg || "超时";
+            }
+        });
+    };
+
+
+}]);
+
 /**
  * Created by Administrator on 2017/8/7.
  */
@@ -1823,24 +1857,24 @@ App.controller('userDetailController', ['$scope', '$stateParams', '$state', '$ro
     //默认显示基本资料
     $scope.type = '01';
 
-    $scope.query = function (type) {
+    $scope.query = function () {
         //$scope.progressbar.start(); //进度条
         $scope.switchgetUserDetailDetailApi = $rootScope.api.getUserDetail01;
         //根据选择不同的tab的head选择不同的数据源
-        if (type == "01") {
+        if ($scope.type == "01") {
             $scope.switchgetUserDetailDetailApi = $rootScope.api.getUserDetail01;
         }
-        if (type == "02") {
+        if ($scope.type == "02") {
             $scope.switchgetUserDetailDetailApi = $rootScope.api.getUserDetail02;
             console.log($scope.switchgetUserDetailDetailApi, "地址type=02：");
         }
-        if (type == "03") {
+        if ($scope.type == "03") {
             $scope.switchgetUserDetailDetailApi = $rootScope.api.getUserDetail03;
         }
     /*    if (type == "04") {
             $scope.switchgetUserDetailDetailApi = $rootScope.api.getUserDetail04;
         }*/
-        if (type == "05") {
+        if ($scope.type == "05") {
             $scope.switchgetUserDetailDetailApi = $rootScope.api.getUserDetail05;
         }
 
@@ -2037,38 +2071,4 @@ App.controller('userInfoController', ['$scope', '$state', '$rootScope', '$http',
         }
 
     };
-}]);
-
-/*
- * @Author: 唐文雍
- * @Date:   2016-05-04 17:26:02
- * @Last Modified by:   snoob
- * @Last Modified time: 2017-1-4 18:18:35
- */
-'use strict';
-App.controller('UserLoginController', ['$scope', '$rootScope', '$state', 'AuthService', 'Session', 'msgBus', '$http', 'restful', '$interval', '$cookies', '$location', 'toastr', function($scope, $rootScope, $state, AuthService, Session, msgBus, $http, restful, $interval, $cookies, $location, toastr) {
-    //初始时将之前登录过的信息清空
-    $scope.load = function() {
-        Session.destroy();
-    };
-    $scope.credentials = {};
-    $scope.error = "";
-
-    $scope.login = function(credentials) {
-        $scope.loginPromise = AuthService.login(credentials).then(function(res) {
-            if (res.code == 1) {
-                toastr.error(res.msg);
-                return;
-            }
-            if (res.data.account) {
-                msgBus.emitMsg("login");
-
-                $state.go('dashboard');
-            } else {
-                $scope.error = data.msg || "超时";
-            }
-        });
-    };
-
-
 }]);

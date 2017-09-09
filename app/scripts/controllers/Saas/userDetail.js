@@ -33,24 +33,24 @@ App.controller('userDetailController', ['$scope', '$stateParams', '$state', '$ro
     //默认显示基本资料
     $scope.type = '01';
 
-    $scope.query = function (type) {
+    $scope.query = function () {
         //$scope.progressbar.start(); //进度条
         $scope.switchgetUserDetailDetailApi = $rootScope.api.getUserDetail01;
         //根据选择不同的tab的head选择不同的数据源
-        if (type == "01") {
+        if ($scope.type == "01") {
             $scope.switchgetUserDetailDetailApi = $rootScope.api.getUserDetail01;
         }
-        if (type == "02") {
+        if ($scope.type == "02") {
             $scope.switchgetUserDetailDetailApi = $rootScope.api.getUserDetail02;
             console.log($scope.switchgetUserDetailDetailApi, "地址type=02：");
         }
-        if (type == "03") {
+        if ($scope.type == "03") {
             $scope.switchgetUserDetailDetailApi = $rootScope.api.getUserDetail03;
         }
     /*    if (type == "04") {
             $scope.switchgetUserDetailDetailApi = $rootScope.api.getUserDetail04;
         }*/
-        if (type == "05") {
+        if ($scope.type == "05") {
             $scope.switchgetUserDetailDetailApi = $rootScope.api.getUserDetail05;
         }
 
