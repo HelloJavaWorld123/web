@@ -251,10 +251,10 @@ App.controller('DevConfigController', ['$scope', '$stateParams', '$rootScope', '
 
                 for (var i = 0; i < $scope.DevListData.length; i++) {
                     if ($scope.DevListData[i].onlineStatus == 0) {
-                        $scope.DevListData[i].onlineStatusName = "在线";
+                        $scope.DevListData[i].onlineStatusName = "离线";
                     }
                     if ($scope.DevListData[i].onlineStatus == 1) {
-                        $scope.DevListData[i].onlineStatusName = "离线";
+                        $scope.DevListData[i].onlineStatusName = "在线";
                     }
                     if ($scope.DevListData[i].onlineStatus == 2) {
                         $scope.DevListData[i].onlineStatusName = "使用中";
