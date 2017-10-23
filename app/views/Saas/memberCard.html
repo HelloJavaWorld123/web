@@ -152,6 +152,7 @@
                                                         <th>城市</th>
                                                         <th>购买金额</th>
                                                         <th>激活日期</th>
+                                                        <th>支付渠道</th>
                                                         <th>有效期</th>
                                                         <th>已使用会员卡次数</th>
                                                         <th>会员卡状态</th>
@@ -173,6 +174,7 @@
                                                         <td>{{item.price}}</td>
 
                                                         <td>{{tools.timeStampToDate(item.activeTime)}}</td>
+                                                        <td>{{item.strPayType}}</td>
                                                         <td>{{tools.timeStampToDate(item.expireTime)}}</td>
                                                         <td>{{item.useCount}}</td>
                                                         <td>{{item.statusEnum.msg}}</td>

@@ -166,6 +166,8 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
         alterDepositAmount: $rootScope.BASEURL + "api/memberMgmt/wallet/alterDepositAmount",
         decideToRefund: $rootScope.BASEURL + "api/memberMgmt/wallet/decideToRefund",
         reflushRufundStatus: $rootScope.BASEURL + "api/memberMgmt/wallet/reflushRufundStatus",
+        cashPledgeListExport: $rootScope.BASEURL + "api/memberMgmt/wallet/exportDepositCharge",
+        cashPledgeExport: $rootScope.BASEURL + "api/memberMgmt/wallet/dataExport",
 
 
         //会员卡

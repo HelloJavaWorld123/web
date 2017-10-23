@@ -140,7 +140,7 @@
                 <div class="form-group col-md-12">
                     <label class="col-md-3 text-right control-label" >打款金额</label>
                     <div class="col-md-9">
-                        <input type="number" class="form-control" ng-model="data.amount"  required oninput="if(value[0]=='-'||value[0]=='.'){value=value.slice(0,0)}else if(value.split('.')[1]&&value.split('.')[1].length>2||value>100.00){value=value.slice(0,value.length-1)}
+                        <input type="number" placeholder="(打款金额0~100)"  class="form-control" ng-model="data.amount"  required oninput="if(value[0]=='-'||value[0]=='.'){value=value.slice(0,0)}else if(value.split('.')[1]&&value.split('.')[1].length>2||value>100.00){value=value.slice(0,value.length-1)}
 " onafterpaste="if(value[0]=='-'||value[0]=='.'){value=value.slice(0,0)}else if(value.split('.')[1]&&value.split('.')[1].length>2||value>100.00){value=value.slice(0,value.length-1)}">
                     </div>
                 </div>
