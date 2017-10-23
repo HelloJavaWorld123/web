@@ -102,6 +102,7 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
         EditDev: $rootScope.BASEURL + "api/devMgmt/device/alter",
         getDevById: $rootScope.BASEURL + "api/devMgmt/device/getById",
         switchDevStatus: $rootScope.BASEURL + "api/devMgmt/device/alterOnlineStatus",
+        getDevSharingById: $rootScope.BASEURL + "api/devMgmt/device/listSharingByDeviceId",
 
         //所有设备-与场馆无关
         getDevUnboundList: $rootScope.BASEURL + "api/deviceLock/findAll",
