@@ -408,7 +408,7 @@ App.directive('upImg', ['$http', 'toastr', '$rootScope', function ($http, toastr
 }]);
 
 
-App.directive('upIco', ['$http', 'toastr', '$rootScope', function($http, toastr, $rootScope) {
+App.directive('upIco', ['$http', 'toastr', '$rootScope', function ($http, toastr, $rootScope) {
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
@@ -499,8 +499,33 @@ App.directive('map', function () {
             function G(id) {
                 return document.getElementById(id);
             }
+
             var map = new BMap.Map("l-map");
+            //地图大头针位置回绑
+/*
+           if(attr.positionlngandlatobj){
+               console.log(attr.positionlngandlatobj, "地图回传：");
+               var locationXY = attr.positionlngandlatobj ? attr.positionlngandlatobj : "";
+               var arrXY = locationXY.split(",");
+
+               var lngStartIndex = '"longitude":"'.length + 1;
+               var lngEndIndex = locationXY.indexOf('","');
+               var lngPoint = arrXY[0].substring(lngStartIndex, lngEndIndex);
+               console.log(lngPoint, "lngPoint:");
+
+               var latStartIndex = '"latitude":"'.length;
+               var latPoint = arrXY[1].substring(latStartIndex, arrXY[1].length - 1);
+               console.log(latPoint, "latPoint:");
+
+           }
+           // var point = new BMap.Point(Number(lngPoint),Number(latPoint));
+*/
+
+        
+
+
             var point = new BMap.Point(113.424239, 23.180031);
+            // var point = new BMap.Point(121.51921200, 31.30993000);
             // 初始化地图,设置城市和地图级别。
             map.centerAndZoom(point, 18);
             //滚轮放大放小
@@ -560,13 +585,14 @@ App.directive('map', function () {
                 local.search(myValue);
             }
 
-            map.addEventListener("click", function (e) {
-                alert("当前选中的经纬度：" + e.point.lng + "," + e.point.lat);
-                scope.position = {
-                    "lat": e.point.lat,
-                    "lng": e.point.lng
+            $('#suggestId').bind({  //  按回车，则进行关键字检索
+                'keydown ': function (event) {
+                    var event = event ? event : (window.event ? window.event : null);
+                    if ($(this).val() != ' ' && event.keyCode == 13) {
+                        myValue = $(this).val();
+                        setPlace();
+                    }
                 }
-                scope.positionLngAndLat = scope.position.lng + "," + scope.position.lat;
             });
         }
     }
@@ -722,225 +748,214 @@ App.directive('eChart', function () {
 });
 
 
-App.directive('fileUploader', function($timeout, toastr, msgBus) {
-	//文件上传器
-	var link = function($scope, $ele, $attr, $ctrl) {
-		//初始化当前input的material样式
-		$.material.input($ele);
-		//文件上传成功之后的回调
-		$scope.uploadComplete = function(res) {
-			$scope.result = res;
-			if (res.success) {
-				$scope.file = $scope.result.data || $scope.result.msg;
-				toastr.success('上传成功');
-				console.log($scope.file,'123');
-			} else {
-				toastr.error($scope.result.msg);
-			}
-		};
+App.directive('fileUploader', function ($timeout, toastr, msgBus) {
+    //文件上传器
+    var link = function ($scope, $ele, $attr, $ctrl) {
+        //初始化当前input的material样式
+        $.material.input($ele);
+        //文件上传成功之后的回调
+        $scope.uploadComplete = function (res) {
+            $scope.result = res;
+            if (res.success) {
+                $scope.file = $scope.result.data || $scope.result.msg;
+                toastr.success('上传成功');
+                console.log($scope.file, '123');
+            } else {
+                toastr.error($scope.result.msg);
+            }
+        };
 
-		if ($scope.auto) {
-			//如果设为自动上传
-			$ele.find("#uploadFile").bind("change", function(e) {
-				$(this).val() && $ele.submit();
-				var fileName = $(this)[0].files[0].name;
-				fileName && $(this).val("");
+        if ($scope.auto) {
+            //如果设为自动上传
+            $ele.find("#uploadFile").bind("change", function (e) {
+                $(this).val() && $ele.submit();
+                var fileName = $(this)[0].files[0].name;
+                fileName && $(this).val("");
 
-				$timeout(function() {
-					$scope.fileName = fileName;
-					$ele.find("#uploadFileName").val(fileName);
-				});
-			});
-		}
+                $timeout(function () {
+                    $scope.fileName = fileName;
+                    $ele.find("#uploadFileName").val(fileName);
+                });
+            });
+        }
 
-		//接受“清空”消息
-		msgBus.onMsg('reset', $scope, function() {
-			$scope.file = null;
-			$scope.fileName = null;
-		});
-	};
-	return {
-		scope: {
-			api: '@', //文件上传接口地址
-			file: '=', //上传成功后的文件名
-			accept: '@', //所接受的文件类型，使用方式和inpu=file accept一样
-			placeholder: '@', //输入提示
-			auto: '=' //是否自动上传
-		},
-		replace: true,
-		link: link,
-		templateUrl: 'app/scripts/directives/template/uploader.html'
-	}
+        //接受“清空”消息
+        msgBus.onMsg('reset', $scope, function () {
+            $scope.file = null;
+            $scope.fileName = null;
+        });
+    };
+    return {
+        scope: {
+            api: '@', //文件上传接口地址
+            file: '=', //上传成功后的文件名
+            accept: '@', //所接受的文件类型，使用方式和inpu=file accept一样
+            placeholder: '@', //输入提示
+            auto: '=' //是否自动上传
+        },
+        replace: true,
+        link: link,
+        templateUrl: 'app/scripts/directives/template/uploader.html'
+    }
 });
 
 
+App.directive('myFileUp', ['$http', 'toastr', '$rootScope', function ($http, toastr, $rootScope) {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attr) {
+            var imglength = attr && attr.imglength ? parseInt(attr.imglength) : 9;
 
-App.directive('myFileUp', ['$http', 'toastr', '$rootScope', function($http, toastr, $rootScope) {
-	return {
-		restrict: 'A',
-		link: function(scope, element, attr) {
-			var imglength = attr && attr.imglength ? parseInt(attr.imglength) : 9;
+            var picIndex = attr && attr.picIndex ? parseInt(attr.picIndex) : 2;
 
-			var picIndex = attr && attr.picIndex ? parseInt(attr.picIndex) : 2;
+            var key = 'imgUrlIcoArr' + picIndex
+            console.log(key);
 
-			var key = 'imgUrlIcoArr' + picIndex
-			console.log(key);
-
-			if(attr && attr.imgwidth && attr.imgheight) {
-				var scale = parseInt(attr.imgwidth) / parseInt(attr.imgheight);
-			}
-			element.on('change', function() {
-
-				console.log(this);
-				var initLength = 0;
-				if(this.files.length == 0) {
-					//图片为0，就是没选择，直接跳出
-					return;
-				}
-				//判断原来是否已经存在图片了
-				if(scope[key]) {
-					initLength = scope[key].length;
-				} else {
-					//没有就清空数组
-					scope[key] = [];
-				}
-				if(this.files.length + initLength > imglength) {
-					var str = "你选择的图片总和超过了" + imglength + "张，请重新选择";
-					toastr.error(str);
-					return;
-				} else {
-					scope.isLoadingIco = true;
-				}
-
-
-                var fileObj = this.files[0];
-                console.log("11111111",fileObj);
-                var fileExt = fileObj.name.substring(fileObj.name.lastIndexOf("."),fileObj.name.length);//获得文件后缀名
-                console.log(fileExt);
-
-                if(scope.data.type==0&&fileExt!='.apk') {
-                    toastr.error("请上传后缀名为apk的文件！");
-                    scope.isLoadingIco = false;
+            if (attr && attr.imgwidth && attr.imgheight) {
+                var scale = parseInt(attr.imgwidth) / parseInt(attr.imgheight);
+            }
+            element.on('change', function () {
+                console.log(this);
+                var initLength = 0;
+                if (this.files.length == 0) {
+                    //图片为0，就是没选择，直接跳出
                     return;
-                }else if(scope.data.type==1&&fileExt!='.bin'){
-                    toastr.error("请上传后缀名为bin的文件！");
-                    scope.isLoadingIco = false;
+                }
+                //判断原来是否已经存在图片了
+                if (scope[key]) {
+                    initLength = scope[key].length;
+                } else {
+                    //没有就清空数组
+                    scope[key] = [];
+                }
+                if (this.files.length + initLength > imglength) {
+                    var str = "你选择的图片总和超过了" + imglength + "张，请重新选择";
+                    toastr.error(str);
                     return;
-                } else{
-                    var fd = new FormData();
-                    console.log(fd,"fd:");
-                    for(var i = this.files.length; i >= 0; i--) {
-                        fd.append('file', this.files[i]);
-                    }
-                    for(var i = 0; i < this.files.length; i++) {
+                } else {
+                    scope.isLoadingIco = true;
+                }
+                var fd = new FormData();
+                for (var i = this.files.length; i >= 0; i--) {
+                    fd.append('file', this.files[i]);
+                }
+                for (var i = 0; i < this.files.length; i++) {
+
+                    $http({
+                        method: 'POST',
+                        url: $rootScope.api.fileUpload,
+                        data: fd,
+                        headers: {
+                            'Content-Type': undefined
+                        },
+                        transformRequest: angular.identity
+                    })
+                        .success(function (response) {
+                            //上传成功的操作
+                            $(".imgArr").remove();
+                            console.log("上传成功返回的数据：", response.data);
+
+                            scope[key].push(response.data);
+
+                            console.log(scope[key]);
+                            scope.isLoadingIco = false;
+                        });
+
+                    var imageObj = this.files[i];
+                    if (this.files[i].size > imgsize * 1024 * 1024) {
+                        toastr.error("你的文件超过了" + imgsize + "M，请重新选择图片上传！");
+                        scope.isLoadingIco = false;
+                        return;
+                    } else {
                         $http({
                             method: 'POST',
-                            url: $rootScope.api.fileUpload,
+                            url: $rootScope.api.multiFileUpload,
                             data: fd,
                             headers: {
                                 'Content-Type': undefined
                             },
                             transformRequest: angular.identity
                         })
-                            .success(function(response) {
+                            .success(function (response) {
                                 //上传成功的操作
                                 $(".imgArr").remove();
-                                console.log("上传成功返回的数据：", response.data);
+                                console.log("上传成功返回的数据：", response);
+                                if (response.data.length) {
+                                    for (var i = 0; i < response.data.length; i++) {
 
-                                scope[key].push(response.data);
-
+                                        scope[key].push(response.data[i]);
+                                    }
+                                } else {
+                                    var imgObj = {
+                                        url: response.data.url,
+                                        imgId: response.data.id,
+                                    }
+                                    scope[key].push(imgObj);
+                                }
                                 console.log(scope[key]);
                                 scope.isLoadingIco = false;
                             });
+                    }
                 }
-
-
-
-
-						/*$http({
-							method: 'POST',
-							url: $rootScope.api.multiFileUpload,
-							data: fd,
-							headers: {
-								'Content-Type': undefined
-							},
-							transformRequest: angular.identity
-						})
-							.success(function(response) {
-								//上传成功的操作
-								$(".imgArr").remove();
-								console.log("上传成功返回的数据：", response);
-								if(response.data.length){
-									for(var i = 0; i < response.data.length; i++) {
-
-										scope[key].push(response.data[i]);
-									}
-								}else{
-									var imgObj = {
-										url:response.data.url,
-										imgId:response.data.id,
-									}
-									scope[key].push(imgObj);
-								}
-								console.log(scope[key]);
-								scope.isLoadingIco = false;
-							});*/
-
-				}
-			});
-		}
-	}
+            });
+        }
+    }
 }]);
 
-//输入金额限制最大为99999999.99
-App.directive('money', function() {
+//输入金额限制最大为9 999 999.99
+App.directive('money', function () {
     return {
         restrict: 'A',
-        link: function(scope, element, attr) {
+        link: function (scope, element, attr) {
             //限制输入数字最大值 比如99999999.99
-            var maxNumber = attr.maxNumber?Number(attr.maxNumber):99999999.99;
-            element.on('afterpaste', function() {
+            var maxNumber = attr.maxNumber ? Number(attr.maxNumber) : 9999999.99;
+            element.on('afterpaste', function () {
                 var value = element[0].value;
-                if(value[0]=="-"||value[0]=="."){value=value.slice(0,0)}else if(value.split(".")[1]&&value.split(".")[1].length>2||value>maxNumber){value=value.slice(0,value.length-1)}
+                if (value[0] == "-" || value[0] == ".") {
+                    value = value.slice(0, 0)
+                } else if (value.split(".")[1] && value.split(".")[1].length > 2 || value > maxNumber) {
+                    value = value.slice(0, value.length - 1)
+                }
             });
-            element.on('input', function() {
+            element.on('input', function () {
                 var value = element[0].value;
-                if(value[0]=="-"||value[0]=="."){
-                    element[0].value=value.slice(0,0)
-                }else if(value.split(".")[1]&&value.split(".")[1].length>2||value>maxNumber){
-                    element[0].value=value.slice(0,value.length-1)
-                };
+                if (value[0] == "-" || value[0] == ".") {
+                    element[0].value = value.slice(0, 0)
+                } else if (value.split(".")[1] && value.split(".")[1].length > 2 || value > maxNumber) {
+                    element[0].value = value.slice(0, value.length - 1)
+                }
+                ;
             });
         }
     }
 });
 //输入数量限制最大为9999自然正整数
-App.directive('count', function() {
+App.directive('count', function () {
     //input type为text
     return {
         restrict: 'A',
-        link: function(scope, element, attr) {
+        link: function (scope, element, attr) {
             //限制输入最大值
-            var maxNumber = attr.maxNumber?Number(attr.maxNumber):9999;
-            element.on('afterpaste', function() {
+            var maxNumber = attr.maxNumber ? Number(attr.maxNumber) : 9999;
+            element.on('afterpaste', function () {
                 var value = element[0].value;
-                if(value[0]=='-'){
-                    element[0].value=''
-                }else{
-                    element[0].value=value.replace(/\D/g,'');
-                    if(Number(value)>maxNumber){
-                        element[0].value=value.slice(0,value.length-1);
+                if (value[0] == '-') {
+                    element[0].value = ''
+                } else {
+                    element[0].value = value.replace(/\D/g, '');
+                    if (Number(value) > maxNumber) {
+                        element[0].value = value.slice(0, value.length - 1);
                     }
                 }
             });
-            element.on('input', function() {
+            element.on('input', function () {
                 var value = element[0].value;
-                if(value[0]=='-'){
-                    element[0].value=''
-                }else{
-                    element[0].value=value.replace(/\D/g,'');
-                    if(Number(value)>maxNumber){
-                        element[0].value=value.slice(0,value.length-1);
+                if (value[0] == '-') {
+                    element[0].value = ''
+                } else {
+                    element[0].value = value.replace(/\D/g, '');
+                    if (Number(value) > maxNumber) {
+                        element[0].value = value.slice(0, value.length - 1);
                     }
                 }
             });

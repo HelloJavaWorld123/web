@@ -1,0 +1,67 @@
+<article ng-controller="withdrawDepositController" class="complain container-fluid">
+
+
+    <!--下部-查询列表-->
+    <section class="row conPanelLeft">
+        <div class="gymConfigWrapper  col-lg-12">
+            <!-- 下部分 -->
+            <section>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-head">
+                        <tr class="active">
+                            <th>时间</th>
+                            <th>提现金额</th>
+
+                            <th>提现后账户余额</th>
+                            <th>提现状态</th>
+
+                        </tr>
+                        </thead>
+
+                        <tbody ng-repeat="item in withDrawRecordListData">
+                        <tr>
+                            <td>{{item.createTime}}</td>
+
+                            <td>{{item.drawMoney}}</td>
+                            <td>{{item.leftMoney}}</td>
+                            <td>{{item.drawStatusText}}</td>
+
+
+
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div ng-if="!withDrawRecordListData.length" class="noData ng-scope">暂无数据</div>
+                </div>
+                <div cg-busy="gymListPromise"></div>
+
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <select class="page-size" ng-model="PageSize" ng-change="pageChanged()">
+                            <option value="20" ng-selected="true">每页显示20条</option>
+                            <option value="40">每页显示40条</option>
+                            <option value="60">每页显示60条</option>
+                            <option value="80">每页显示80条</option>
+                            <option value="100">每页显示100条</option>
+                        </select>
+                        <uib-pagination ng-model="PageIndex" ng-change="pageChanged()" total-items="withDrawRecordListDataCount"
+                                        max-size="maxSize" items-per-page="PageSize" class="pagination-sm"
+                                        boundary-link-numbers="true" rotate="false" previous-text="上一页"
+                                        next-text="下一页"></uib-pagination>
+                    </div>
+                    <div class="col-md-1"><span class="totalTxt">总计：{{withDrawRecordListDataCount==null?"--":withDrawRecordListDataCount }} 条</span></div>
+                    <div class="col-md-3 text-right">
+                        <span>跳转到</span>
+                        <input type="text" onafterpaste="this.value=this.value.replace(/\D/g,'')"
+                               onkeyup="this.value=this.value.replace(/\D/g,'')" ng-model="toPageNum"
+                               class="variant-form-control">
+                        <button ng-click="setPage()" class="to-page-num">确定</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </section>
+</article>

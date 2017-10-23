@@ -1,6 +1,5 @@
 node_modules/
 .idea/
-app/dist/
 test/
-
+app/scripts/controller.js
 

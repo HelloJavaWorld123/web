@@ -1,0 +1,469 @@
+<article ng-controller=" gymIotConfigController" class="gymConfig container-fluid">
+        <div class="unModalView " ng-if="allShowOrHidden==1">
+            <!-- 上部分-联动 -->
+            <form action="{{api.GymIotEportExcel}}" method="POST" ng-enter="query()">
+                <section class="row">
+                    <div class="form-group col-md-2">
+                        <label class="col-md-4 control-label">省份：</label>
+                        <div class="col-md-8">
+                            <ui-select ng-model="data.provinceId" theme="bootstrap" on-select="getCitysForward($item.id)"
+                                       name="provinceId" >
+                                <ui-select-match allow-clear="true" placeholder="省">{{$select.selected.name}}
+                                </ui-select-match>
+                                <ui-select-choices
+                                        repeat="item.id as item in provinces | orderBy:'id' | filter: $select.search.id">
+                                    <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <input type="hidden" name="provinceId" value="{{data.provinceId}}">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="col-md-4 control-label">城市：</label>
+                        <div class="col-md-8">
+                            <ui-select ng-model="data.cityId" theme="bootstrap" on-select="getCountysForward($item.id)"
+                                       name="cityId" ng-disabled="data.provinceId==undefined?true:false">
+                                <ui-select-match allow-clear="true" placeholder="市">{{$select.selected.name}}
+                                </ui-select-match>
+                                <ui-select-choices
+                                        repeat="item.id as item in citys | orderBy:'id' | filter: $select.search.id">
+                                    <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <input type="hidden" name="cityId" value="{{data.cityId}}">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="col-md-4 control-label">区域：</label>
+                        <div class="col-md-8">
+                            <ui-select ng-model="data.regionId" theme="bootstrap"
+                                       ng-disabled="data.cityId==undefined?true:false" name="regionId">
+                                <ui-select-match allow-clear="true" placeholder="区">{{$select.selected.name}}
+                                </ui-select-match>
+                                <ui-select-choices
+                                        repeat="item.id as item in countys | orderBy:'id' | filter: $select.search.id">
+                                    <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <input type="hidden" name="regionId" value="{{data.regionId}}">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label class="col-md-3 text-right control-label">场馆名称：</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" ng-model="data.name" name="name" maxlength="100">
+                        </div>
+                    </div>
+                </section>
+
+
+                <!--中部-点击弹窗-->
+                <div class="button-first">
+                    <button type="button" class="btn btn-raised btn-primary" ng-click="query()">查询</button>
+                    <button type="button" class="btn btn-raised btn-default" ng-click="reset()">重置</button>
+                    <button type="button" class="btn btn-raised btn-info" ng-click="addGym()">新增</button>
+                    <button type="submit" class="btn btn-raised btn-primary">导出</button>
+                </div>
+
+
+            </form>
+            <!--下部-查询列表-->
+            <section class="row conPanelLeft"  >
+                <div class="gymConfigWrapper  col-lg-12">
+                    <!-- 下部分 -->
+                    <section>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-head">
+                                <tr class="active">
+                                    <th>序号</th>
+                                    <th>场馆名称</th>
+
+                                    <th>创建时间</th>
+                                    <th>是否显示在地图</th>
+
+                                    <th>省份</th>
+                                    <th>城市</th>
+                                    <th>区域</th>
+                                    <th>详细地址</th>
+
+                                    <th>设备数量</th>
+
+                                    <th>联系人</th>
+
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+
+                                <tbody ng-repeat="item in gymListData">
+                                <tr>
+                                    <td>{{$index+1+(((PageIndex||1)-1)*PageSize)}}</td>
+                                    <td>{{item.name==null?"--":item.name}}</td>
+
+                                    <td>{{item.createTime==null?"--":item.createTime|date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                                    <td>{{item.showInMapStr==null?"--":item.showInMapStr}}</td>
+
+                                    <td>{{item.provinceName==null?"--":item.provinceName}}</td>
+                                    <td>{{item.cityName==null?"--":item.cityName}}</td>
+                                    <td>{{item.regionName==null?"--":item.regionName}}</td>
+                                    <td class="w300">{{item.address==null?"--":item.address}}</td>
+                                    <td>{{item.deviceCount==null?"--":item.deviceCount}}</td>
+                                    <td>{{item.linkedMan==null?"--":item.linkedMan}} <br>{{item.phone==null?"--":item.phone}}</td>
+
+                                    <td>
+                                        <a ng-click="devDetailListIot(item)" class="pointer">查看设备</a>
+                                        <a ng-click="gymEdit(item)" class="pointer">编辑</a>
+                                        <a ng-click="gymDel(item)" class="pointer"
+                                           ng-disabled="checklist" confirm="确定删除吗？" confirm-title="删除" confirm-ok="确定"
+                                           confirm-cancel="取消">删除</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div ng-if="!gymListData.length" class="noData ng-scope">暂无数据</div>
+                        </div>
+
+
+
+                    </section>
+                </div>
+
+            </section>
+        </div>
+
+    <!--弹窗定制-增加场馆-->
+    <div class="hxbMadal col-md-8" ng-controller="gymIotAddController" ng-if="modalAddShowOrHidden==1"><!---->
+        <div class="row modaHd">
+            <div class="col-md-12">
+                <h4 class="col-md-2 text-right control-label">新增场馆</h4>
+            </div>
+        </div>
+        <div class="modalBd">
+            <form name="gymViewAddForm">
+                <section class="col-md-12">
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 text-right control-label">名称：</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" ng-model="data.gymName" required maxlength="20">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 text-right control-label">联系人：</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty"
+                                   ng-model="data.linkedMan" required maxlength="10">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 text-right control-label">联系方式：</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" ng-model="data.phone" required name="phone"
+                                   ng-pattern="PATTERN_CONFIG.TEL" maxlength="12">
+                        </div>
+                        <div ng-show="gymViewAddForm.phone.$error.pattern" class="col-lg-12">
+                            <label class="col-md-offset-3 col-md-9" style="color:red">请输入正确的手机号码或固话</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 control-label text-right">经营时间：</label>
+                        <div class="col-md-2">
+                            <ui-select allow-clear ng-model="data.openTimeFormat" theme="bootstrap" required>
+                                <ui-select-match placeholder="开始时间">{{$select.selected.status}}</ui-select-match>
+                                <ui-select-choices repeat="item.status as item in beginTimeArr | filter: $select.search" value="{{$select.selected.status}}">
+                                    <span ng-bind-html="item.status | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="text-center" style="line-height: 45px;height: 45px;">—</div>
+                        </div>
+                        <div class="col-md-2">
+                            <ui-select allow-clear ng-model="data.endTimeFormat" theme="bootstrap" required>
+                                <ui-select-match placeholder="结束时间">{{$select.selected.status}}</ui-select-match>
+                                <ui-select-choices repeat="item.status as item in endTimeArr | filter: $select.search" value="{{$select.selected.status}}">
+                                    <span ng-bind-html="item.status | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 control-label text-right">是否地图显示：</label>
+                        <div class="col-md-9">
+                            <ui-select ng-model="data.showInMap" theme="bootstrap" on-select="getShowInMap($item)" required>
+                                <ui-select-match allow-clear="true" placeholder="是/否">{{$select.selected.name}}
+                                </ui-select-match>
+                                <ui-select-choices
+                                        repeat="item.id as item in showInMapArr | orderBy:'id' | filter: $select.search.name">
+                                    <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <input type="hidden" name="type" value="{{data.type}}">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 control-label text-right">所在区域：</label>
+                        <div class="col-md-9">
+                            <div class="col-md-4">
+                                <ui-select ng-model="data.provinceId" theme="bootstrap" on-select="getCitys($item.id)"
+                                           name="provinceId" required>
+                                    <ui-select-match allow-clear="true" placeholder="省">{{$select.selected.name}}
+                                    </ui-select-match>
+                                    <ui-select-choices
+                                            repeat="item.id as item in provinces | orderBy:'id' | filter: $select.search.id">
+                                        <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <div class="col-md-4">
+                                <ui-select ng-model="data.cityId" theme="bootstrap" on-select="getCountys($item.id)"
+                                           name="cityId" required>
+                                    <ui-select-match allow-clear="true" placeholder="市">{{$select.selected.name}}
+                                    </ui-select-match>
+                                    <ui-select-choices
+                                            repeat="item.id as item in citys | orderBy:'id' | filter: $select.search.id">
+                                        <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <div class="col-md-4">
+                                <ui-select ng-model="data.regionId" theme="bootstrap"
+                                           ng-disabled="data.cityId==undefined?true:false" name="regionId" required>
+                                    <ui-select-match allow-clear="true" placeholder="区">{{$select.selected.name}}
+                                    </ui-select-match>
+                                    <ui-select-choices
+                                            repeat="item.id as item in countys | orderBy:'id' | filter: $select.search.id">
+                                        <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 text-right control-label">详细地址：</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty"
+                                   ng-model="data.address" name="address" placeholder="请输入详细地址" required maxlength="50">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 text-right control-label">坐标：</label>
+                        <div class="col-md-9">
+                            <div id="r-result">
+                                <input type="text" id="suggestId" size="20" value="百度" placeholder="请输入地址或在地图标记"
+                                       class="form-control" ng-model="data.address"/>
+                                <input type="text" class="ng-pristine ng-untouched ng-valid ng-empty" name="pp"
+                                       placeholder="113.367865,23.015556" ng-model="positionLngAndLat" disabled>
+                            </div>
+                            <br/>
+                            <div id="searchResultPanel"
+                                 style="border:1px solid #C0C0C0;width:150px;height:auto;display:none;position: fixed;z-index: 9999"></div>
+                            <map></map>
+                            <!--地图组件-->
+                        </div>
+                    </div>
+                </section>
+            </form>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn withripple btn-raised btn-warning" type="button" ng-click="close()"
+                            style="float: right;">取消
+                    </button>
+                    <button class="btn withripple btn-raised btn-primary" type="button" ng-click="save()"
+                            ng-disabled="!gymViewAddForm.$valid" style="float: right;margin-right: 6px;">确定
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+
+
+    <!--弹窗定制-编辑场馆-->
+    <div class="hxbMadal col-md-8" ng-if="modalEditShowOrHidden==1">
+        <div class="row modaHd">
+            <div class="col-md-12">
+                <h4 class="col-md-2 text-right control-label">编辑场馆</h4>
+            </div>
+        </div>
+        <div class="modalBd">
+            <form name="gymViewAddForm">
+                <section class="col-md-12">
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 text-right control-label">名称：</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" ng-model="gymEditData.name" required maxlength="20">
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 text-right control-label">联系人：</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty"
+                                   ng-model="gymEditData.linkedMan" required maxlength="10">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 text-right control-label">联系方式：</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" ng-model="gymEditData.phone" required name="phone"
+                                   ng-pattern="PATTERN_CONFIG.TEL" maxlength="12">
+                        </div>
+                        <div ng-show="gymViewAddForm.phone.$error.pattern" class="col-lg-12">
+                            <label class="col-md-offset-3 col-md-9" style="color:red">请输入正确的手机号码或固话</label>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 control-label text-right">经营时间：</label>
+                        <div class="col-md-2">
+                            <ui-select allow-clear ng-model="gymEditData.openTimeFormat" theme="bootstrap" required>
+                                <ui-select-match placeholder="开始时间">{{$select.selected.status}}</ui-select-match>
+                                <ui-select-choices repeat="item.status as item in beginTimeArr | filter: $select.search" value="{{$select.selected.status}}">
+                                    <span ng-bind-html="item.status | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="text-center" style="line-height: 45px;height: 45px;">—</div>
+                        </div>
+                        <div class="col-md-2">
+                            <ui-select allow-clear ng-model="gymEditData.endTimeFormat" theme="bootstrap" required>
+                                <ui-select-match placeholder="结束时间">{{$select.selected.status}}</ui-select-match>
+                                <ui-select-choices repeat="item.status as item in endTimeArr | filter: $select.search" value="{{$select.selected.status}}">
+                                    <span ng-bind-html="item.status | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 control-label text-right">是否地图显示：</label>
+                        <div class="col-md-9">
+                            <ui-select ng-model="gymEditData.showInMap" theme="bootstrap" on-select="getShowInMap($item)" required>
+                                <ui-select-match allow-clear="true" placeholder="是/否">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="item.id as item in showInMapArr | orderBy:'id' | filter: $select.search.name">
+                                    <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <input type="hidden" name="type" value="{{data.type}}">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 control-label text-right">所在区域：</label>
+                        <div class="col-md-9">
+                            <div class="col-md-4">
+                                <ui-select ng-model="gymEditData.provinceId" theme="bootstrap"
+                                           on-select="getCitys($item.id)"
+                                           name="provinceId" required>
+                                    <ui-select-match allow-clear="true" placeholder="省">{{$select.selected.name}}
+                                    </ui-select-match>
+                                    <ui-select-choices
+                                            repeat="item.id as item in provinces | orderBy:'id' | filter: $select.search.id">
+                                        <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <div class="col-md-4">
+                                <ui-select ng-model="gymEditData.cityId" theme="bootstrap"
+                                           on-select="getCountys($item.id)"
+                                           name="cityId" required>
+                                    <ui-select-match allow-clear="true" placeholder="市">{{$select.selected.name}}
+                                    </ui-select-match>
+                                    <ui-select-choices
+                                            repeat="item.id as item in citys | orderBy:'id' | filter: $select.search.id">
+                                        <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <div class="col-md-4">
+                                <ui-select ng-model="gymEditData.regionId" theme="bootstrap"
+                                           ng-disabled="gymEditData.cityId==undefined?true:false" name="regionId" required>
+                                    <ui-select-match allow-clear="true" placeholder="区">{{$select.selected.name}}
+                                    </ui-select-match>
+                                    <ui-select-choices
+                                            repeat="item.id as item in countys | orderBy:'id' | filter: $select.search.id">
+                                        <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 text-right control-label">详细地址：</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty"
+                                   ng-model="gymEditData.address" name="address" placeholder="请输入详细地址" required
+                                   maxlength="30">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 text-right control-label">坐标：</label>
+                        <div class="col-md-9">
+                            <div id="r-result">
+                                <input type="text" id="suggestId" class="form-control" size="40"
+                                       placeholder="请输入地址或在地图标记" ng-model="gymEditData.address"/>
+                                <input type="text" class=" ng-pristine ng-untouched ng-valid ng-empty" name="pp"
+                                       placeholder="1.0,1.0" ng-model="positionLngAndLat" disabled
+                                       style="width: 233px;"><!--placeholder="113.367865,23.015556"-->
+                            </div>
+                            <br/>
+                            <div id="searchResultPanel"
+                                 style="border:1px solid #C0C0C0;width:150px;height:auto;display:none;position: fixed;z-index: 9999"></div>
+                            <!--地图数据的回绑-positionLngAndLatObj-->
+                            <map positionLngAndLatObj="{{positionLngAndLatObj}}"></map>
+
+                            <!--地图组件-->
+                        </div>
+                    </div>
+                </section>
+            </form>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn withripple btn-raised btn-warning" type="button" ng-click="closeGymEdit()"
+                            style="float: right;">取消
+                    </button>
+                    <button class="btn withripple btn-raised btn-primary" type="button" ng-click="saveGymEdit(positionLngAndLat)"
+                            ng-disabled="!gymViewAddForm.$valid" style="float: right;margin-right: 6px;">确定
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+    <div class="row pageGpsShowOrHidden">
+        <div class="col-md-9">
+            <select class="page-size" ng-model="PageSize" ng-change="pageChanged()">
+                <option value="20" ng-selected="true">每页显示20条</option>
+                <option value="40">每页显示40条</option>
+                <option value="60">每页显示60条</option>
+                <option value="80">每页显示80条</option>
+                <option value="100">每页显示100条</option>
+            </select>
+            <uib-pagination ng-model="PageIndex" ng-change="pageChanged()"
+                            total-items="totalCount"
+                            max-size="maxSize" items-per-page="PageSize" class="pagination-sm"
+                            boundary-link-numbers="true" rotate="false" previous-text="上一页"
+                            next-text="下一页"></uib-pagination>
+        </div>
+        <div class="col-md-1"><span class="totalTxt">总计：{{totalCount==null?"--":totalCount }} 条</span>
+        </div>
+        <div class="col-md-2 text-right">
+            <span>跳转到</span>
+            <input type="text" onafterpaste="this.value=this.value.replace(/\D/g,'')"
+                   onkeyup="this.value=this.value.replace(/\D/g,'')" ng-model="toPageNum"
+                   class="variant-form-control">
+            <button ng-click="setPage()" class="to-page-num">确定</button>
+        </div>
+    </div>
+
+</article>

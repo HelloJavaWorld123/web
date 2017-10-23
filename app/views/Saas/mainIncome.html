@@ -1,0 +1,162 @@
+<article ng-controller="mainIncomeController" class="complain container-fluid">
+
+    <section class="row">
+        <div class="reportFaultWrapper col-lg-12">
+            <form action="{{api.mainIncomeExcel}}" method="POST" ng-enter="query()" name="mainIncomeListDataFormName" id="mainIncome">
+
+                <section class="row">
+
+                    <div class="form-group col-md-3">
+                        <label class="col-md-3 text-right control-label" >订单号：</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" ng-model="data.orderNo"  maxlength="20" name="orderNo">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group col-md-2">
+                        <label class="col-md-4 control-label">开始日期：</label>
+                        <div class="col-md-8">
+                            <div class="dropdown">
+                                <input type="text" name="startTime" class="form-control" ng-model="data.startTime" datetime-transform format="yyyy-MM-dd" disabled>
+                                <i class="glyphicon glyphicon-calendar rili-icon dropdown-toggle" class="startTime" role="button" data-toggle="dropdown"></i>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="startTime">
+                                    <datetimepicker ng-model="data.startTime" data-datetimepicker-config="{dropdownSelector: '.startTime',startView:'day',minView:'day'}" on-set-time="onEnrollstartSeleted(newDate, oldDate)"></datetimepicker>
+                                </ul>
+                            </div>
+                            <!--配合后端导出功能-->
+                            <input type="hidden" name="startTime"
+                                   value="{{data.startTime|date:'yyyy-MM-dd '}}">
+
+                        </div>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="col-md-4 control-label">结束日期： </label>
+                        <div class="col-md-8">
+                            <div class="dropdown">
+                                <input type="text" name="endTime" class="form-control" ng-model="data.endTime" datetime-transform format="yyyy-MM-dd" disabled>
+                                <i class="glyphicon glyphicon-calendar rili-icon dropdown-toggle" class="endTime" role="button" data-toggle="dropdown"></i>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="endTime">
+                                    <datetimepicker ng-model="data.endTime" data-datetimepicker-config="{dropdownSelector: '.endTime',startView:'day',minView:'day'}" on-set-time="onEnrollstartSeleted(newDate, oldDate)"></datetimepicker>
+                                </ul>
+                            </div>
+                            <!--配合后端导出功能-->
+                            <input type="hidden" name="endTime"
+                                   value="{{data.endTime|date:'yyyy-MM-dd '}}">
+
+                        </div>
+                    </div>
+
+
+                    <div class="form-group col-md-2">
+                        <label class="col-md-4 text-right control-label" >场地：</label>
+                        <div class="col-md-8">
+                            <ui-select ng-model="memberTypeDatas.gymId" theme="bootstrap" on-select="getMemberTypeData($item)">
+                                <ui-select-match allow-clear="true" placeholder="点击选择">{{$select.selected.gymId}}</ui-select-match>
+
+
+                                <ui-select-choices
+                                        repeat="item.gymId as item in memberTypeData | orderBy:'gymId' | filter: $select.search.gymId">
+                                    <span ng-bind-html="item.gymId | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+
+
+
+
+
+
+                </section>
+
+
+                <!--中部-点击搜索-->
+                <div class="button-first">
+                    <button type="button" class="btn btn-raised btn-primary" ng-click="query()">查询</button>
+                    <button type="button" class="btn btn-raised btn-default" ng-click="reset()">重置</button>
+                    <button type="submit" class="btn btn-raised btn-primary" >导出</button>
+                </div>
+            </form>
+        </div>
+
+
+    </section>
+
+
+    <!--下部-查询列表-->
+    <section class="row conPanelLeft">
+        <div class="gymConfigWrapper  col-lg-12">
+            <!-- 下部分 -->
+            <section>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-head">
+                        <tr class="active">
+                            <th>订单号</th>
+                            <th>场馆名称</th>
+                            <th>订单状态</th>
+
+                            <th>订单时间</th>
+                            <th>设备类型</th>
+                            <th>设备号</th>
+                            <th>订单总价（元）</th>
+
+                            <th>实际支付金额（元）</th>
+                            <th>分成比例%</th>
+                            <th>分成金额（元）</th>
+                        </tr>
+                        </thead>
+
+                        <tbody ng-repeat="item in mainIncomeListData">
+                        <tr>
+                            <td>{{item.orderNo}}</td>
+                            <td>{{item.gymName}}</td>
+
+                            <td>{{item.statusText}}</td>
+                            <td>{{item.createTime}}</td>
+                            <td>{{item.productName}}</td>
+                            <td>{{item.deviceID}}</td>
+
+                            <td>{{item.amount}}</td>
+                            <td>{{item.actualAmount}}</td>
+                            <td>{{item.sharePercent}}</td>
+                            <td>{{item.sharingAmount}}</td>
+
+
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div ng-if="!mainIncomeListData.length" class="noData ng-scope">暂无数据</div>
+                </div>
+                <div cg-busy="gymListPromise"></div>
+
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <select class="page-size" ng-model="PageSize" ng-change="pageChanged()">
+                            <option value="20" ng-selected="true">每页显示20条</option>
+                            <option value="40">每页显示40条</option>
+                            <option value="60">每页显示60条</option>
+                            <option value="80">每页显示80条</option>
+                            <option value="100">每页显示100条</option>
+                        </select>
+                        <uib-pagination ng-model="PageIndex" ng-change="pageChanged()" total-items="mainIncomeListDataCount"
+                                        max-size="maxSize" items-per-page="PageSize" class="pagination-sm"
+                                        boundary-link-numbers="true" rotate="false" previous-text="上一页"
+                                        next-text="下一页"></uib-pagination>
+                    </div>
+                    <div class="col-md-1"><span class="totalTxt">总计：{{mainIncomeListDataCount==null?"--":mainIncomeListDataCount }} 条</span></div>
+                    <div class="col-md-3 text-right">
+                        <span>跳转到</span>
+                        <input type="text" onafterpaste="this.value=this.value.replace(/\D/g,'')"
+                               onkeyup="this.value=this.value.replace(/\D/g,'')" ng-model="toPageNum"
+                               class="variant-form-control">
+                        <button ng-click="setPage()" class="to-page-num">确定</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </section>
+</article>

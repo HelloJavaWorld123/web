@@ -28,6 +28,21 @@ App.controller('DevConfigController', ['$scope', '$stateParams', '$rootScope', '
         $scope.query();
     }
 
+    //经营类型
+    $scope.runKind = [
+        {
+            runKindId: 0,
+            name: "自营"
+        }, {
+            runKindId: 1,
+            name: "合作"
+        },
+    ];
+
+    $scope.getRunKind = function ($item) {
+        $item = {};
+        $scope.runKindId = $item.runKindId;
+    }
 
 
     //弹窗新增
@@ -93,17 +108,15 @@ App.controller('DevConfigController', ['$scope', '$stateParams', '$rootScope', '
     }
     //
     // 状态切换
-    //
+    // <!--0：下线（脱络）；1：在线；  2:使用中；-->
     $scope.switchDevStatus = function (item) {
         var param = {
             id: item.id,
             onlineStatus: item.onlineStatus == 1 ? item.onlineStatus = 0 : 1
 
         };
-
         restful.fetch($rootScope.api.switchDevStatus, "POST", param).then(function (res) {
             if (res.code == 2000) {
-                console.log(res, "状态切换返回：");
                 toastr.success("切换状态成功", res.msg);
                 $scope.query();
             } else {
@@ -137,10 +150,10 @@ App.controller('DevConfigController', ['$scope', '$stateParams', '$rootScope', '
 
                 for (var i = 0; i < $scope.DevListData.length; i++) {
                     if ($scope.DevListData[i].onlineStatus == 0) {
-                        $scope.DevListData[i].onlineStatusName = "离线";
+                        $scope.DevListData[i].onlineStatusName = "在线";
                     }
                     if ($scope.DevListData[i].onlineStatus == 1) {
-                        $scope.DevListData[i].onlineStatusName = "在线";
+                        $scope.DevListData[i].onlineStatusName = "离线";
                     }
                     if ($scope.DevListData[i].onlineStatus == 2) {
                         $scope.DevListData[i].onlineStatusName = "使用中";
@@ -158,7 +171,7 @@ App.controller('DevConfigController', ['$scope', '$stateParams', '$rootScope', '
 
     //设备类型
     $scope.deviceKinds = {};
-    $scope.deviceKind = [
+    var devTypeArr = [
         {
             id: 0,
             name: "跑步机"
@@ -168,44 +181,43 @@ App.controller('DevConfigController', ['$scope', '$stateParams', '$rootScope', '
         }, {
             id: 2,
             name: "分析仪"
-        }, {
-            id: 3,
-            name: "AR"
         }
     ];
+
+    if ($stateParams.gymType == 0) {
+        $scope.deviceKind = devTypeArr;
+    } else if ($stateParams.gymType == 1) {
+        $scope.deviceKind = devTypeArr;
+        $scope.deviceKind.push({
+            id: 3,
+            name: "AR设备"
+        });
+    }
+
+
     $scope.getDeviceKind = function (item) {
         $scope.deviceKinds.id = item.id;
-        console.log($scope.deviceKinds.id);
     };
-
     //设备厂商-跑步机
-    $scope.deviceTradeT1s = {};
     $scope.deviceTradeT1 = [
         {
-            id: 0,
+            deviceTradeId: 0,
             name: "好家庭"
         }, {
-            id: 1,
+            deviceTradeId: 1,
             name: "汇祥"
         }
     ];
-    $scope.getDeviceTradeT1 = function (item) {
-        $scope.$scope.deviceTradeT1s.id = item.id;
-    };
     //设备厂商-椭圆机+分析仪
-    $scope.deviceTradeT2s = {};
     $scope.deviceTradeT2 = [
         {
-            id: 2,
+            deviceTradeId: 2,
             name: "清华同方"
         }, {
-            id: 3,
+            deviceTradeId: 3,
             name: "东华原"
         }
     ];
-    $scope.getDeviceTradeT2 = function (item) {
-        $scope.deviceTradeT2s.id = item.id;
-    };
     //设备厂商-AR
     $scope.deviceTradeT3 = [
         {
@@ -213,11 +225,33 @@ App.controller('DevConfigController', ['$scope', '$stateParams', '$rootScope', '
             name: "中大AR实验室"
         }
     ];
-    $scope.deviceTradeT3s = {};
-    $scope.getDeviceTradeT3 = function (item) {
-        $scope.deviceTradeT3s.id = item.id;
-    };
 
+    $scope.deviceToTradeFn = function (e) {
+        var isFlagSelect = 0;
+        if ($scope.addDev.kind == 0) {
+            //显示的跑步机的供应商F
+            return isFlagSelect = 1;
+        }
+        //显示的非跑步机的供应商
+        return isFlagSelect = 0;
+
+    }
+
+    //根据第一个框的选项获取第二个下拉框的可选值
+    function getItemsToAppend(selectedValue) {
+        var options = new Array();
+        if (selectedValue == "1") {
+            options.push("11", "12");
+        }
+        else if (selectedValue == "2") {
+            options.push("21", "22");
+        }
+        else {
+            options.push("31", "32");
+        }
+        return options;
+
+    }
 
 
 }]);
@@ -241,15 +275,18 @@ App.controller("DevAddController", ['$scope', '$stateParams', '$uibModalInstance
         var params = {
             "productInfoId": $scope.data.productInfoId,
             "manufacturer": $scope.data.manufacturer,
+            "trainerMallId": $scope.data.trainerMallId,
             "deviceIdentity": $scope.data.deviceIdentity,
             "gymId": $stateParams.gymId,
+            "type": $stateParams.gymType,//appJs里路由后跟的参数
             "model": $scope.data.model,
 
             "productionDate": $scope.data.todayStartTime ? $scope.data.todayStartTime : $rootScope.tools.dateToTimeStamp13Bit($scope.data.productionDate),
             "warrantyStartDate": $scope.data.todayStartTime ? $scope.data.todayStartTime : $rootScope.tools.dateToTimeStamp13Bit($scope.data.beginTime),
             "warrantyEndDate": $scope.data.todayEndTime ? $scope.data.todayEndTime : $rootScope.tools.dateToTimeStamp13Bit($scope.data.endTime),
 
-            "onceTime": $scope.data.onceTime
+            "onceTime": $scope.data.onceTime,
+            "cost": $scope.data.cost,
 
         };
         console.log(params, "添加设备要丢给后台的字段");
@@ -269,9 +306,10 @@ App.controller("DevAddController", ['$scope', '$stateParams', '$uibModalInstance
     $scope.close = function () {
         $uibModalInstance.dismiss('close');
     };
+
     //设备类型
     $scope.deviceKinds = {};
-    $scope.deviceKind = [
+    var devTypeArr = [
         {
             id: 0,
             name: "跑步机"
@@ -281,11 +319,18 @@ App.controller("DevAddController", ['$scope', '$stateParams', '$uibModalInstance
         }, {
             id: 2,
             name: "分析仪"
-        }, {
-            id: 3,
-            name: "AR"
         }
     ];
+
+    if ($stateParams.gymType == 0) {
+        $scope.deviceKind = devTypeArr;
+    } else if ($stateParams.gymType == 1) {
+        $scope.deviceKind = devTypeArr;
+        $scope.deviceKind.push({
+            id: 3,
+            name: "AR设备"
+        });
+    }
     $scope.getDeviceKind = function (item) {
         $scope.deviceKinds.id = item.id;
         console.log($scope.deviceKinds.id);
@@ -303,7 +348,7 @@ App.controller("DevAddController", ['$scope', '$stateParams', '$uibModalInstance
         }
     ];
     $scope.getDeviceTradeT1 = function (item) {
-        $scope.$scope.deviceTradeT1s.id = item.id;
+       $scope.deviceTradeT1s.id = item.id;
     };
     //设备厂商-椭圆机+分析仪
     $scope.deviceTradeT2s = {};
@@ -326,11 +371,6 @@ App.controller("DevAddController", ['$scope', '$stateParams', '$uibModalInstance
             name: "中大AR实验室"
         }
     ];
-    $scope.deviceTradeT3s = {};
-    $scope.getDeviceTradeT3 = function (item) {
-        $scope.deviceTradeT3s.id = item.id;
-    };
-
     //单次运行最长时间
     $scope.singleUseTime = function () {
         $scope.data.onceTime = $scope.data.onceTime == 0 ? null : 0;
@@ -370,7 +410,7 @@ App.controller("DevAddController", ['$scope', '$stateParams', '$uibModalInstance
 }]);
 
 
-App.controller("DevEditController", ['$scope', '$http', '$uibModalInstance', 'restful', '$state', '$rootScope', '$uibModal', 'item', 'toastr', 'lifeHouseAreaSelector', function ($scope, $http, $uibModalInstance, restful, $state, $rootScope, $uibModal, item, toastr, lifeHouseAreaSelector) {
+App.controller("DevEditController", ['$scope', '$stateParams', '$http', '$uibModalInstance', 'restful', '$state', '$rootScope', '$uibModal', 'item', 'toastr', 'lifeHouseAreaSelector', function ($scope, $stateParams, $http, $uibModalInstance, restful, $state, $rootScope, $uibModal, item, toastr, lifeHouseAreaSelector) {
 
 
     $scope.data = {};
@@ -386,9 +426,8 @@ App.controller("DevEditController", ['$scope', '$http', '$uibModalInstance', 're
             }
         }
     }, true);
-    //设备类型
     $scope.deviceKinds = {};
-    $scope.deviceKind = [
+    var devTypeArr = [
         {
             id: 0,
             name: "跑步机"
@@ -398,11 +437,18 @@ App.controller("DevEditController", ['$scope', '$http', '$uibModalInstance', 're
         }, {
             id: 2,
             name: "分析仪"
-        }, {
-            id: 3,
-            name: "AR"
         }
     ];
+
+    if ($stateParams.gymType == 0) {
+        $scope.deviceKind = devTypeArr;
+    } else if ($stateParams.gymType == 1) {
+        $scope.deviceKind = devTypeArr;
+        $scope.deviceKind.push({
+            id: 3,
+            name: "AR设备"
+        });
+    }
     $scope.getDeviceKind = function (item) {
         $scope.deviceKinds.id = item.id;
         console.log($scope.deviceKinds.id);
@@ -420,10 +466,9 @@ App.controller("DevEditController", ['$scope', '$http', '$uibModalInstance', 're
         }
     ];
     $scope.getDeviceTradeT1 = function (item) {
-        $scope.$scope.deviceTradeT1s.id = item.id;
+        $scope.deviceTradeT1s.id = item.id;
     };
     //设备厂商-椭圆机+分析仪
-    $scope.deviceTradeT2s = {};
     $scope.deviceTradeT2 = [
         {
             id: 2,
@@ -433,6 +478,7 @@ App.controller("DevEditController", ['$scope', '$http', '$uibModalInstance', 're
             name: "东华原"
         }
     ];
+    $scope.deviceTradeT2s = {};
     $scope.getDeviceTradeT2 = function (item) {
         $scope.deviceTradeT2s.id = item.id;
     };
@@ -443,11 +489,6 @@ App.controller("DevEditController", ['$scope', '$http', '$uibModalInstance', 're
             name: "中大AR实验室"
         }
     ];
-    $scope.deviceTradeT3s = {};
-    $scope.getDeviceTradeT3 = function (item) {
-        $scope.deviceTradeT3s.id = item.id;
-    };
-
 
     /*
      -----------------
@@ -474,12 +515,14 @@ App.controller("DevEditController", ['$scope', '$http', '$uibModalInstance', 're
             toastr.error(res.msg, "获取设备信息列表失败");
         }
     });
-
     //2：编辑好后提交设备的信息
     $scope.saveDevEdit = function () {
         var params = {
             "id": item.id,
+            "gymId": $stateParams.gymId,
+            "type": $scope.data.type,//从上边的根据设备id获取的，后台数据有问题null
             "productInfoId": $scope.data.productInfoId,
+            "trainerMallId": $scope.data.trainerMallId,
             "manufacturer": $scope.data.manufacturer,
             "deviceIdentity": $scope.data.deviceIdentity,
             "model": $scope.data.model,
@@ -487,6 +530,7 @@ App.controller("DevEditController", ['$scope', '$http', '$uibModalInstance', 're
             "warrantyStartDate": $scope.data.warrantyStartDate,
             "warrantyEndDate": $scope.data.warrantyEndDate,
             "onceTime": $scope.data.onceTime,
+            "cost": $scope.data.cost,
         };
         console.log(params, "编辑场馆要丢给后台的字段");
         restful.fetch($rootScope.api.EditDev, "POST", params).then(function (res) {

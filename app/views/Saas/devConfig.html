@@ -33,6 +33,12 @@
 
                             <th>单次最长运行时间(min)</th>
                             <th>运行状态</th>
+
+                            <!--      <th>私教猫号</th>
+                                  <th>设备成本</th>
+                                  <th>是否收回成本</th>
+                                  <th>分成比例</th>-->
+
                             <th>操作</th>
 
 
@@ -60,18 +66,23 @@
                             <td ng-if="item.onceTime=='0'">不限</td>
                             <td ng-if="item.onceTime!='0'">{{item.onceTime==null?"--":item.onceTime}}</td>
                             <td>{{item.useStatusName==null?"--":item.useStatusName}}</td>
+
+                            <!--   <td>{{item.trainerMallId==null?"&#45;&#45;":item.trainerMallId}}</td>
+                               <td>{{item.cost==null?"&#45;&#45;":item.cost}}</td>
+                               <td>{{item.isProfit==null?"&#45;&#45;":item.isProfit}}</td>
+                               <td>查看</td>-->
                             <td>
-                                <!--0：在线；1：离线；  2:使用中；-->
-                                <a ng-click="switchDevStatus(item)" class="pointer"
-                                   ng-if="item.onlineStatus!=undefined&&item.onlineStatus==0" ng-disabled="checklist"
-                                   confirm="确定下线吗？" confirm-title="状态切换" confirm-ok="确定"
-                                   confirm-cancel="取消">{{item.onlineStatusName}} </a>
-
-
+                                <!--0：离线（脱络）；1：在线；  2:使用中；-->
                                 <a ng-click="switchDevStatus(item)" class="pointer"
                                    ng-if="item.onlineStatus!=undefined&&item.onlineStatus==1" ng-disabled="checklist"
-                                   confirm="确定上线吗？" confirm-title="状态切换" confirm-ok="确定"
-                                   confirm-cancel="取消">{{item.onlineStatusName}}</a>
+                                   confirm="确定要下线吗？" confirm-title="状态切换" confirm-ok="确定"
+                                   confirm-cancel="取消">要下线 </a>
+
+
+                                <a ng-click="switchDevStatus(item)" class="pointer"
+                                   ng-if="item.onlineStatus!=undefined&&item.onlineStatus==0" ng-disabled="checklist"
+                                   confirm="确定要上线吗？" confirm-title="状态切换" confirm-ok="确定"
+                                   confirm-cancel="取消">要上线</a>
 
 
                                 <a ng-click="DevEdit(item)" class="pointer">编辑</a>
@@ -133,8 +144,8 @@
                     <div class="col-md-9">
                         <!--后台对应的字段-->
                         <ui-select ng-model="data.productInfoId" theme="bootstrap"
-                                   on-select="getDeviceKind($item)" name="" required>
-                            <ui-select-match allow-clear="true" >{{$select.selected.name}}
+                                   on-select="getDeviceKind($item)" name="">
+                            <ui-select-match allow-clear="true">{{$select.selected.name}}
                             </ui-select-match>
                             <ui-select-choices
                                     repeat="item.id as item in deviceKind | orderBy:'id' | filter: $select.search.name">
@@ -149,8 +160,8 @@
                     <!--跑步机-->
                     <div class="col-md-9" ng-if="data.productInfoId==0 ||data.productInfoId==undefined">
                         <ui-select ng-model="data.manufacturer" theme="bootstrap" on-select="getDeviceKind($item)"
-                                   name="" ng-disabled="data.productInfoId==undefined?true:false" required>
-                            <ui-select-match allow-clear="true" >{{$select.selected.name}}
+                                   name="" ng-disabled="data.productInfoId==undefined?true:false">
+                            <ui-select-match allow-clear="true">{{$select.selected.name}}
                             </ui-select-match>
                             <ui-select-choices
                                     repeat="item.id as item in deviceTradeT1 | orderBy:'id' | filter: $select.search.name">
@@ -163,8 +174,8 @@
                     <!--非跑步机-->
                     <div class="col-md-9" ng-if="data.productInfoId==1||data.productInfoId==2">
                         <ui-select ng-model="data.manufacturer" theme="bootstrap" on-select="getDeviceTradeT2($item)"
-                                   name="" ng-disabled="data.productInfoId==undefined?true:false" required>
-                            <ui-select-match allow-clear="true" >{{$select.selected.name}}
+                                   name="" ng-disabled="data.productInfoId==undefined?true:false">
+                            <ui-select-match allow-clear="true">{{$select.selected.name}}
                             </ui-select-match>
                             <ui-select-choices
                                     repeat="item.id as item in deviceTradeT2 | orderBy:'id' | filter: $select.search.name">
@@ -177,7 +188,7 @@
                     <div class="col-md-9" ng-if="data.productInfoId==3">
                         <ui-select ng-model="data.manufacturer" theme="bootstrap" on-select="getDeviceTradeT3($item)"
                                    name="" ng-disabled="data.productInfoId==undefined?true:false" required>
-                            <ui-select-match allow-clear="true" >{{$select.selected.name}}
+                            <ui-select-match allow-clear="true">{{$select.selected.name}}
                             </ui-select-match>
                             <ui-select-choices
                                     repeat="item.id as item in deviceTradeT3 | orderBy:'id' | filter: $select.search.name">
@@ -187,13 +198,20 @@
                         </ui-select>
                     </div>
                 </div>
-
+                <!-- <div class="form-group col-md-12">
+                     <label class="col-md-3 text-right control-label">领养私教：</label>
+                     <div class="col-md-9">
+                         <input type="text" class="form-control" placeholder="请输入猫号"
+                                ng-model="data.trainerMallId" name="trainerMallId"  required
+                                maxlength="20" >
+                     </div>
+                 </div>-->
                 <div class="form-group col-md-12">
                     <label class="col-md-3 text-right control-label">设备编码：</label>
                     <div class="col-md-9">
                         <input type="text" ng-pattern="PATTERN_CONFIG.numAndCha" class="form-control"
-                               ng-model="data.deviceIdentity" name="deviceIdentity"  required
-                               maxlength="20" >
+                               ng-model="data.deviceIdentity" name="deviceIdentity" required
+                               maxlength="20">
                     </div>
                     <div ng-show="DevViewAddForm.deviceIdentity.$error.pattern" class="col-lg-12">
                         <label class="col-md-offset-3 col-md-9" style="color:red">只能输入数字、字母、下划线</label>
@@ -204,7 +222,7 @@
                     <label class="col-md-3 text-right control-label">设备型号：</label>
                     <div class="col-md-9">
                         <input type="text" class="form-control " ng-pattern="PATTERN_CONFIG.numAndCha"
-                               ng-model="data.model" name="model"  required
+                               ng-model="data.model" name="model" required
                                maxlength="20">
                     </div>
                     <div ng-show="DevViewAddForm.model.$error.pattern" class="col-lg-12">
@@ -218,8 +236,8 @@
                             <div class="dropdown">
                                 <input type="text" class="form-control" ng-model="data.productionDate"
                                        datetime-transform
-                                       format="yyyy-MM-dd" name="productionDate" disabled required>
-                                <i class="glyphicon glyphicon-calendar rili-icon dropdown-toggle" id="" role="button"
+                                       format="yyyy-MM-dd" name="productionDate" disabled>
+                                <i class="glyphicon glyphicon-calendar rili-icon dropdown-toggle" role="button"
                                    data-toggle="dropdown"></i>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="beginTime">
                                     <datetimepicker ng-model="data.productionDate"
@@ -238,7 +256,7 @@
                     <div class="col-md-4">
                         <div class="dropdown">
                             <input type="text" class="form-control" ng-model="data.beginTime" datetime-transform
-                                   format="yyyy-MM-dd" name="beginTime" disabled required>
+                                   format="yyyy-MM-dd" name="beginTime" disabled>
                             <i class="glyphicon glyphicon-calendar rili-icon dropdown-toggle" id="beginTime"
                                role="button"
                                data-toggle="dropdown"></i>
@@ -255,7 +273,7 @@
                     <div class="col-md-4">
                         <div class="dropdown">
                             <input type="text" class="form-control" ng-model="data.endTime" datetime-transform
-                                   format="yyyy-MM-dd" name="endTime" disabled required>
+                                   format="yyyy-MM-dd" name="endTime" disabled>
                             <i class="glyphicon glyphicon-calendar rili-icon dropdown-toggle" id="endTime" role="button"
                                data-toggle="dropdown"></i>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="endTime">
@@ -286,7 +304,13 @@
                         <input type="checkbox" ng-checked="data.onceTime==0" ng-click="singleUseTime()">&nbsp;不限
                     </div>
                 </div>
-
+                <!--  <div class="form-group col-md-12">
+                      <label class="col-md-3 text-right control-label">设备成本（元/台）：</label>
+                      <div class="col-md-9">
+                          <input type="text" class="form-control" ng-model="data.cost" required maxlength="9"
+                                 money max-number="999999.99">
+                      </div>
+                  </div>-->
             </section>
         </form>
     </div>
@@ -317,8 +341,8 @@
                     <label ng-click="getDeviceKind($item)" class="col-md-3 text-right control-label">设备类型：</label>
                     <div class="col-md-9">
                         <ui-select ng-model="data.productInfoId" theme="bootstrap"
-                                   on-select="getDeviceKind($item)" name="" required>
-                            <ui-select-match allow-clear="true" >{{$select.selected.name}}
+                                   on-select="getDeviceKind($item)" name="">
+                            <ui-select-match allow-clear="true">{{$select.selected.name}}
                             </ui-select-match>
                             <ui-select-choices
                                     repeat="item.id as item in deviceKind | orderBy:'id' | filter: $select.search.name">
@@ -335,8 +359,8 @@
                     <!--跑步机-->
                     <div class="col-md-9" ng-if="data.productInfoId==0">
                         <ui-select ng-model="data.manufacturer" theme="bootstrap" on-select="getDeviceKind($item)"
-                                   name="" required>
-                            <ui-select-match allow-clear="true" >{{$select.selected.name}}
+                                   name="">
+                            <ui-select-match allow-clear="true">{{$select.selected.name}}
                             </ui-select-match>
                             <ui-select-choices
                                     repeat="item.id as item in deviceTradeT1 | orderBy:'id' | filter: $select.search.name">
@@ -349,8 +373,8 @@
                     <!--非跑步机-->
                     <div class="col-md-9" ng-if="data.productInfoId==1||data.productInfoId==2">
                         <ui-select ng-model="data.manufacturer" theme="bootstrap" on-select="getDeviceTradeT2($item)"
-                                   name="" required>
-                            <ui-select-match allow-clear="true" >{{$select.selected.name}}
+                                   name="">
+                            <ui-select-match allow-clear="true">{{$select.selected.name}}
                             </ui-select-match>
                             <ui-select-choices
                                     repeat="item.id as item in deviceTradeT2 | orderBy:'id' | filter: $select.search.name">
@@ -363,7 +387,7 @@
                     <div class="col-md-9" ng-if="data.productInfoId==3">
                         <ui-select ng-model="data.manufacturer" theme="bootstrap" on-select="getDeviceTradeT3($item)"
                                    name="" ng-disabled="data.productInfoId==undefined?true:false" required>
-                            <ui-select-match allow-clear="true" >{{$select.selected.name}}
+                            <ui-select-match allow-clear="true">{{$select.selected.name}}
                             </ui-select-match>
                             <ui-select-choices
                                     repeat="item.id as item in deviceTradeT3 | orderBy:'id' | filter: $select.search.name">
@@ -373,13 +397,20 @@
                         </ui-select>
                     </div>
                 </div>
-
+                <!--<div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label">领养私教：</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" placeholder="请输入猫号"
+                               ng-model="data.trainerMallId" name="trainerMallId"  required
+                               maxlength="20" >
+                    </div>
+                </div>-->
 
                 <div class="form-group col-md-12">
                     <label class="col-md-3 text-right control-label">设备编码：</label>
                     <div class="col-md-9">
                         <input type="text" class="form-control" ng-pattern="PATTERN_CONFIG.numAndCha"
-                               ng-model="data.deviceIdentity" name="deviceIdentity"  required
+                               ng-model="data.deviceIdentity" name="deviceIdentity" required
                                maxlength="20">
                     </div>
                     <div ng-show="DevViewEditForm.deviceIdentity.$error.pattern" class="col-lg-12">
@@ -390,7 +421,7 @@
                     <label class="col-md-3 text-right control-label">设备型号：</label>
                     <div class="col-md-9">
                         <input type="text" class="form-control" ng-pattern="PATTERN_CONFIG.numAndCha"
-                               ng-model="data.model" name="model"  required
+                               ng-model="data.model" name="model" required
                                maxlength="20">
                     </div>
                     <div ng-show="DevViewEditForm.model.$error.pattern" class="col-lg-12">
@@ -404,7 +435,7 @@
                             <div class="dropdown">
                                 <input type="text" class="form-control" ng-model="data.productionDate"
                                        datetime-transform
-                                       format="yyyy-MM-dd" name="productionDate" disabled required>
+                                       format="yyyy-MM-dd" name="productionDate" disabled>
                                 <i class="glyphicon glyphicon-calendar rili-icon dropdown-toggle" id="" role="button"
                                    data-toggle="dropdown"></i>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="beginTime">
@@ -421,42 +452,42 @@
                 </div>
                 <div class="form-group col-md-12">
                     <label class="col-md-3 text-right control-label">保修期：</label>
-                        <div class="col-md-4">
-                            <div class="dropdown">
-                                <input type="text" class="form-control" ng-model="data.warrantyStartDate"
-                                       datetime-transform
-                                       format="yyyy-MM-dd" name="warrantyStartDate" disabled required>
-                                <i class="glyphicon glyphicon-calendar rili-icon dropdown-toggle" id="beginTime"
-                                   role="button"
-                                   data-toggle="dropdown"></i>
-                                <ul class="dropdown-menu" role="menu" aria-labelledby="beginTime">
-                                    <datetimepicker ng-model="data.warrantyStartDate"
-                                                    data-datetimepicker-config="{dropdownSelector: '#beginTime',startView:'day',minView:'day'}"
-                                                    on-set-time="restRadio()"></datetimepicker>
-                                </ul>
-                            </div>
+                    <div class="col-md-4">
+                        <div class="dropdown">
+                            <input type="text" class="form-control" ng-model="data.warrantyStartDate"
+                                   datetime-transform
+                                   format="yyyy-MM-dd" name="warrantyStartDate" disabled>
+                            <i class="glyphicon glyphicon-calendar rili-icon dropdown-toggle" id="beginTime"
+                               role="button"
+                               data-toggle="dropdown"></i>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="beginTime">
+                                <datetimepicker ng-model="data.warrantyStartDate"
+                                                data-datetimepicker-config="{dropdownSelector: '#beginTime',startView:'day',minView:'day'}"
+                                                on-set-time="restRadio()"></datetimepicker>
+                            </ul>
                         </div>
-                        <input type="text" name="warrantyStartDate"
-                               value="{{data.todayStartTime?data.todayStartTime:tools.dateToTimeStamp(data.warrantyStartDate)}}"
-                               class="exportNone">
-                        <div class="col-md-4">
-                            <div class="dropdown">
-                                <input type="text" class="form-control" ng-model="data.warrantyEndDate"
-                                       datetime-transform
-                                       format="yyyy-MM-dd" name="warrantyEndDate" disabled required>
-                                <i class="glyphicon glyphicon-calendar rili-icon dropdown-toggle" id="endTime"
-                                   role="button"
-                                   data-toggle="dropdown"></i>
-                                <ul class="dropdown-menu" role="menu" aria-labelledby="endTime">
-                                    <datetimepicker ng-model="data.warrantyEndDate"
-                                                    data-datetimepicker-config="{dropdownSelector: '#endTime',startView:'day',minView:'day'}"
-                                                    on-set-time="restRadio()"></datetimepicker>
-                                </ul>
-                            </div>
+                    </div>
+                    <input type="text" name="warrantyStartDate"
+                           value="{{data.todayStartTime?data.todayStartTime:tools.dateToTimeStamp(data.warrantyStartDate)}}"
+                           class="exportNone">
+                    <div class="col-md-4">
+                        <div class="dropdown">
+                            <input type="text" class="form-control" ng-model="data.warrantyEndDate"
+                                   datetime-transform
+                                   format="yyyy-MM-dd" name="warrantyEndDate" disabled>
+                            <i class="glyphicon glyphicon-calendar rili-icon dropdown-toggle" id="endTime"
+                               role="button"
+                               data-toggle="dropdown"></i>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="endTime">
+                                <datetimepicker ng-model="data.warrantyEndDate"
+                                                data-datetimepicker-config="{dropdownSelector: '#endTime',startView:'day',minView:'day'}"
+                                                on-set-time="restRadio()"></datetimepicker>
+                            </ul>
                         </div>
-                        <input type="text" name="warrantyEndDate"
-                               value="{{data.todayEndTime?data.todayEndTime:tools.dateToTimeStamp(data.warrantyEndDate)}}"
-                               class="exportNone">
+                    </div>
+                    <input type="text" name="warrantyEndDate"
+                           value="{{data.todayEndTime?data.todayEndTime:tools.dateToTimeStamp(data.warrantyEndDate)}}"
+                           class="exportNone">
 
 
                     <div class="form-group col-md-12">
@@ -475,6 +506,13 @@
                             <input type="checkbox" ng-checked="data.onceTime==0" ng-click="singleUseTime()">&nbsp;不限
                         </div>
                     </div>
+                    <!--<div class="form-group col-md-12">
+                        <label class="col-md-3 text-right control-label">设备成本（元/台）：</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" ng-model="data.cost" required maxlength="9"
+                                   money max-number="999999.99">
+                        </div>
+                    </div>-->
 
 
             </section>

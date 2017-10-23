@@ -1,0 +1,152 @@
+<article ng-controller="sendDiscountController" class="sendDiscount container-fluid">
+    <!--头部查询-->
+    <form action="{{api.sendDiscountEportExcel}}" method="POST" ng-enter="query()" name="sendDiscountDataFormName" id="sendDiscountListEcho">
+        <section class="row">
+            <div class="form-group col-md-3">
+                <label class="col-md-3 text-right control-label" >猫号：</label>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" ng-model="data.mallId"  maxlength="20" name="mallId">
+                </div>
+            </div>
+
+
+            <div class="form-group col-md-3">
+                <label class="col-md-3 text-right control-label" >手机号：</label>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" ng-model="data.mobile"  maxlength="20" name="mobile">
+                </div>
+            </div>
+
+
+            <div class="form-group col-md-3">
+                <label class="col-md-3 control-label">卡券类型：</label>
+                <div class="col-md-8">
+                    <ui-select ng-model="data.type" theme="bootstrap" on-select="getDeviceKind($item)">
+                        <ui-select-match allow-clear="true" placeholder="全部">{{$select.selected.name}}</ui-select-match>
+
+
+                        <ui-select-choices
+                                repeat="item.id as item in deviceKind | orderBy:'id' | filter: $select.search.name">
+                            <span ng-bind-html="item.name | highlight: $select.search"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                    <input type="hidden"  value="{{data.type}}" name="type">
+                </div>
+            </div>
+
+        </section>
+        <section class="row">
+
+            <div class="form-group col-md-4">
+                <label class="col-md-3 text-center control-label" >城市：</label>
+                <div class="col-md-4">
+                    <div class="col-md-12">
+                        <ui-select ng-model="data.provinceId" theme="bootstrap" on-select="getCitys($item.id)" name="provinceId">
+                            <ui-select-match allow-clear="true" placeholder="省">{{$select.selected.name}}
+                            </ui-select-match>
+                            <ui-select-choices
+                                    repeat="item.id as item in provinces | orderBy:'id' | filter: $select.search.id">
+                                <span ng-bind-html="item.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <input type="hidden"  value="{{data.provinceId}}" name="provinceId">
+                </div>
+                <div class=" col-md-4">
+                    <div class="col-md-12">
+                        <ui-select ng-model="data.cityId" theme="bootstrap" on-select="getCountys($item.id)" ng-disabled="data.provinceId==undefined?true:false" name="cityId">
+
+                            <ui-select-match allow-clear="true" placeholder="市">{{$select.selected.name}}
+                            </ui-select-match>
+                            <ui-select-choices
+                                    repeat="item.id as item in citys | orderBy:'id' | filter: $select.search.id">
+                                <span ng-bind-html="item.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                        <input type="hidden"  value="{{data.cityId}}" name="cityId">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!--按钮-点击搜索-->
+        <div class="button-first">
+            <button type="button" class="btn btn-raised btn-primary" ng-click="query()">查询</button>
+            <button type="button" class="btn btn-raised btn-default" ng-click="reset()">重置</button>
+            <button type="submit" class="btn btn-raised btn-primary" >导出</button>
+        </div>
+    </form>
+
+
+    <!--下部-查询列表-->
+    <section class="row conPanelLeft">
+        <div class="sendDiscountWrapper  col-lg-12">
+            <!-- 下部分 -->
+            <section>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-head">
+                        <tr class="active">
+
+                            <th>序号</th>
+                            <th>用户猫号</th>
+
+                            <th>用户手机号</th>
+                            <th>类型</th>
+                            <th>卡券名称</th>
+                            <th>卡券面额(元)</th>
+
+                            <th>领取时间</th>
+
+                        </tr>
+                        </thead>
+
+                        <tbody ng-repeat="item in sendDiscountListData">
+                        <tr>
+                            <td>{{$index+1+(((PageIndex||1)-1)*PageSize)}}</td>
+                            <td>{{item.mallId}}</td>
+                            <td>{{item.mobile}}</td>
+                            <td>{{item.type}}</td>
+                            <td>{{item.cardName}}</td>
+                            <td>{{item.cardAmount}}</td>
+                            <td>{{item.createTime}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div ng-if="!sendDiscountListData.length" class="noData ng-scope">暂无数据</div>
+                </div>
+                <div cg-busy="sendDiscountListPromise"></div>
+                <div class="row">
+                    <div class="col-md-9">
+                        <select class="page-size" ng-model="PageSize" ng-change="pageChanged()">
+                            <option value="20" ng-selected="true">每页显示20条</option>
+                            <option value="40">每页显示40条</option>
+                            <option value="60">每页显示60条</option>
+                            <option value="80">每页显示80条</option>
+                            <option value="100">每页显示100条</option>
+                        </select>
+                        <uib-pagination ng-model="PageIndex" ng-change="pageChanged()"
+                                        total-items="sendDiscountListDataCount"
+                                        max-size="maxSize" items-per-page="PageSize" class="pagination-sm"
+                                        boundary-link-numbers="true" rotate="false" previous-text="上一页"
+                                        next-text="下一页"></uib-pagination>
+                    </div>
+                    <div class="col-md-1"><span class="totalTxt">总计：{{sendDiscountListDataCount==null?"--":sendDiscountListDataCount }} 条</span></div>
+
+                    <div class="col-md-2 text-right">
+                        <span>跳转到</span>
+                        <input type="text" onafterpaste="this.value=this.value.replace(/\D/g,'')"
+                               onkeyup="this.value=this.value.replace(/\D/g,'')" ng-model="toPageNum"
+                               class="variant-form-control">
+                        <button ng-click="setPage()" class="to-page-num">确定</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </section>
+
+</article>
+
+

@@ -20,7 +20,24 @@ App.controller('sportProgramController', ['$scope', '$stateParams', '$rootScope'
         $scope.data = {};
         $scope.query();
     };
+    //性别
+    $scope.sexArr = [
+        {
+            sexId: 0,
+            name: "女"
+        }, {
+            sexId: 1,
+            name: "男"
+        }, {
+            sexId: 2,
+            name: "不限"
+        }
+    ];
 
+    $scope.getSexStatus = function ($item) {
+        $item = {};
+        $scope.sexId = $item.sexId;
+    };
     //查询运动方案
     $rootScope.query = function () {
         var params = {
@@ -28,6 +45,9 @@ App.controller('sportProgramController', ['$scope', '$stateParams', '$rootScope'
             "page": parseInt($scope.PageIndex) - 1,
             "count": parseInt($scope.PageSize),
             "schemeName": $scope.data.schemeName,
+            "sex": $scope.data.sex,
+            "minBmi": $scope.data.minBmi,
+            "maxBmi": $scope.data.maxBmi
         };
         console.log(params, "查询运动方案入参：");
         $http({
@@ -186,7 +206,8 @@ App.controller("sportProgramAddController", ['$scope', '$uibModalInstance', 'res
         var params = {
             "detailInDTOList": $scope.sportStageData,
             "schemeName": $scope.data.schemeName,
-            "description": $scope.data.description,
+
+
         };
         $http({
             url: $rootScope.api.addSportProgram,
@@ -283,9 +304,10 @@ App.controller("sportProgramEditController", ['$scope', '$http', '$uibModalInsta
             "schemeId": item.schemeId,
             "detailInDTOList": $scope.sportStageData,
             "schemeName": $scope.data.schemeName,
-            "description": $scope.data.description,
+
+
         };
-        console.log(params, "编辑丢给后台的参数：");
+        console.log(params, "编辑丢给后台的参数===========：");
         $http({
             url: $rootScope.api.EditSportProgram,
             method: 'post',

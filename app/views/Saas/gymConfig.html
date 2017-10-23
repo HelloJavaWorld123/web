@@ -1,141 +1,160 @@
 <article ng-controller=" gymConfigController" class="gymConfig container-fluid">
-        <div class="unModalView " ng-if="allShowOrHidden==1">
-            <!-- 上部分-联动 -->
-            <form action="{{api.GymEportExcel}}" method="POST" ng-enter="query()">
-                <section class="row">
-                    <div class="form-group col-md-2">
-                        <label class="col-md-4 control-label">省份：</label>
-                        <div class="col-md-8">
-                            <ui-select ng-model="data.provinceId" theme="bootstrap" on-select="getCitysForward($item.id)"
-                                       name="provinceId">
-                                <ui-select-match allow-clear="true" placeholder="省">{{$select.selected.name}}
-                                </ui-select-match>
-                                <ui-select-choices
-                                        repeat="item.id as item in provinces | orderBy:'id' | filter: $select.search.id">
-                                    <span ng-bind-html="item.name | highlight: $select.search"></span>
-                                </ui-select-choices>
-                            </ui-select>
-                        </div>
-                        <input type="hidden" name="provinceId" value="{{data.provinceId}}">
+    <div class="unModalView " ng-if="allShowOrHidden==1">
+        <!-- 上部分-联动 -->
+        <form action="{{api.GymEportExcel}}" method="POST" ng-enter="query()">
+            <section class="row">
+                <div class="form-group col-md-2">
+                    <label class="col-md-4 control-label">省份：</label>
+                    <div class="col-md-8">
+                        <ui-select ng-model="data.provinceId" theme="bootstrap" on-select="getCitysForward($item.id)"
+                                   name="provinceId">
+                            <ui-select-match allow-clear="true" placeholder="省">{{$select.selected.name}}
+                            </ui-select-match>
+                            <ui-select-choices
+                                    repeat="item.id as item in provinces | orderBy:'id' | filter: $select.search.id">
+                                <span ng-bind-html="item.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
                     </div>
-                    <div class="form-group col-md-2">
-                        <label class="col-md-4 control-label">城市：</label>
-                        <div class="col-md-8">
-                            <ui-select ng-model="data.cityId" theme="bootstrap" on-select="getCountysForward($item.id)"
-                                       name="cityId" ng-disabled="data.provinceId==undefined?true:false">
-                                <ui-select-match allow-clear="true" placeholder="市">{{$select.selected.name}}
-                                </ui-select-match>
-                                <ui-select-choices
-                                        repeat="item.id as item in citys | orderBy:'id' | filter: $select.search.id">
-                                    <span ng-bind-html="item.name | highlight: $select.search"></span>
-                                </ui-select-choices>
-                            </ui-select>
-                        </div>
-                        <input type="hidden" name="cityId" value="{{data.cityId}}">
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label class="col-md-4 control-label">区域：</label>
-                        <div class="col-md-8">
-                            <ui-select ng-model="data.regionId" theme="bootstrap"
-                                       ng-disabled="data.cityId==undefined?true:false" name="regionId">
-                                <ui-select-match allow-clear="true" placeholder="区">{{$select.selected.name}}
-                                </ui-select-match>
-                                <ui-select-choices
-                                        repeat="item.id as item in countys | orderBy:'id' | filter: $select.search.id">
-                                    <span ng-bind-html="item.name | highlight: $select.search"></span>
-                                </ui-select-choices>
-                            </ui-select>
-                        </div>
-                        <input type="hidden" name="regionId" value="{{data.regionId}}">
-                    </div>
-
-                    <div class="form-group col-md-3">
-                        <label class="col-md-3 text-right control-label">场馆名称：</label>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control" ng-model="data.name" name="name" maxlength="100">
-                        </div>
-                    </div>
-
-                </section>
-
-
-                <!--中部-点击弹窗-->
-                <div class="button-first">
-                    <button type="button" class="btn btn-raised btn-primary" ng-click="query()">查询</button>
-                    <button type="button" class="btn btn-raised btn-default" ng-click="reset()">重置</button>
-                    <button type="button" class="btn btn-raised btn-info" ng-click="addGym()">新增</button>
-                    <button type="submit" class="btn btn-raised btn-primary">导出</button>
+                    <input type="hidden" name="provinceId" value="{{data.provinceId}}">
                 </div>
-
-
-            </form>
-            <!--下部-查询列表-->
-            <section class="row conPanelLeft"  >
-                <div class="gymConfigWrapper  col-lg-12">
-                    <!-- 下部分 -->
-                    <section>
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead class="table-head">
-                                <tr class="active">
-                                    <th>序号</th>
-                                    <th>场馆名称</th>
-
-
-
-                                    <th>创建时间</th>
-
-                                    <th>省份</th>
-                                    <th>城市</th>
-                                    <th>区域</th>
-                                    <th>详细地址</th>
-
-                                    <th>设备数量</th>
-                                    <th>联系人</th>
-
-                                    <th>操作</th>
-                                </tr>
-                                </thead>
-
-                                <tbody ng-repeat="item in gymListData">
-                                <tr>
-                                    <td>{{$index+1+(((PageIndex||1)-1)*PageSize)}}</td>
-                                    <td>{{item.name==null?"--":item.name}}</td>
-
-
-
-                                    <td>{{item.createTime==null?"--":item.createTime|date:'yyyy-MM-dd HH:mm:ss'}}</td>
-
-                                    <td>{{item.provinceName==null?"--":item.provinceName}}</td>
-                                    <td>{{item.cityName==null?"--":item.cityName}}</td>
-                                    <td>{{item.regionName==null?"--":item.regionName}}</td>
-                                    <td class="w300">{{item.address==null?"--":item.address}}</td>
-                                    <td>{{item.deviceCount==null?"--":item.deviceCount}}</td>
-                                    <td>{{item.linkedMan==null?"--":item.linkedMan}} <br>{{item.phone==null?"--":item.phone}}</td>
-
-                                    <td>
-                                        <a ng-click="devDetailList(item.id)" class="pointer">查看设备</a>
-                                        <a ng-click="gymEdit(item)" class="pointer">编辑</a>
-                                        <a ng-click="gymDel(item)" class="pointer"
-                                           ng-disabled="checklist" confirm="确定删除吗？" confirm-title="删除" confirm-ok="确定"
-                                           confirm-cancel="取消">删除</a>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                            <div ng-if="!gymListData.length" class="noData ng-scope">暂无数据</div>
-                        </div>
-
-
-
-                    </section>
+                <div class="form-group col-md-2">
+                    <label class="col-md-4 control-label">城市：</label>
+                    <div class="col-md-8">
+                        <ui-select ng-model="data.cityId" theme="bootstrap" on-select="getCountysForward($item.id)"
+                                   name="cityId" ng-disabled="data.provinceId==undefined?true:false">
+                            <ui-select-match allow-clear="true" placeholder="市">{{$select.selected.name}}
+                            </ui-select-match>
+                            <ui-select-choices
+                                    repeat="item.id as item in citys | orderBy:'id' | filter: $select.search.id">
+                                <span ng-bind-html="item.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <input type="hidden" name="cityId" value="{{data.cityId}}">
                 </div>
+                <div class="form-group col-md-2">
+                    <label class="col-md-4 control-label">区域：</label>
+                    <div class="col-md-8">
+                        <ui-select ng-model="data.regionId" theme="bootstrap"
+                                   ng-disabled="data.cityId==undefined?true:false" name="regionId">
+                            <ui-select-match allow-clear="true" placeholder="区">{{$select.selected.name}}
+                            </ui-select-match>
+                            <ui-select-choices
+                                    repeat="item.id as item in countys | orderBy:'id' | filter: $select.search.id">
+                                <span ng-bind-html="item.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <input type="hidden" name="regionId" value="{{data.regionId}}">
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="col-md-3 text-right control-label">场馆名称：</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" ng-model="data.name" name="name" maxlength="100">
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="col-md-3 control-label">经营状态：</label>
+                    <div class="col-md-8">
+                        <ui-select ng-model="data.status" theme="bootstrap" on-select="getRunStatus($item)">
+                            <ui-select-match allow-clear="true" placeholder="全部">{{$select.selected.name}}
+                            </ui-select-match>
+
+
+                            <ui-select-choices
+                                    repeat="item.runStatusId as item in runStatus | orderBy:'runStatusId' | filter: $select.search.name">
+                                <span ng-bind-html="item.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <input type="hidden" name="status" value="{{data.status}}">
+                </div>
+                <!--<div class="form-group col-md-3">
+                    <label class="col-md-3 text-right control-label">场馆账号：</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" ng-model="data.username" name="username" maxlength="12">
+                    </div>
+                </div>-->
 
             </section>
-        </div>
+
+            <!--中部-点击弹窗-->
+            <div class="button-first">
+                <button type="button" class="btn btn-raised btn-primary" ng-click="query()">查询</button>
+                <button type="button" class="btn btn-raised btn-default" ng-click="reset()">重置</button>
+                <button type="button" class="btn btn-raised btn-info" ng-click="addGym()">新增</button>
+                <button type="submit" class="btn btn-raised btn-primary">导出</button>
+            </div>
+
+        </form>
+        <!--下部-查询列表-->
+        <section class="row conPanelLeft">
+            <div class="gymConfigWrapper  col-lg-12">
+                <!-- 下部分 -->
+                <section>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-head">
+                            <tr class="active">
+                                <th>序号</th>
+                                <th>场馆名称</th>
+                                <!--<th>场馆账号</th>-->
+
+                                <th>创建时间</th>
+                                <th>经营状态</th>
+
+                                <th>省份</th>
+                                <th>城市</th>
+                                <th>区域</th>
+                                <th>详细地址</th>
+
+                                <th>设备数量</th>
+
+                                <th>联系人</th>
+
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+
+                            <tbody ng-repeat="item in gymListData">
+                            <tr>
+                                <td>{{$index+1+(((PageIndex||1)-1)*PageSize)}}</td>
+                                <td>{{item.name==null?"--":item.name}}</td>
+                                <!--<td>{{item.username==null?"&#45;&#45;":item.username}}</td>-->
+
+                                <td>{{item.createTime==null?"--":item.createTime|date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                                <td>{{item.statusName==null?"--":item.statusName}}</td>
+                                <td>{{item.provinceName==null?"--":item.provinceName}}</td>
+                                <td>{{item.cityName==null?"--":item.cityName}}</td>
+                                <td>{{item.regionName==null?"--":item.regionName}}</td>
+                                <td class="w300">{{item.address==null?"--":item.address}}</td>
+                                <td>{{item.deviceCount==null?"--":item.deviceCount}}</td>
+                                <td>{{item.linkedMan==null?"--":item.linkedMan}} <br>{{item.phone==null?"--":item.phone}}
+                                </td>
+
+                                <td>
+                                    <a ng-click="devDetailList(item)" class="pointer">查看设备</a>
+                                    <a ng-click="gymEdit(item)" class="pointer">编辑</a>
+                                    <a ng-click="gymDel(item)" class="pointer"
+                                       ng-disabled="checklist" confirm="确定删除吗？" confirm-title="删除" confirm-ok="确定"
+                                       confirm-cancel="取消">删除</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div ng-if="!gymListData.length" class="noData ng-scope">暂无数据</div>
+                    </div>
+
+
+                </section>
+            </div>
+
+        </section>
+    </div>
 
     <!--弹窗定制-增加场馆-->
-    <div class="hxbMadal col-md-8" ng-controller="gymAddController" ng-if="modalAddShowOrHidden==1"><!---->
+    <div class="hxbMadal col-md-8" ng-controller="gymAddController" ng-if="modalAddShowOrHidden==1">
         <div class="row modaHd">
             <div class="col-md-12">
                 <h4 class="col-md-2 text-right control-label">新增场馆</h4>
@@ -147,11 +166,9 @@
                     <div class="form-group col-md-12">
                         <label class="col-md-2 text-right control-label">名称：</label>
                         <div class="col-md-9">
-                            <input type="text" class="form-control" ng-model="data.gymName" required maxlength="20">
+                            <input type="text" class="form-control" ng-model="data.name" required maxlength="20">
                         </div>
                     </div>
-
-
                     <div class="form-group col-md-12">
                         <label class="col-md-2 text-right control-label">联系人：</label>
                         <div class="col-md-9">
@@ -163,12 +180,193 @@
                         <label class="col-md-2 text-right control-label">联系方式：</label>
                         <div class="col-md-9">
                             <input type="text" class="form-control" ng-model="data.phone" required name="phone"
-                                   ng-pattern="PATTERN_CONFIG.TEL" maxlength="11">
+                                   ng-pattern="PATTERN_CONFIG.TEL" maxlength="12"><!--固话是11+1杠-->
                         </div>
                         <div ng-show="gymViewAddForm.phone.$error.pattern" class="col-lg-12">
                             <label class="col-md-offset-3 col-md-9" style="color:red">请输入正确的手机号码或固话</label>
                         </div>
                     </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 text-right control-label">经营状态：</label>
+                        <div class="col-md-9">
+                            <ui-select ng-model="data.status" theme="bootstrap" on-select="getRunStatus($item)"
+                                       name="status" required>
+                                <ui-select-match allow-clear="true" placeholder="经营状态">{{$select.selected.name}}
+                                </ui-select-match>
+                                <ui-select-choices
+                                        repeat="item.runStatusId as item in runStatus | orderBy:'runStatusId' | filter: $select.search.name">
+                                    <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 control-label text-right">经营时间：</label>
+                        <div class="col-md-2">
+                            <ui-select allow-clear ng-model="data.openTimeFormat" theme="bootstrap" required>
+                                <ui-select-match placeholder="开始时间">{{$select.selected.status}}</ui-select-match>
+                                <ui-select-choices repeat="item.status as item in beginTimeArr | filter: $select.search"
+                                                   value="{{$select.selected.status}}">
+                                    <span ng-bind-html="item.status | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="text-center" style="line-height: 45px;height: 45px;">—</div>
+                        </div>
+                        <div class="col-md-2">
+                            <ui-select allow-clear ng-model="data.endTimeFormat" theme="bootstrap" required>
+                                <ui-select-match placeholder="结束时间">{{$select.selected.status}}</ui-select-match>
+                                <ui-select-choices repeat="item.status as item in endTimeArr | filter: $select.search"
+                                                   value="{{$select.selected.status}}">
+                                    <span ng-bind-html="item.status | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+<!--                    <div class="form-group col-md-12">
+                        <label class="col-md-2 text-right control-label">角色分成:</label>
+                        <div class="col-md-10"></div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 text-right control-label"></label>
+                        <div class="col-md-12">
+                            <div class="table-responsive" style="overflow: hidden">
+                                <table class="table table-hover">
+                                    <thead class="table-head">
+                                    <tr class="row">
+                                        <th class="col-md-2">角色</th>
+                                        <th class="col-md-3">代理级别</th>
+                                        <th class="col-md-2">分成比例(%)</th>
+                                        <th class="col-md-3">主体账户</th>
+                                    </tr>
+                                    </thead>
+                                    &lt;!&ndash;ng-repeat="data in ShareRoles"&ndash;&gt;
+                                    <tbody>
+                                    <tr class="row" ng-repeat="item in ShareRoles">
+                                        &lt;!&ndash;1角色&ndash;&gt;
+                                        <td class="form-group col-md-2">
+                                            &lt;!&ndash;  <input type="text" ng-model="item.gymRoleName"
+                                                     class="form-control" required disabled="true"
+                                                     style="padding-left: 30px;">&ndash;&gt;
+                                            {{item.gymRoleName==null?'&#45;&#45;':item.gymRoleName}}
+
+                                        </td>
+                                        &lt;!&ndash;2代理级别&ndash;&gt;
+                                        <td class="form-group col-md-3" ng-if="item.gymRoleName=='代理'">
+                                            <div class="col-md-8">
+                                                <ui-select ng-model="item.proxyId" theme="bootstrap"
+                                                           name="proxyId" required>
+                                                    <ui-select-match allow-clear="true" placeholder="代理级别">
+                                                        {{$select.selected.name}}
+                                                    </ui-select-match>
+                                                    <ui-select-choices
+                                                            repeat="item.id as item in proxyArr | orderBy:'id' | filter: $select.search.id">
+                                                        <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </div>
+                                        </td>
+                                        &lt;!&ndash;如果是渠道方，有下拉，前端自己展现，不予后台交互&ndash;&gt;
+                                        <td class="form-group col-md-3" ng-if="item.gymRoleName=='渠道方'">
+                                            <div class="col-md-8">
+                                                <ui-select ng-model="webData.isHasRoleId5" theme="bootstrap"
+                                                           name="isHasRoleId5" on-select="getIsHasRole5($item)" required>
+                                                    <ui-select-match allow-clear="true" placeholder="是/否">
+                                                        {{$select.selected.name}}
+                                                    </ui-select-match>
+                                                    <ui-select-choices
+                                                            repeat="item.id as item in isHasRoleId5Arr | orderBy:'id' | filter: $select.search.id">
+                                                        <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </div>
+                                        </td>
+                                        <td class="form-group col-md-3"
+                                            ng-show="item.gymRoleName!='代理'&&item.gymRoleName!='渠道方'">
+                                            &#45;&#45;
+                                        </td>
+                                        &lt;!&ndash;3分成比例&ndash;&gt;
+                                        <td class="form-group col-md-2">
+                                            {{item.percent==null?'&#45;&#45;':item.percent}}
+                                        </td>
+                                        &lt;!&ndash;4主体账户&ndash;&gt;
+                                        <td class="form-group col-md-3 gymListMain">
+                                            <input type="text" class="form-control" ng-model="item.subjectName"
+                                                   maxlength="50" ng-keyup="getSubject(item)"
+                                                   ng-disabled="item.gymRoleName=='场地方（场馆）' ||item.gymRoleName=='领养私教'">
+                                            <ul ng-show="item.listBodyIsShow" class="gymListBody">
+                                                <li ng-repeat="subjectItem in item.subjectListData"
+                                                    ng-click="getSubjectList(subjectItem,item)">
+                                                    {{subjectItem.subjectName}}
+                                                </li>
+                                            </ul>
+                                        </td>
+                                        &lt;!&ndash;<td class="form-group col-md-3" ng-show="item.gymRoleName==4||item.gymRoleName==6">&ndash;&gt;
+                                        &lt;!&ndash;&#45;&#45;&ndash;&gt;
+                                        &lt;!&ndash;</td>&ndash;&gt;
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 text-right control-label">场馆投入成本（元）：</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" ng-model="data.gymCost" required maxlength="10"
+                                   money max-number="9999999.99">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 text-right control-label">默认设备成本（元/台）：</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" ng-model="data.deviceCost" required maxlength="9"
+                                   money max-number="999999.99">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 text-right control-label">场地方账户类型：</label>
+                        <div class="col-md-9">
+                            <ui-select ng-model="data.bankType" theme="bootstrap"
+
+                                       name="bankType" required>
+                                <ui-select-match allow-clear="true" placeholder="场地方账户类型">{{$select.selected.name}}
+                                </ui-select-match>
+                                <ui-select-choices
+                                        repeat="item.id as item in bankTypeArr | orderBy:'id' | filter: $select.search.name">
+                                    <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 text-right control-label">场地方开户名称：</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" ng-model="data.bankName" required maxlength="50">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 text-right control-label">场地方开户银行：</label>
+                        <div class="col-md-9">
+                            <ui-select ng-model="data.accountName" theme="bootstrap"
+                                       name="accountName" required>
+                                <ui-select-match allow-clear="true" placeholder="场地方开户银行">{{$select.selected.name}}
+                                </ui-select-match>
+                                <ui-select-choices
+                                        repeat="item.id as item in accountNameArr | orderBy:'id' | filter: $select.search.name">
+                                    <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 text-right control-label">场地方银行账号：</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" ng-model="data.bankAccount" required maxlength="30">
+                        </div>
+                    </div>-->
+
                     <div class="form-group col-md-12">
                         <label class="col-md-2 control-label text-right">所在区域：</label>
                         <div class="col-md-9">
@@ -196,7 +394,7 @@
                             </div>
                             <div class="col-md-4">
                                 <ui-select ng-model="data.regionId" theme="bootstrap"
-                                           ng-disabled="data.cityId==undefined?true:false" name="regionId" required>
+                                           ng-disabled="data.cityId==undefined?true:false" name="regionId"  required>
                                     <ui-select-match allow-clear="true" placeholder="区">{{$select.selected.name}}
                                     </ui-select-match>
                                     <ui-select-choices
@@ -214,7 +412,22 @@
                                    ng-model="data.address" name="address" placeholder="请输入详细地址" required maxlength="50">
                         </div>
                     </div>
-
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 text-right control-label">坐标：</label>
+                        <div class="col-md-9">
+                            <div id="r-result">
+                                <input type="text" id="suggestId" size="20" value="百度" placeholder="请输入地址或在地图标记"
+                                       class="form-control" ng-model="data.address"/>
+                                <input type="text" class="ng-pristine ng-untouched ng-valid ng-empty" name="pp"
+                                       placeholder="113.367865,23.015556" ng-model="positionLngAndLat" disabled>
+                            </div>
+                            <br/>
+                            <div id="searchResultPanel"
+                                 style="border:1px solid #C0C0C0;width:150px;height:auto;display:none;position: fixed;z-index: 9999"></div>
+                            <map></map>
+                            <!--地图组件-->
+                        </div>
+                    </div>
                 </section>
             </form>
         </div>
@@ -243,7 +456,7 @@
             </div>
         </div>
         <div class="modalBd">
-            <form name="gymViewAddForm">
+            <form name="gymViewEditForm">
                 <section class="col-md-12">
                     <div class="form-group col-md-12">
                         <label class="col-md-2 text-right control-label">名称：</label>
@@ -251,7 +464,6 @@
                             <input type="text" class="form-control" ng-model="gymEditData.name" required maxlength="20">
                         </div>
                     </div>
-
                     <div class="form-group col-md-12">
                         <label class="col-md-2 text-right control-label">联系人：</label>
                         <div class="col-md-9">
@@ -263,17 +475,198 @@
                         <label class="col-md-2 text-right control-label">联系方式：</label>
                         <div class="col-md-9">
                             <input type="text" class="form-control" ng-model="gymEditData.phone" required name="phone"
-                                   ng-pattern="PATTERN_CONFIG.TEL" maxlength="11">
+                                   ng-pattern="PATTERN_CONFIG.TEL" maxlength="12">
                         </div>
                         <div ng-show="gymViewAddForm.phone.$error.pattern" class="col-lg-12">
                             <label class="col-md-offset-3 col-md-9" style="color:red">请输入正确的手机号码或固话</label>
                         </div>
                     </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 text-right control-label">经营状态：</label>
+                        <div class="col-md-9">
+                            <ui-select ng-model="gymEditData.status" theme="bootstrap" on-select="getRunStatus($item)"
+                                       name="status" required>
+                                <ui-select-match allow-clear="true" placeholder="经营状态">{{$select.selected.name}}
+                                </ui-select-match>
+                                <ui-select-choices
+                                        repeat="item.runStatusId as item in runStatus | orderBy:'runStatusId' | filter: $select.search.name">
+                                    <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 control-label text-right">经营时间：</label>
+                        <div class="col-md-2">
+                            <ui-select allow-clear ng-model="gymEditData.openTimeFormat" theme="bootstrap" required>
+                                <ui-select-match placeholder="开始时间">{{$select.selected.status}}</ui-select-match>
+                                <ui-select-choices repeat="item.status as item in beginTimeArr | filter: $select.search"
+                                                   value="{{$select.selected.status}}">
+                                    <span ng-bind-html="item.status | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="text-center" style="line-height: 45px;height: 45px;">—</div>
+                        </div>
+                        <div class="col-md-2">
+                            <ui-select allow-clear ng-model="gymEditData.endTimeFormat" theme="bootstrap" required>
+                                <ui-select-match placeholder="结束时间">{{$select.selected.status}}</ui-select-match>
+                                <ui-select-choices repeat="item.status as item in endTimeArr | filter: $select.search"
+                                                   value="{{$select.selected.status}}">
+                                    <span ng-bind-html="item.status | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                   <!-- <div class="form-group col-md-12">
+                        <label class="col-md-2 text-right control-label">角色分成:</label>
+                        <div class="col-md-10"></div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 text-right control-label"></label>
+                        <div class="col-md-12">
+                            <div class="table-responsive" style="overflow: hidden">
+                                <table class="table table-hover">
+                                    <thead class="table-head">
+                                    <tr class="row">
+                                        <th class="col-md-2">角色</th>
+                                        <th class="col-md-3">代理级别</th>
+                                        <th class="col-md-2">分成比例(%)</th>
+                                        <th class="col-md-3">主体账户</th>
+                                    </tr>
+                                    </thead>
+                                    &lt;!&ndash;ng-repeat="gymEditData in ShareRoles"&ndash;&gt;
+                                    <tbody>
+                                    <tr class="row" ng-repeat="item in gymEditData.roleRelList">
+                                        &lt;!&ndash;1角色&ndash;&gt;
+                                        <td class="form-group col-md-2">
+                                            &lt;!&ndash;  <input type="text" ng-model="item.gymRoleName"
+                                                     class="form-control" required disabled="true"
+                                                     style="padding-left: 30px;">&ndash;&gt;
+                                            {{item.gymRoleName==null?'&#45;&#45;':item.gymRoleName}}
 
+                                        </td>
+                                        &lt;!&ndash;2代理级别&ndash;&gt;
+                                        <td class="form-group col-md-3" ng-if="item.gymRoleName=='代理'">
+                                            <div class="col-md-8">
+                                                <ui-select ng-model="item.proxyId" theme="bootstrap"
+                                                           name="proxyId">
+                                                    <ui-select-match allow-clear="true" placeholder="代理级别">
+                                                        {{$select.selected.name}}
+                                                    </ui-select-match>
+                                                    <ui-select-choices
+                                                            repeat="item.id as item in proxyArr | orderBy:'id' | filter: $select.search.id">
+                                                        <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </div>
+                                        </td>
+                                        &lt;!&ndash;如果是渠道方，有下拉，前端自己展现，不予后台交互-java:proxyId-web:isHasRoleId5&ndash;&gt;
+                                        <td class="form-group col-md-3" ng-if="item.gymRoleName=='渠道方'">
+                                            <div class="col-md-8">
+                                                <ui-select ng-model="item.proxyId" theme="bootstrap"
+                                                           name="proxyId" on-select="getIsHasRole5($item)">
+                                                    <ui-select-match allow-clear="true" placeholder="是/否">
+                                                        {{$select.selected.name}}
+                                                    </ui-select-match>
+                                                    <ui-select-choices
+                                                            repeat="item.id as item in isHasRoleId5Arr | orderBy:'id' | filter: $select.search.id">
+                                                        <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </div>
+                                        </td>
+                                        <td class="form-group col-md-3"
+                                            ng-show="item.gymRoleName!='代理'&&item.gymRoleName!='渠道方'">
+                                            &#45;&#45;
+                                        </td>
+                                        &lt;!&ndash;3分成比例&ndash;&gt;
+                                        <td class="form-group col-md-2">
+                                            {{item.percent==null?'&#45;&#45;':item.percent}}
+                                        </td>
+                                        &lt;!&ndash;4主体账户&ndash;&gt;
+                                        <td class="form-group col-md-3 gymListMain">
+                                            <input type="text" class="form-control" ng-model="item.subjectName"
+                                                   maxlength="50" ng-keyup="getSubject(item)"
+                                                   ng-disabled="item.gymRoleName=='场地方（场馆）' ||item.gymRoleName=='领养私教'">
+                                            <ul ng-show="item.listBodyIsShow" class="gymListBody">
+                                                <li ng-repeat="subjectItem in item.subjectListgymEditData"
+                                                    ng-click="getSubjectList(subjectItem,item)">
+                                                    {{subjectItem.subjectName}}
+                                                </li>
+                                            </ul>
+                                        </td>
+                                        &lt;!&ndash;<td class="form-group col-md-3" ng-show="item.gymRoleId==4||item.gymRoleId==6">&ndash;&gt;
+                                        &lt;!&ndash;&#45;&#45;&ndash;&gt;
+                                        &lt;!&ndash;</td>&ndash;&gt;
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 text-right control-label">场馆投入成本（元）：</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" ng-model="gymEditData.gymCost" required
+                                   maxlength="10"
+                                   money max-number="9999999.99">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 text-right control-label">默认设备成本（元/台）：</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" ng-model="gymEditData.deviceCost" required
+                                   maxlength="9"
+                                   money max-number="999999.99">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 text-right control-label">场地方账户类型：</label>
+                        <div class="col-md-9">
 
+                            <ui-select ng-model="gymEditData.bankType" theme="bootstrap"
+                                       name="bankType">
+                                <ui-select-match allow-clear="true" placeholder="场地方账户类型">{{$select.selected.name}}
+                                </ui-select-match>
+                                <ui-select-choices
+                                        repeat="item.id as item in bankTypeArr | orderBy:'id' | filter: $select.search.name">
+                                    <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 text-right control-label">场地方开户名称：</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" ng-model="gymEditData.bankName" required
+                                   maxlength="50">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 text-right control-label">场地方开户银行：</label>
+                        <div class="col-md-9">
+                            <ui-select ng-model="gymEditData.accountName" theme="bootstrap"
+                                       name="accountName">
+                                <ui-select-match allow-clear="true" placeholder="场地方开户银行">{{$select.selected.name}}
+                                </ui-select-match>
+                                <ui-select-choices
+                                        repeat="item.id as item in accountNameArr | orderBy:'id' | filter: $select.search.name">
+                                    <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 text-right control-label">场地方银行账号：</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" ng-model="gymEditData.bankAccount" required
+                                   maxlength="30">
+                        </div>
+                    </div>-->
 
                     <div class="form-group col-md-12">
-
                         <label class="col-md-2 control-label text-right">所在区域：</label>
                         <div class="col-md-9">
                             <div class="col-md-4">
@@ -313,13 +706,28 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="form-group col-md-12">
                         <label class="col-md-2 text-right control-label">详细地址：</label>
                         <div class="col-md-9">
                             <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty"
                                    ng-model="gymEditData.address" name="address" placeholder="请输入详细地址" required
-                                   maxlength="30">
+                                   maxlength="50">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 text-right control-label">坐标：</label>
+                        <div class="col-md-9">
+                            <div id="r-result">
+                                <input type="text" id="suggestId" size="20" value="百度" placeholder="请输入地址或在地图标记"
+                                       class="form-control" ng-model="gymEditData.address"/>
+                                <input type="text" class="ng-pristine ng-untouched ng-valid ng-empty" name="pp"
+                                       placeholder="113.367865,23.015556" ng-model="positionLngAndLat" disabled>
+                            </div>
+                            <br/>
+                            <div id="searchResultPanel"
+                                 style="border:1px solid #C0C0C0;width:150px;height:auto;display:none;position: fixed;z-index: 9999"></div>
+                            <map></map>
+                            <!--地图组件-->
                         </div>
                     </div>
                 </section>
@@ -331,8 +739,10 @@
                     <button class="btn withripple btn-raised btn-warning" type="button" ng-click="closeGymEdit()"
                             style="float: right;">取消
                     </button>
-                    <button class="btn withripple btn-raised btn-primary" type="button" ng-click="saveGymEdit()"
-                            ng-disabled="!gymViewAddForm.$valid" style="float: right;margin-right: 6px;">确定
+                    <button class="btn withripple btn-raised btn-primary" type="button"
+                            ng-click="saveGymEdit(positionLngAndLat)"
+
+                            ng-disabled="!gymViewEditForm.$valid" style="float: right;margin-right: 6px;">确定
                     </button>
                 </div>
             </div>

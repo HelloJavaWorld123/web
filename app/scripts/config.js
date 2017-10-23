@@ -47,7 +47,7 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
         //测试的登录-本地json
         // login: "app/scripts/loginTest.json",
 
-        //物联网登录
+        //小象运动登录
         login: $rootScope.BASEURL + "sail/permission/login",
         logout: $rootScope.BASEURL + "sail/permission/logout",
 
@@ -67,13 +67,34 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
         addLifeHouse: $rootScope.BASEURL + "api/manage/lifehouse/add",
         //获取菜单相关
         getSideNav: $rootScope.BASEURL + "api/menu/myMenu",
-        //场馆
+
+
+        //场馆-sail
         getGymList: $rootScope.BASEURL + "api/devMgmt/gym/getlist",
         addGym: $rootScope.BASEURL + "api/devMgmt/gym/add",
         delGym: $rootScope.BASEURL + "api/devMgmt/gym/del",
         EditGym: $rootScope.BASEURL + "api/devMgmt/gym/alter",
         getGymById: $rootScope.BASEURL + "api/devMgmt/gym/getid",
         GymEportExcel: $rootScope.BASEURL + "api/devMgmt/gym/exportExcel",
+
+
+
+        //场馆-iot
+        getGymIotList: $rootScope.BASEURL + "api/mgmt/lifeGym/getlist",
+        addGymIot: $rootScope.BASEURL + "api/mgmt/lifeGym/add",
+        delGymIot: $rootScope.BASEURL + "api/mgmt/lifeGym/del",
+        EditGymIot: $rootScope.BASEURL + "api/mgmt/lifeGym/alter",
+        getGymIotById: $rootScope.BASEURL + "api/mgmt/lifeGym/getid",
+        GymIotEportExcel: $rootScope.BASEURL + "api/mgmt/lifeGym/exportExcel",
+
+        //场馆角色+分成
+        GymPecentRole: $rootScope.BASEURL + "api/gym/gymRole/listDefaultGymRole",
+        GymPecentBody: $rootScope.BASEURL + "api/subject/getSubjectNameList",
+        //test-get方式访问本地json
+
+        role: "test/02-getGymByIdAPI.json",
+
+
         // 设备
         getDevList: $rootScope.BASEURL + "api/devMgmt/device/getAllByPage",
         addDev: $rootScope.BASEURL + "api/devMgmt/device/add",
@@ -81,20 +102,27 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
         EditDev: $rootScope.BASEURL + "api/devMgmt/device/alter",
         getDevById: $rootScope.BASEURL + "api/devMgmt/device/getById",
         switchDevStatus: $rootScope.BASEURL + "api/devMgmt/device/alterOnlineStatus",
+
+        //所有设备-与场馆无关
+        getDevUnboundList: $rootScope.BASEURL + "api/deviceLock/findAll",
+        //锁定与解绑
+        getDevUnbound: $rootScope.BASEURL + "api/deviceLock/unbound",
+
         //用户信息
         getUserList: $rootScope.BASEURL + "api/memberMgmt/member/list",
         UserListEportExcel: $rootScope.BASEURL + "api/memberMgmt/member/exportExcel",
+
         /*用户详情begin*/
         //基本信息
         getUserDetail01: $rootScope.BASEURL + "api/memberMgmt/member/getDetailById",
         //检测报告
-        getUserDetail02: $rootScope.BASEURL + "api/memberMgmt/member/getBodyReportListByMemId",
+        getUserDetail02: $rootScope.BASEURL + "api/sailMgmt/bodyReportView/getListByMemId",
         //跑步方案
-        getUserDetail03: $rootScope.BASEURL + "api/memberMgmt/member/getMotionSchemeListById",
+        getUserDetail03: $rootScope.BASEURL + "api/memberMgmt/member/getMemberScheme",
         //充值记录
-    /*    getUserDetail04: $rootScope.BASEURL + "api/memberMgmt/wallet/getAccountCharge",*/
+        getUserDetail04: $rootScope.BASEURL + "api/memberMgmt/wallet/getAccountCharge",
         //活动记录
-        getUserDetail05: $rootScope.BASEURL + "api/memberMgmt/member/getSportRecordListById",
+        getUserDetail05: $rootScope.BASEURL + "api/sailMgmt/sportRecord/getlist",
         /*用户详情end*/
 
         //体测报告-东华原
@@ -109,6 +137,65 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
         addSportProgram: $rootScope.BASEURL + "api/sailMgmt/motionScheme/addScheme",
         SportProgramEportExcel: $rootScope.BASEURL + "api/sailMgmt/motionScheme/exportExcel",
 
+
+        // 订单
+        getOrderInfo: $rootScope.BASEURL + "api/report/orderInfo",
+        OrderInfoEportExcel: $rootScope.BASEURL + "api/report/exportExcel",
+
+        // 充值
+        getAccountCharge: $rootScope.BASEURL + "api/memberMgmt/wallet/getAccountChargeByPage",
+        AccountChargeEportExcel: $rootScope.BASEURL + "api/memberMgmt/wallet/exportExcel",
+
+        //预约
+        getMakeOrder: $rootScope.BASEURL + "api/mgmt/bespeak/getList",
+        getMakeOrderEportExcel: $rootScope.BASEURL + "api/mgmt/bespeak/exportExcel",
+
+        //报障
+        getReportFaultList: $rootScope.BASEURL + "api/devMgmt/malfunction/getAllByPage",
+        changeProgress: $rootScope.BASEURL + "api/devMgmt/malfunction/alterProcess",
+        reportFaultExportExcel: $rootScope.BASEURL + "api/devMgmt/malfunction/exportExcel",
+
+        //押金
+        cashPledgeOrder: $rootScope.BASEURL + "api/memberMgmt/wallet/getDepositChargeByPage",
+        cashPledgeSetting: $rootScope.BASEURL + "api/memberMgmt/wallet/getCityToDeposit",
+        cashPledgeRefund: $rootScope.BASEURL + "api/memberMgmt/wallet/getDepositRefundByPage",
+
+
+        cashPledgeSwitch: $rootScope.BASEURL + "api/memberMgmt/wallet/alterDepositStatus",
+        getDepositAmount: $rootScope.BASEURL + "api/memberMgmt/wallet/getDepositAmount",
+        alterDepositAmount: $rootScope.BASEURL + "api/memberMgmt/wallet/alterDepositAmount",
+        decideToRefund: $rootScope.BASEURL + "api/memberMgmt/wallet/decideToRefund",
+        reflushRufundStatus: $rootScope.BASEURL + "api/memberMgmt/wallet/reflushRufundStatus",
+
+
+        //会员卡
+        getvipinfos: $rootScope.BASEURL + "api/vipinfo/getVipList",
+        getDicList: $rootScope.BASEURL + "api/common/getDicList",
+        getList: $rootScope.BASEURL + "api/cardtype/getList",
+        addMember: $rootScope.BASEURL + "api/cardtype/add",
+        getbyId: $rootScope.BASEURL + "api/cardtype/getbyId",
+        alter: $rootScope.BASEURL + "api/cardtype/alter",
+        del: $rootScope.BASEURL + "api/cardtype/del",
+        multiFileUpload: $rootScope.BASEURL + "api/upload/multiFileUpload",
+        memberCardFirstEportExcel: $rootScope.BASEURL + "api/vipinfo/exportExcel",
+
+
+        //活动
+        activityList: $rootScope.BASEURL + "api/devMgmt/activity/getlist",
+        activityDel: $rootScope.BASEURL + "api/devMgmt/activity/del",
+        activityAdd: $rootScope.BASEURL + "api/devMgmt/activity/add",
+        activityGetid: $rootScope.BASEURL + "api/devMgmt/activity/getid",
+        update: $rootScope.BASEURL + "api/devMgmt/activity/update",
+
+
+        //设备费用管理
+        devCostList: $rootScope.BASEURL + "api/devMgmt/devicePrice/getlist",
+        devCostDel: $rootScope.BASEURL + "api/devMgmt/devicePrice/del",
+        devCostGetid: $rootScope.BASEURL + "api/devMgmt/devicePrice/getid",
+        devCostUpdate: $rootScope.BASEURL + "api/devMgmt/devicePrice/update",
+        updateUse: $rootScope.BASEURL + "api/devMgmt/devicePrice/updateUse",
+        devCostAdd: $rootScope.BASEURL + "api/devMgmt/devicePrice/add",
+        devCostExportExcel: $rootScope.BASEURL + "api/devMgmt/devicePrice/exportExcel",
 
 
         //跑步机管理员管理
@@ -136,7 +223,68 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
         gymUpgradeUpdate: $rootScope.BASEURL + "api/devMgmt/apkUploadManage/update",
         findApkPushState: $rootScope.BASEURL + "api/devMgmt/apkUploadManage/findApkPushState",
         pushApk: $rootScope.BASEURL + "api/devMgmt/apkUploadManage/pushApk",
-        fileUpload: $rootScope.BASEURL + "api/upload/fileUpload/false",
+        fileUpload: $rootScope.BASEURL + "api/upload/fileUpload",
+
+
+        //卡券
+        sendDiscount: $rootScope.BASEURL + "api/mgmt/reward/getList",
+        sendDiscountEportExcel: $rootScope.BASEURL + "api/mgmt/reward/exportExcel",
+
+        //充值金额设置
+        chargeList: $rootScope.BASEURL + "api/chargeAmount/getList",
+        chargeDel: $rootScope.BASEURL + "api/chargeAmount/del",
+        chargeAdd: $rootScope.BASEURL + "api/chargeAmount/add",
+        chargeGetid: $rootScope.BASEURL + "api/chargeAmount/getbyId",
+        chargeUpdate: $rootScope.BASEURL + "api/chargeAmount/alter",
+
+
+        //排行榜
+        findRank: $rootScope.BASEURL + "api/memberMgmt/ranking/findRankDistanceByType",
+
+        rankListExportExcel: $rootScope.BASEURL + "api/memberMgmt/ranking/exportExcel",
+
+
+        //对公账户审核
+        accountList: $rootScope.BASEURL + "api/devMgmt/accountAuditRecord/list",
+        updatePayStatus: $rootScope.BASEURL + "api/devMgmt/accountAuditRecord/updatePayStatus",
+        accountExcelList: $rootScope.BASEURL + "api/devMgmt/accountAuditRecord/exportExcel",
+
+
+
+        //主体分成设置
+        shareholderList: $rootScope.BASEURL + "api/subject/list",
+        shareholderAdd: $rootScope.BASEURL + "api/subject/insert",
+        shareholderDel: $rootScope.BASEURL + "api/subject/delete",
+        shareholderId: $rootScope.BASEURL + "api/subject/id",
+        shareholderUpdate: $rootScope.BASEURL + "api/subject/update",
+        shareholderExport: $rootScope.BASEURL + "api/subject/export",
+
+
+        //分成方后台收入明细
+        mainIncomeList: $rootScope.BASEURL + "api/devMgmt/income/list",
+        mainIncomeExcel: $rootScope.BASEURL + "api/devMgmt/income/exportExcel",
+        getDicGymList: $rootScope.BASEURL + "api/deposit/gym/info",
+
+        //分成方后台提现记录
+        withDrawRecordList: $rootScope.BASEURL + "api/devMgmt/withDrawRecord/user/list",
+
+
+
+        //场地方提现审核
+        depositAuditingList: $rootScope.BASEURL + "api/devMgmt/withDrawRecord/list",
+        depositAuditingStatus: $rootScope.BASEURL + "api/devMgmt/withDrawRecord/updateAuditStatus",
+        depositAuditingExcel: $rootScope.BASEURL + "api/devMgmt/withDrawRecord/exportExcel",
+
+        //订单分成管理
+        incomeManageList: $rootScope.BASEURL + "api/devMgmt/income/order/share",
+        incomeManageExcel: $rootScope.BASEURL + "api/devMgmt/income/order/share/exportExcel",
+
+        //分成统计
+        shareCountList: $rootScope.BASEURL + "api/devMgmt/income/statistics/list",
+        shareCountExcel: $rootScope.BASEURL + "api/devMgmt/income/exportExcel",
+        shareCountAmount: $rootScope.BASEURL + "api/devMgmt/income/statistics/totalAmount",
+
+
 
 
 
@@ -201,11 +349,11 @@ App.run(function ($rootScope) {
             }
             return tm;
         },
-        //图片压缩拼接字符串
-        imgCompress: function (str, strScale) {
+        //图片压缩    不拼接字符串
+        imgCompress: function (str) {
             if (str) {
                 var arr = str.split(".");
-                arr[arr.length - 2] += "_" + strScale;
+
                 var imgUrl = arr.join(".");
                 return imgUrl;
             } else {

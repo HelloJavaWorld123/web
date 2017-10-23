@@ -1,0 +1,125 @@
+<article ng-controller=" DevUnbound1Controller" class="DevUnbound container-fluid">
+    <!-- 上部分-联动 -->
+    <form action="" method="POST" ng-enter="query()">
+        <div class="row">
+            <div class="form-group col-md-3">
+                <label class="col-md-3 text-right control-label">设备二维码</label>
+                <div class="col-md-8">
+                    <input type=" text " class="form-control" ng-model="data.deviceIdentity" name="deviceIdentity" maxlength="20">
+                </div>
+            </div>
+        </div>
+
+
+        <!--中部-点击弹窗-->
+        <div class="button-first">
+            <button type="button" class="btn btn-raised btn-primary" ng-click="query()">查询</button>
+        </div>
+    </form>
+
+
+    <!--下部-查询列表-->
+    <section class="row conPanelLeft">
+        <div class="DevUnboundWrapper  col-lg-12">
+            <!-- 下部分 -->
+            <section>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-head">
+                        <tr class="active">
+                            <th>序号</th>
+                            <th>设备类型</th>
+                            <th>设备号</th>
+
+                            <th>品牌</th>
+
+
+                            <th>添加日期</th>
+                            <th>设备型号</th>
+                            <th>出厂日期</th>
+
+                            <th>保修期</th>
+                            <th>绑定状态</th>
+
+                            <th>是否在线</th>
+                            <th>运行状态</th>
+                            <th>操作</th>
+
+
+                        </tr>
+                        </thead>
+
+                        <tbody ng-repeat="item in DevListData">
+                        <tr>
+                            <td>{{$index+1+(((PageIndex||1)-1)*PageSize)}}</td>
+                            <td>{{item.productName==null?"--":item.productName}}</td>
+                            <td>{{item.deviceIdentity==null?"--":item.deviceIdentity}}</td>
+
+                            <td>{{item.manufacturerName==null?"--":item.manufacturerName}}</td>
+
+                            <td>{{item.createTime==null?"--":item.createTime|date:'yyyy-MM-dd'}}</td>
+                            <td>{{item.model==null?"--":item.model}}</td>
+                            <td>{{item.productionDate==null?"--":item.productionDate|date:'yyyy-MM-dd'}}</td>
+
+
+                            <td>{{item.warrantyStartDate==null?"--":item.warrantyStartDate|date:'yyyy-MM-dd'}}<br>
+                                {{item.warrantyEndDate==null?"--":item.warrantyEndDate|date:'yyyy-MM-dd'}}
+                            </td>
+                            <td>{{item.bindStatusName==null?"--":item.bindStatusName}}</td>
+
+                            <td >{{item.onlineStatusName==null?"--":item.onlineStatusName}}</td>
+                            <td>{{item.useStatusName==null?"--":item.useStatusName}}</td>
+                            <td>
+
+
+
+                                <!--解除占用-->
+                                <!--1:不在线，0：在线，联网的，可控-->
+                                <a  class="cursorHover"  ng-if="item.onlineStatus!=undefined&&item.onlineStatus=='1'">--</a>
+
+                                <a class="cursorHover" ng-click="lockToUnbound(item.deviceIdentity)" ng-if="item.onlineStatus!=undefined&&item.onlineStatus=='0'"  confirm="确定解除设备占用状态吗？" confirm-title="设备解绑" confirm-ok="确定"
+                                   confirm-cancel="取消" >解绑</a>
+
+
+                            </td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div ng-if="!DevListData.length" class="noData ng-scope">暂无数据</div>
+                </div>
+                <div cg-busy="DevListPromise"></div>
+
+
+                <div class="row">
+                    <div class="col-md-9">
+                        <select class="page-size" ng-model="PageSize" ng-change="pageChanged()">
+                            <option value="20" ng-selected="true">每页显示20条</option>
+                            <option value="40">每页显示40条</option>
+                            <option value="60">每页显示60条</option>
+                            <option value="80">每页显示80条</option>
+                            <option value="100">每页显示100条</option>
+                        </select>
+                        <uib-pagination ng-model="PageIndex" ng-change="pageChanged()" total-items="totalCount"
+                                        max-size="maxSize" items-per-page="PageSize" class="pagination-sm"
+                                        boundary-link-numbers="true" rotate="false" previous-text="上一页"
+                                        next-text="下一页"></uib-pagination>
+                    </div>
+                    <div class="col-md-1"><span class="totalTxt">总计：{{totalCount==null?"--":totalCount }} 条</span>
+                    </div>
+                    <div class="col-md-2 text-right">
+                        <span>跳转到</span>
+                        <input type="text" onafterpaste="this.value=this.value.replace(/\D/g,'')"
+                               onkeyup="this.value=this.value.replace(/\D/g,'')" ng-model="toPageNum"
+                               class="variant-form-control">
+                        <button ng-click="setPage()" class="to-page-num">确定</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </section>
+
+</article>
+
+

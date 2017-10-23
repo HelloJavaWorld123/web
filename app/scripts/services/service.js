@@ -62,7 +62,7 @@ angular.module("AdminService", [])
             }
         };
     })
-    .factory('AuthService', ['$http', 'Session', '$rootScope', function($http, Session, $rootScope) {
+    .factory('AuthService', ['$http', 'Session', '$rootScope','toastr',function($http, Session, $rootScope,toastr) {
         var authService = {};
         authService.login = function(credentials) {
             //登录，成功后返回用户名
@@ -71,6 +71,9 @@ angular.module("AdminService", [])
                 .then(function(res) {
                     if (res.data.code == 2000) {
                         Session.create(res.data.data.account, res.data.data.accessToken);
+                    }
+                    else{
+                        toastr.error(res.data.msg);
                     }
                     return res.data;
                 });

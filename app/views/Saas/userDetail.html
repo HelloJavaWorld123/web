@@ -7,7 +7,7 @@
                         <li class="col-md-2" ng-class="{cur:type=='01'}" ng-click="click('01')">基本资料</li>
                         <li class="col-md-2" ng-class="{cur:type=='02'}" ng-click="click('02')">体测报告</li>
                         <li class="col-md-2" ng-class="{cur:type=='03'}" ng-click="click('03')">跑步方案</li>
-                        <!--<li class="col-md-2" ng-class="{cur:type=='04'}" ng-click="click('04')">充值记录</li>-->
+                        <li class="col-md-2" ng-class="{cur:type=='04'}" ng-click="click('04')">充值记录</li>
                         <li class="col-md-2" ng-class="{cur:type=='05'}" ng-click="click('05')">运动记录</li>
                     </ul>
                 </div>
@@ -28,9 +28,11 @@
 
                                                 <th>头像</th>
                                                 <th>猫号</th>
+                                                <th>账号</th>
 
                                                 <th>昵称</th>
-
+                                                <th>会员卡</th>
+                                                <th>押金¥</th>
                                                 <th>性别</th>
 
                                                 <th>年龄</th>
@@ -49,10 +51,11 @@
                                             <tr>
                                                 <td><img ng-src="{{item.headPortraitIcon}}" style="width: 50px;"></td>
                                                 <td>{{item.mallId==null?"--":item.mallId}}</td>
+                                                <td>{{item.account==null?"--":item.account}}</td>
 
                                                 <td>{{item.nickname==null?"--":item.nickname }}</td>
-
-
+                                                <td >{{item.cardTypeName==null||item.cardTypeName==undefined?"--":item.cardTypeName}}</td>
+                                                <td>{{item.cashPledge==null?"--":item.cashPledge }}</td>
                                                 <td ng-if="item.sex==0">女</td>
                                                 <td ng-if="item.sex==1">男</td>
 
@@ -227,11 +230,11 @@
                         </section>
                     </div>
                     <!--充值记录-->
-                   <!-- <div class="col-md-12" ng-show="type=='04'">
-                        &lt;!&ndash;分页&ndash;&gt;
+                    <div class="col-md-12" ng-show="type=='04'">
+                        <!--分页-->
                         <section class="row conPanelLeft">
                             <div class="userInfoWrapper  col-lg-12">
-                                &lt;!&ndash; 下部分 &ndash;&gt;
+                                <!-- 下部分 -->
                                 <section>
                                     <div class="table-responsive">
                                         <table class="table table-hover">
@@ -241,7 +244,7 @@
                                                 <th>序号</th>
                                                 <th>充值日期</th>
 
-
+                                                <th>金额</th>
                                                 <th>充值后账户余额</th>
                                             </tr>
                                             </thead>
@@ -249,10 +252,10 @@
                                             <tbody ng-repeat="item in item">
                                             <tr>
                                                 <td>{{$index+1+(((PageIndex||1)-1)*PageSize)}}</td>
-                                                <td>{{item.createTime ==null?"&#45;&#45;":item.createTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                                                <td>{{item.createTime ==null?"--":item.createTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
 
-
-                                                <td>{{item.accountBalance==null?"&#45;&#45;":item.accountBalance }}</td>
+                                                <td>{{item.chargeAmount==null?"--":item.chargeAmount }}</td>
+                                                <td>{{item.accountBalance==null?"--":item.accountBalance }}</td>
 
                                             </tr>
                                             </tbody>
@@ -292,7 +295,7 @@
                             </div>
 
                         </section>
-                    </div>-->
+                    </div>
                     <!--活动记录-->
                     <div class="col-md-12" ng-show="type=='05'">
                         <!--分页-->
@@ -318,6 +321,7 @@
                                                 <th>速度（km/h）</th>
                                                 <th>最大峰值速度（km/h）</th>
 
+                                                <th>订单号</th>
                                             </tr>
                                             </thead>
 
@@ -336,6 +340,7 @@
                                                 <td>{{item.speed==null?"--":item.speed }}</td>
                                                 <td>{{item.maxSpeed==null?"--":item.maxSpeed }}</td>
 
+                                                <td>{{item.orderNo==null?"--":item.orderNo }}</td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -403,7 +408,6 @@
                     </div>
                 </div>
 
-
                 <div class="form-group  col-md-12">
                     <label class="col-md-1 text-right control-label">详情：</label>
                     <div class="col-md-11">
@@ -414,6 +418,7 @@
                                 <thead class="table-head">
                                 <tr class="active row">
                                     <th class="col-md-1">序号</th>
+                                    <th class="col-md-2">名称</th>
                                     <th class="col-md-2">时间（min）</th>
 
                                     <th class="col-md-2">速度（km/h）</th>
@@ -426,6 +431,10 @@
                                     <td class="form-group col-md-1">
                                         <input type="text" readOnly="true" class="form-control"
                                                ng-model="data.sequence" disabled>
+                                    </td>
+                                    <td class="form-group col-md-2">
+                                        <input type="text" ng-model="data.name"
+                                               class="form-control" placeholder="名称" maxlength="10" required>
                                     </td>
                                     <td class="form-group col-md-2">
                                         <input type="number" ng-model="data.execTime"

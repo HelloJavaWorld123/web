@@ -8,6 +8,9 @@
                     <input type="text" class="form-control" ng-model="data.schemeName" name="schemeName" maxlength="20">
                 </div>
             </div>
+
+
+
         </section>
 
 
@@ -34,7 +37,7 @@
                         <tr class="active">
                             <th>序号</th>
                             <th>方案名称</th>
-                            <th>方案说明</th>
+
 
                             <th>阶段数</th>
 
@@ -46,7 +49,6 @@
                         <tr>
                             <td>{{$index+1+(((PageIndex||1)-1)*PageSize)}}</td>
                             <td>{{item.schemeName==null?"--":item.schemeName}}</td>
-                            <td>{{item.description==null?"--":item.description}}</td>
 
 
                             <td>{{item.detailCount==null?"--":item.detailCount}}</td>
@@ -112,13 +114,6 @@
                                placeholder="请输入方案名">
                     </div>
                 </div>
-                <div class="form-group col-md-12">
-                    <label class="col-md-1 text-right control-label">方案说明：</label>
-                    <div class="col-md-11">
-                        <input type="text" class="form-control" ng-model="data.description" required maxlength="50"
-                               placeholder="请输入方案说明">
-                    </div>
-                </div>
 
 
                 <div class="form-group  col-md-12">
@@ -141,11 +136,15 @@
 
                                     </tr>
                                     </thead>
+                                    <!-- -->
                                     <!--ng-repeat="data in sportStageData"-->
                                     <tbody ng-repeat="data in sportStageData">
                                     <tr class="">
                                         <td class="form-group col-md-1" id="sportStageIndex">
-
+                                            <!-- value="$index+1+(((PageIndex||1)-1)*PageSize)"-->
+                                            <!--{{$index+1+(((PageIndex||1)-1)*PageSize)}}-->
+                                            <!--readOnly="true"-->
+                                            <!--待处理-->
                                             <input type="text" class="form-control" ng-model="data.sequence"
                                                    readOnly="true" style="border: none;" disabled="false">
                                         </td>
@@ -218,13 +217,6 @@
                     </div>
                 </div>
 
-                <div class="form-group col-md-12">
-                    <label class="col-md-1 text-right control-label">方案说明：</label>
-                    <div class="col-md-11">
-                        <input type="text" class="form-control" ng-model="data.description" required maxlength="50"
-                               placeholder="方案说明">
-                    </div>
-                </div>
 
                 <div class="form-group  col-md-12">
                     <label class="col-md-1 text-right control-label">详情：</label>
@@ -249,7 +241,8 @@
                                 <tbody ng-repeat="data in sportStageData">
                                 <tr class="row">
                                     <td class="form-group col-md-1">
-
+                                        <!-- value="$index+1+(((PageIndex||1)-1)*PageSize)"-->
+                                        <!--{{$index+1+(((PageIndex||1)-1)*PageSize)}}-->
                                         <input type="text" readOnly="true" class="form-control"
                                                ng-model="data.sequence"><!---->
                                     </td>

@@ -35,17 +35,31 @@ App.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
         })
 
         //***************************设备管理*********************************
-        //场馆配置
+        //场馆配置-sail
         .state('gymConfig', {
             url: '/Saas/gymConfig',
             templateUrl: 'app/views/Saas/gymConfig.html',
             controller: function ($rootScope) {
             }
         })
+        //场馆配置-iot
+        .state('gymIotConfig', {
+            url: '/Saas/gymIotConfig',
+            templateUrl: 'app/views/Saas/gymIotConfig.html',
+            controller: function ($rootScope) {
+            }
+        })
         //从场馆进-设备
         .state('devConfig', {
-            url: '/Saas/devConfig?gymId&page',
+            url: '/Saas/devConfig?gymId&gymType',//场馆的id和类型type（0：小象-sail，1：生活馆-iot）
             templateUrl: 'app/views/Saas/devConfig.html',
+            controller: function ($rootScope) {
+            }
+        })
+        //隐匿-设备锁定与解绑
+        .state('devUnbound', {
+            url: '/Saas/devUnbound',
+            templateUrl: 'app/views/Saas/devUnbound.html',
             controller: function ($rootScope) {
             }
         })
@@ -84,7 +98,105 @@ App.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
             controller: function ($rootScope) {
             }
         })
-
+        //订单信息
+        .state('orderInfo', {
+            url: '/Saas/orderInfo',
+            templateUrl: 'app/views/Saas/orderInfo.html',
+            controller: function ($rootScope) {
+            }
+        })
+        //账户充值
+        .state('accountCharge', {
+            url: '/Saas/accountCharge',
+            templateUrl: 'app/views/Saas/accountCharge.html',
+            controller: function ($rootScope) {
+            }
+        })
+        //预约
+        .state('makeOrder', {
+            url: '/Saas/makeOrder',
+            templateUrl: 'app/views/Saas/makeOrder.html',
+            controller: function ($rootScope) {
+            }
+        })
+        //排行榜
+        .state('rankList', {
+            url: '/Saas/rankList',
+            templateUrl: 'app/views/Saas/rankList.html',
+            controller: function ($rootScope) {
+            }
+        })
+        //充值金额设置
+        .state('chargeSet', {
+            url: '/Saas/chargeSet',
+            templateUrl: 'app/views/Saas/chargeSet.html',
+            controller: function ($rootScope) {
+            }
+        })
+        //活动设置
+        .state('activitySet', {
+            url: '/Saas/activitySet',
+            templateUrl: 'app/views/Saas/activitySet.html',
+            controller: function ($rootScope) {
+            }
+        })
+        //报障
+        .state('reportFault', {
+            url: '/Saas/reportFault',
+            templateUrl: 'app/views/Saas/reportFault.html',
+            controller: function ($rootScope) {
+                // $rootScope.title = "报障";
+            }
+        })
+        //投诉
+        .state('complain', {
+            url: '/Saas/complain',
+            templateUrl: 'app/views/Saas/complain.html',
+            controller: function ($rootScope) {
+            }
+        })
+        //押金
+        .state('cashPledge', {
+            url: '/Saas/cashPledge',
+            templateUrl: 'app/views/Saas/cashPledge.html',
+            controller: function ($rootScope) {
+            }
+        })
+        //优惠券派发
+        .state('sendDiscount', {
+            url: '/Saas/sendDiscount',
+            templateUrl: 'app/views/Saas/sendDiscount.html',
+            controller: function ($rootScope) {
+            }
+        })
+        //会员卡
+        .state('memberCard', {
+            url: '/Saas/memberCard',
+            templateUrl: 'app/views/Saas/memberCard.html',
+            controller: function ($rootScope) {
+            }
+        })
+        //设备费用管理
+        .state('devCostManage', {
+            url: '/Saas/devCostManage',
+            templateUrl: 'app/views/Saas/devCostManage.html',
+            controller: function ($rootScope) {
+            }
+        })
+        //跑步机管理员管理
+        .state('treadmillAdmin', {
+            url: '/Saas/treadmillAdmin',
+            templateUrl: 'app/views/Saas/treadmillAdmin.html',
+            controller: function ($rootScope) {
+            }
+        })
+        //跑步机开关机管理
+        .state('treadmillSwitch', {
+            url: '/Saas/treadmillSwitch',
+            templateUrl: 'app/views/Saas/treadmillSwitch.html',
+            controller: function ($rootScope) {
+            }
+        })
         //场馆软件升级管理
         .state('gymUpgrade', {
             url: '/Saas/gymUpgrade',
@@ -96,6 +208,64 @@ App.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
         .state('checkApk', {
             url: '/Saas/checkApk?id',
             templateUrl: 'app/views/Saas/checkApk.html',
+            controller: function ($rootScope) {
+            }
+        })
+
+        //对公账户审核
+        .state('accountAuditing', {
+            url: '/Saas/accountAuditing',
+            templateUrl: 'app/views/Saas/accountAuditing.html',
+            controller: function ($rootScope) {
+            }
+        })
+
+        //分成主体
+        .state('shareholder', {
+            url: '/Saas/shareholder',
+            templateUrl: 'app/views/Saas/shareholder.html',
+            controller: function ($rootScope) {
+            }
+        })
+
+        //场地方收入明细
+        .state('mainIncome', {
+            url: '/Saas/mainIncome',
+            templateUrl: 'app/views/Saas/mainIncome.html',
+            controller: function ($rootScope) {
+            }
+        })
+
+        //场地方提现记录
+        .state('withdrawDeposit', {
+            url: '/Saas/withdrawDeposit',
+            templateUrl: 'app/views/Saas/withdrawDeposit.html',
+            controller: function ($rootScope) {
+            }
+        })
+
+
+
+        //订单分成管理
+        .state('incomeManage', {
+            url: '/Saas/incomeManage',
+            templateUrl: 'app/views/Saas/incomeManage.html',
+            controller: function ($rootScope) {
+            }
+        })
+
+        //分成统计
+        .state('shareCount', {
+            url: '/Saas/shareCount',
+            templateUrl: 'app/views/Saas/shareCount.html',
+            controller: function ($rootScope) {
+            }
+        })
+
+        //场地方提现审核
+        .state('depositAuditing', {
+            url: '/Saas/depositAuditing',
+            templateUrl: 'app/views/Saas/depositAuditing.html',
             controller: function ($rootScope) {
             }
         })

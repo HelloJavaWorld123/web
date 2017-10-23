@@ -47,9 +47,9 @@ App.controller('userDetailController', ['$scope', '$stateParams', '$state', '$ro
         if ($scope.type == "03") {
             $scope.switchgetUserDetailDetailApi = $rootScope.api.getUserDetail03;
         }
-    /*    if (type == "04") {
+        if ($scope.type == "04") {
             $scope.switchgetUserDetailDetailApi = $rootScope.api.getUserDetail04;
-        }*/
+        }
         if ($scope.type == "05") {
             $scope.switchgetUserDetailDetailApi = $rootScope.api.getUserDetail05;
         }
@@ -69,13 +69,11 @@ App.controller('userDetailController', ['$scope', '$stateParams', '$state', '$ro
             }
         }).then(function (res) {
             if (res.data.code == 2000) {
+                $scope.item = res.data.data;
                 if(!res.data.page_info){
                     res.data.page_info={};
                 }
-                $scope.item = res.data.data;
-                $scope.totalCount=res.data.page_info.total;
-
-                console.log(res.data, "用户基本信息：");
+                $scope.totalCount = res.data.page_info.total;
             } else {
                 $scope.item = undefined;
                 console.log(res.data.msg, "获取信息失败：");
