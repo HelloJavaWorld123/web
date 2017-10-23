@@ -1,0 +1,72 @@
+<article ng-controller="getMoneyListController" class="getMoneyList container-fluid">
+    <!--下部-查询列表-->
+    <section class="row conPanelLeft">
+        <div class="gymConfigWrapper  col-lg-12">
+            <!-- 下部分 -->
+            <section>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-head">
+                        <tr class="active">
+                            <th>序号</th>
+                            <th>方案名称</th>
+
+
+                            <th>阶段数</th>
+
+                            <th>总时长(min)</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody ng-repeat="item in getMoneyListData">
+                        <tr>
+                            <td>{{$index+1+(((PageIndex||1)-1)*PageSize)}}</td>
+                            <td>{{item.schemeName==null?"--":item.schemeName}}</td>
+
+
+                            <td>{{item.detailCount==null?"--":item.detailCount}}</td>
+
+                            <td>{{item.execTime==null?"--":item.execTime}}</td>
+                            <td>
+                                <a ng-click="getMoneyListEdit(item)" class="pointer">编辑</a>
+                                <a ng-click="getMoneyListDel(item)" class="pointer"
+                                   ng-disabled="checklist" confirm="确定删除吗？" confirm-title="删除" confirm-ok="确定"
+                                   confirm-cancel="取消">删除</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div ng-if="!getMoneyListData.length" class="noData ng-scope">暂无数据</div>
+                </div>
+                <div cg-busy="getMoneyListListPromise"></div>
+
+
+                <div class="row">
+                    <div class="col-md-9">
+                        <select class="page-size" ng-model="PageSize" ng-change="pageChanged()">
+                            <option value="20" ng-selected="true">每页显示20条</option>
+                            <option value="40">每页显示40条</option>
+                            <option value="60">每页显示60条</option>
+                            <option value="80">每页显示80条</option>
+                            <option value="100">每页显示100条</option>
+                        </select>
+                        <uib-pagination ng-model="PageIndex" ng-change="pageChanged()" total-items="totalCount"
+                                        max-size="maxSize" items-per-page="PageSize" class="pagination-sm"
+                                        boundary-link-numbers="true" rotate="false" previous-text="上一页"
+                                        next-text="下一页"></uib-pagination>
+                    </div>
+                    <div class="col-md-1"><span class="totalTxt">总计：{{totalCount==null?"--":totalCount }} 条</span>
+                    </div>
+                    <div class="col-md-2 text-right">
+                        <span>跳转到</span>
+                        <input type="text" onafterpaste="this.value=this.value.replace(/\D/g,'')"
+                               onkeyup="this.value=this.value.replace(/\D/g,'')" ng-model="toPageNum"
+                               class="variant-form-control">
+                        <button ng-click="setPage()" class="to-page-num">确定</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </section>
+</article>
