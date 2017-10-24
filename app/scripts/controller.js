@@ -1512,7 +1512,28 @@ App.controller('DevConfigController', ['$scope', '$stateParams', '$rootScope', '
         $item = {};
         $scope.runKindId = $item.runKindId;
     }
+    //弹窗查看设备分成比例
+    $scope.DevSharing = function (data) {
 
+        var item;
+        var modalInstance = $uibModal.open({
+            templateUrl: 'DevSharing.html',
+            controller: 'DevSharingController',
+            size: 'lg',
+            resolve: {
+                item: function () {
+                    return data;
+                }
+            },
+        });
+        modalInstance.result.then(function () {
+            //close
+            $scope.query();
+        }, function () {
+            //dismissed
+            $scope.query();
+        })
+    }
 
     //弹窗新增
     $scope.add = function (data) {
@@ -1721,10 +1742,7 @@ App.controller('DevConfigController', ['$scope', '$stateParams', '$rootScope', '
         return options;
 
     }
-
-
 }]);
-
 App.controller("DevAddController", ['$scope', '$stateParams', '$uibModalInstance', 'restful', '$state', '$rootScope', 'AllAreaSelector', '$uibModal', 'toastr', 'CommonData', 'lifeHouseAreaSelector', function ($scope, $stateParams, $uibModalInstance, restful, $state, $rootScope, AllAreaSelector, $uibModal, toastr, CommonData, lifeHouseAreaSelector) {
     $scope.data = {};
     /*数值监听*/
@@ -1739,6 +1757,8 @@ App.controller("DevAddController", ['$scope', '$stateParams', '$uibModalInstance
             }
         }
     }, true);
+    //设备的默认价格，从新增场馆里继承下来。
+    $scope.data.cost = $stateParams.deviceCost ? $stateParams.deviceCost : $scope.data.cost;
     /*增加设备*/
     $scope.save = function () {
         var params = {
@@ -1758,7 +1778,6 @@ App.controller("DevAddController", ['$scope', '$stateParams', '$uibModalInstance
             "cost": $scope.data.cost,
 
         };
-        console.log(params, "添加设备要丢给后台的字段");
         restful.fetch($rootScope.api.addDev, "POST", params).then(function (res) {
             if (res.code == 2000) {
                 toastr.success("添加成功");
@@ -1817,7 +1836,7 @@ App.controller("DevAddController", ['$scope', '$stateParams', '$uibModalInstance
         }
     ];
     $scope.getDeviceTradeT1 = function (item) {
-       $scope.deviceTradeT1s.id = item.id;
+        $scope.deviceTradeT1s.id = item.id;
     };
     //设备厂商-椭圆机+分析仪
     $scope.deviceTradeT2s = {};
@@ -1877,8 +1896,6 @@ App.controller("DevAddController", ['$scope', '$stateParams', '$uibModalInstance
     };
 
 }]);
-
-
 App.controller("DevEditController", ['$scope', '$stateParams', '$http', '$uibModalInstance', 'restful', '$state', '$rootScope', '$uibModal', 'item', 'toastr', 'lifeHouseAreaSelector', function ($scope, $stateParams, $http, $uibModalInstance, restful, $state, $rootScope, $uibModal, item, toastr, lifeHouseAreaSelector) {
 
 
@@ -2059,6 +2076,58 @@ App.controller("DevEditController", ['$scope', '$stateParams', '$http', '$uibMod
 
 }]);
 
+App.controller("DevSharingController", ['$scope', '$http', '$uibModalInstance', '$state', '$rootScope', '$uibModal', 'item', 'toastr', function ($scope, $http, $uibModalInstance, $state, $rootScope, $uibModal, item, toastr) {
+
+
+    $scope.data = {};
+    //代理级别
+    $scope.proxyArr = [
+        {
+            "id": 0,
+            "name": "省代理"
+        }, {
+            "id": 1,
+            "name": "一级代理"
+        }, {
+            "id": 2,
+            "name": "二级代理"
+        }, {
+            "id": 3,
+            "name": "三级代理"
+        }
+    ];
+    //是、否有渠道方
+    $scope.isHasRoleId5Arr = [
+        {
+            id: 0,
+            name: "无"
+        }, {
+            id: 1,
+            name: "有"
+        }
+    ];
+    //1：通过设备id查询设备的信息
+    $http({
+        url: $rootScope.api.getDevSharingById,
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: {
+            "deviceId": item.id
+        }
+    }).then(function (res) {
+        if (res.data.code == 2000) {
+            $scope.data = res.data.data;
+        } else {
+            toastr.error(res.msg);
+        }
+    });
+    $scope.close=function () {
+        $uibModalInstance.close();
+    }
+
+}]);
 /*
  * @Author: haoxb
  * @Date:   2017-6-7 9:01:54
@@ -2639,6 +2708,69 @@ App.controller('DevUnbound1Controller', ['$scope', '$stateParams', '$rootScope',
  * @Author: haoxb
  * @Date:   2017-5-31 9:01:54
  * @Last Modified by:   haoxb
+ * @Last Modified time: 2017-10-16 11:43:51
+ */
+//分成方设置
+'use strict';
+App.controller('dividedConfigController', ['$scope', function ($scope) {
+
+}]);
+
+/**
+ * Created by haoxb on 2017/6/23.
+ */
+'use strict';
+App.controller('getMoneyListController', ['$scope', '$stateParams', '$rootScope', '$http', 'ngProgressFactory', '$uibModal', 'toastr', function ($scope, $stateParams, $rootScope, $http, ngProgressFactory, $uibModal, toastr) {
+    $scope.data = {};
+    //分页
+    $scope.PageIndex = $rootScope.PAGINATION_CONFIG.PAGEINDEX;
+    $scope.PageSize = $rootScope.PAGINATION_CONFIG.PAGESIZE;
+    $scope.maxSize = $rootScope.PAGINATION_CONFIG.MAXSIZE;
+    $scope.pageChanged = function () {
+        $scope.query();
+    };
+
+    $scope.setPage = function () {
+        $scope.PageIndex = $scope.toPageNum > Math.ceil($scope.totalCount / $scope.PageSize) ? Math.ceil($scope.totalCount / $scope.PageSize) : $scope.toPageNum;
+        $scope.query();
+    };
+    $scope.reset = function () {
+        $scope.data = {};
+        $scope.query();
+    };
+
+    //查询运动方案
+    $rootScope.query = function () {
+        var params = {
+            "page": parseInt($scope.PageIndex) - 1,
+            "count": parseInt($scope.PageSize),
+        };
+        $http({
+            url: $rootScope.api.getMoneyList,
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: params,
+        }).then(function (res) {
+            if (res.data.code == 2000) {
+                $scope.getMoneyListData = res.data.data;
+                $scope.totalCount = res.data.page_info.total;
+                console.log(res.data, "运动方案：");
+            } else {
+                toastr.error(res.data.msg);
+            }
+        }, function (rej) {
+            console.log("失败状态码：" + rej.code, +",失败信息：" + rej.data);
+        });
+    };
+    $scope.query();
+}]);
+
+/*
+ * @Author: haoxb
+ * @Date:   2017-5-31 9:01:54
+ * @Last Modified by:   haoxb
  * @Last Modified time: 2017-06-07 11:43:51
  */
 //场馆设置
@@ -2869,7 +3001,7 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
     //弹窗显示场馆对应的设备详细信息
     $scope.devDetailList = function (item) {
         console.log(item.id,item.type, "跨页传递的参数：id和type");
-        $state.go("devConfig", {"gymId": item.id,"gymType":item.type});
+        $state.go("devConfig", {"gymId": item.id,"gymType":item.type,"deviceCost":item.deviceCost});
 
     };
     //设备类型
@@ -3003,6 +3135,7 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
         item.subjectName = subjectItem.subjectName;//
         item.subjectId = subjectItem.subjectId;
         item.listBodyIsShow = false;
+        console.log(item.subjectId);
     }
     //获取主体-支持模糊搜索-编辑-根据主体id反查出主体名字
     $scope.getSubject = function (item) {
@@ -3063,10 +3196,6 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
             "status": $scope.gymEditData.status,
             "gymCost": $scope.gymEditData.gymCost,
             "deviceCost": $scope.gymEditData.deviceCost,
-            "bankType": $scope.gymEditData.bankType,
-            "bankName": $scope.gymEditData.bankName,
-            "accountName": $scope.gymEditData.accountName,
-            "bankAccount": $scope.gymEditData.bankAccount,
             "roleRelList": $scope.gymEditData.roleRelList//有些字段是自己添加此对象。
         };
         console.log("编辑场馆要丢给后台的字段");
@@ -3294,10 +3423,6 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
             "status": $scope.data.status,
             "gymCost": $scope.data.gymCost,
             "deviceCost": $scope.data.deviceCost,
-            "bankType": $scope.data.bankType,
-            "bankName": $scope.data.bankName,
-            "accountName": $scope.data.accountName,
-            "bankAccount": $scope.data.bankAccount,
             "roleRelList": $scope.ShareRoles,//有些字段是自己添加此对象。
         };
         console.log(params, "添加场馆要丢给后台的字段:");
@@ -4164,6 +4289,57 @@ App.controller("editApkController", ['$scope', '$uibModalInstance', 'restful', '
 }]);
 
 
+
+/**
+ * Created by haoxb on 2017/6/23.
+ */
+'use strict';
+App.controller('incomeListController', ['$scope', '$stateParams', '$rootScope', '$http', 'ngProgressFactory', '$uibModal', 'toastr', function ($scope, $stateParams, $rootScope, $http, ngProgressFactory, $uibModal, toastr) {
+    $scope.data = {};
+    //分页
+    $scope.PageIndex = $rootScope.PAGINATION_CONFIG.PAGEINDEX;
+    $scope.PageSize = $rootScope.PAGINATION_CONFIG.PAGESIZE;
+    $scope.maxSize = $rootScope.PAGINATION_CONFIG.MAXSIZE;
+    $scope.pageChanged = function () {
+        $scope.query();
+    };
+
+    $scope.setPage = function () {
+        $scope.PageIndex = $scope.toPageNum > Math.ceil($scope.totalCount / $scope.PageSize) ? Math.ceil($scope.totalCount / $scope.PageSize) : $scope.toPageNum;
+        $scope.query();
+    };
+    $scope.reset = function () {
+        $scope.data = {};
+        $scope.query();
+    };
+
+    //查询运动方案
+    $rootScope.query = function () {
+        var params = {
+            "page": parseInt($scope.PageIndex) - 1,
+            "count": parseInt($scope.PageSize),
+        };
+        $http({
+            url: $rootScope.api.getIncomeList,
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: params,
+        }).then(function (res) {
+            if (res.data.code == 2000) {
+                $scope.incomeListData = res.data.data;
+                $scope.totalCount = res.data.page_info.total;
+                console.log(res.data, "运动方案：");
+            } else {
+                toastr.error(res.data.msg);
+            }
+        }, function (rej) {
+            console.log("失败状态码：" + rej.code, +",失败信息：" + rej.data);
+        });
+    };
+    $scope.query();
+}]);
 
 /*
  * @Author: gaofan
@@ -7371,7 +7547,7 @@ App.controller('UserLoginController', ['$scope', '$rootScope', '$state', 'AuthSe
                 toastr.error(res.msg);
                 return;
             }
-            if (res.data.account) {
+            if (res.data.username) {
                 msgBus.emitMsg("login");
 
                 $state.go('dashboard');

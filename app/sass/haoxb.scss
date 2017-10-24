@@ -544,27 +544,58 @@ table.baseInfo {
     padding: 10px 15px;
   }
 }
+
 //总
 
-.totalTxt{
+.totalTxt {
   display: inline-block;
   font-size: 14px;
   height: 30px;
   line-height: 30px;
 }
-.memberAdd{
+
+.memberAdd {
   margin-top: 16px !important;
 }
+
 /*界面部分字段宽度限制*/
 //适合字段限制在50内
-.w300{
+.w300 {
   width: 300px;
 }
+
 //段落文字
-.w500{
+.w500 {
   width: 500px;
 }
-.pt30{
+
+.pt30 {
   padding-top: 30px !important;
   box-sizing: border-box;
 }
+
+
+/*gym分成模糊下来*/
+.gymListMain {
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.gymListBody {
+  position: absolute;
+  width: 240px;
+  padding: 10px;
+  background: #fff;
+  z-index: 99;
+  border: 1px solid #ccc;
+  overflow: hidden;
+}
+
+.gymListBody li {
+  height: 30px;
+  text-align: left;
+  color: #000;
+  font-size: 16px;
+}
+

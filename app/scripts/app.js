@@ -51,7 +51,7 @@ App.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
         })
         //从场馆进-设备
         .state('devConfig', {
-            url: '/Saas/devConfig?gymId&gymType',//场馆的id和类型type（0：小象-sail，1：生活馆-iot）
+            url: '/Saas/devConfig?gymId&gymType&deviceCost',//场馆的id和类型type（0：小象-sail，1：生活馆-iot）
             templateUrl: 'app/views/Saas/devConfig.html',
             controller: function ($rootScope) {
             }
@@ -60,6 +60,27 @@ App.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
         .state('devUnbound', {
             url: '/Saas/devUnbound',
             templateUrl: 'app/views/Saas/devUnbound.html',
+            controller: function ($rootScope) {
+            }
+        })
+        //分成方
+        .state('dividedConfig', {
+            url: '/Saas/dividedConfig',
+            templateUrl: 'app/views/Saas/dividedConfig.html',
+            controller: function ($rootScope) {
+            }
+        })
+        //收入明细
+        .state('incomeList', {
+            url: '/Saas/incomeList',
+            templateUrl: 'app/views/Saas/incomeList.html',
+            controller: function ($rootScope) {
+            }
+        })
+        //提现明细
+        .state('getMoneyList', {
+            url: '/Saas/getMoneyList',
+            templateUrl: 'app/views/Saas/getMoneyList.html',
             controller: function ($rootScope) {
             }
         })

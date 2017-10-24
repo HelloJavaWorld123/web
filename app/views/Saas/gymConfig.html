@@ -70,13 +70,6 @@
                     </div>
                     <input type="hidden" name="status" value="{{data.status}}">
                 </div>
-                <!--<div class="form-group col-md-3">
-                    <label class="col-md-3 text-right control-label">场馆账号：</label>
-                    <div class="col-md-8">
-                        <input type="text" class="form-control" ng-model="data.username" name="username" maxlength="12">
-                    </div>
-                </div>-->
-
             </section>
 
             <!--中部-点击弹窗-->
@@ -121,7 +114,7 @@
                             <tr>
                                 <td>{{$index+1+(((PageIndex||1)-1)*PageSize)}}</td>
                                 <td>{{item.name==null?"--":item.name}}</td>
-                                <!--<td>{{item.username==null?"&#45;&#45;":item.username}}</td>-->
+                                <td>{{item.username==null?"--":item.username}}</td>
 
                                 <td>{{item.createTime==null?"--":item.createTime|date:'yyyy-MM-dd HH:mm:ss'}}</td>
                                 <td>{{item.statusName==null?"--":item.statusName}}</td>
@@ -224,7 +217,7 @@
                             </ui-select>
                         </div>
                     </div>
-<!--                    <div class="form-group col-md-12">
+                    <div class="form-group col-md-12">
                         <label class="col-md-2 text-right control-label">角色分成:</label>
                         <div class="col-md-10"></div>
                     </div>
@@ -241,18 +234,18 @@
                                         <th class="col-md-3">主体账户</th>
                                     </tr>
                                     </thead>
-                                    &lt;!&ndash;ng-repeat="data in ShareRoles"&ndash;&gt;
+                                    <!--ng-repeat="data in ShareRoles"-->
                                     <tbody>
                                     <tr class="row" ng-repeat="item in ShareRoles">
-                                        &lt;!&ndash;1角色&ndash;&gt;
+                                        <!--1角色-->
                                         <td class="form-group col-md-2">
-                                            &lt;!&ndash;  <input type="text" ng-model="item.gymRoleName"
+                                            <!--  <input type="text" ng-model="item.gymRoleName"
                                                      class="form-control" required disabled="true"
-                                                     style="padding-left: 30px;">&ndash;&gt;
-                                            {{item.gymRoleName==null?'&#45;&#45;':item.gymRoleName}}
+                                                     style="padding-left: 30px;">-->
+                                            {{item.gymRoleName==null?'--':item.gymRoleName}}
 
                                         </td>
-                                        &lt;!&ndash;2代理级别&ndash;&gt;
+                                        <!--2代理级别-->
                                         <td class="form-group col-md-3" ng-if="item.gymRoleName=='代理'">
                                             <div class="col-md-8">
                                                 <ui-select ng-model="item.proxyId" theme="bootstrap"
@@ -267,7 +260,7 @@
                                                 </ui-select>
                                             </div>
                                         </td>
-                                        &lt;!&ndash;如果是渠道方，有下拉，前端自己展现，不予后台交互&ndash;&gt;
+                                        <!--如果是渠道方，有下拉，前端自己展现，不予后台交互-->
                                         <td class="form-group col-md-3" ng-if="item.gymRoleName=='渠道方'">
                                             <div class="col-md-8">
                                                 <ui-select ng-model="webData.isHasRoleId5" theme="bootstrap"
@@ -284,17 +277,17 @@
                                         </td>
                                         <td class="form-group col-md-3"
                                             ng-show="item.gymRoleName!='代理'&&item.gymRoleName!='渠道方'">
-                                            &#45;&#45;
+                                            --
                                         </td>
-                                        &lt;!&ndash;3分成比例&ndash;&gt;
+                                        <!--3分成比例-->
                                         <td class="form-group col-md-2">
-                                            {{item.percent==null?'&#45;&#45;':item.percent}}
+                                            {{item.percent==null?'--':item.percent}}
                                         </td>
-                                        &lt;!&ndash;4主体账户&ndash;&gt;
+                                        <!--4主体账户-->
                                         <td class="form-group col-md-3 gymListMain">
                                             <input type="text" class="form-control" ng-model="item.subjectName"
                                                    maxlength="50" ng-keyup="getSubject(item)"
-                                                   ng-disabled="item.gymRoleName=='场地方（场馆）' ||item.gymRoleName=='领养私教'">
+                                                   ng-disabled="item.gymRoleName=='领养私教'">
                                             <ul ng-show="item.listBodyIsShow" class="gymListBody">
                                                 <li ng-repeat="subjectItem in item.subjectListData"
                                                     ng-click="getSubjectList(subjectItem,item)">
@@ -302,9 +295,6 @@
                                                 </li>
                                             </ul>
                                         </td>
-                                        &lt;!&ndash;<td class="form-group col-md-3" ng-show="item.gymRoleName==4||item.gymRoleName==6">&ndash;&gt;
-                                        &lt;!&ndash;&#45;&#45;&ndash;&gt;
-                                        &lt;!&ndash;</td>&ndash;&gt;
                                     </tr>
                                     </tbody>
                                 </table>
@@ -325,48 +315,6 @@
                                    money max-number="999999.99">
                         </div>
                     </div>
-                    <div class="form-group col-md-12">
-                        <label class="col-md-2 text-right control-label">场地方账户类型：</label>
-                        <div class="col-md-9">
-                            <ui-select ng-model="data.bankType" theme="bootstrap"
-
-                                       name="bankType" required>
-                                <ui-select-match allow-clear="true" placeholder="场地方账户类型">{{$select.selected.name}}
-                                </ui-select-match>
-                                <ui-select-choices
-                                        repeat="item.id as item in bankTypeArr | orderBy:'id' | filter: $select.search.name">
-                                    <span ng-bind-html="item.name | highlight: $select.search"></span>
-                                </ui-select-choices>
-                            </ui-select>
-                        </div>
-                    </div>
-                    <div class="form-group col-md-12">
-                        <label class="col-md-2 text-right control-label">场地方开户名称：</label>
-                        <div class="col-md-9">
-                            <input type="text" class="form-control" ng-model="data.bankName" required maxlength="50">
-                        </div>
-                    </div>
-                    <div class="form-group col-md-12">
-                        <label class="col-md-2 text-right control-label">场地方开户银行：</label>
-                        <div class="col-md-9">
-                            <ui-select ng-model="data.accountName" theme="bootstrap"
-                                       name="accountName" required>
-                                <ui-select-match allow-clear="true" placeholder="场地方开户银行">{{$select.selected.name}}
-                                </ui-select-match>
-                                <ui-select-choices
-                                        repeat="item.id as item in accountNameArr | orderBy:'id' | filter: $select.search.name">
-                                    <span ng-bind-html="item.name | highlight: $select.search"></span>
-                                </ui-select-choices>
-                            </ui-select>
-                        </div>
-                    </div>
-                    <div class="form-group col-md-12">
-                        <label class="col-md-2 text-right control-label">场地方银行账号：</label>
-                        <div class="col-md-9">
-                            <input type="text" class="form-control" ng-model="data.bankAccount" required maxlength="30">
-                        </div>
-                    </div>-->
-
                     <div class="form-group col-md-12">
                         <label class="col-md-2 control-label text-right">所在区域：</label>
                         <div class="col-md-9">
@@ -519,7 +467,7 @@
                             </ui-select>
                         </div>
                     </div>
-                   <!-- <div class="form-group col-md-12">
+                    <div class="form-group col-md-12">
                         <label class="col-md-2 text-right control-label">角色分成:</label>
                         <div class="col-md-10"></div>
                     </div>
@@ -536,18 +484,18 @@
                                         <th class="col-md-3">主体账户</th>
                                     </tr>
                                     </thead>
-                                    &lt;!&ndash;ng-repeat="gymEditData in ShareRoles"&ndash;&gt;
+                                    <!--ng-repeat="gymEditData in ShareRoles"-->
                                     <tbody>
                                     <tr class="row" ng-repeat="item in gymEditData.roleRelList">
-                                        &lt;!&ndash;1角色&ndash;&gt;
+                                        <!--1角色-->
                                         <td class="form-group col-md-2">
-                                            &lt;!&ndash;  <input type="text" ng-model="item.gymRoleName"
+                                            <!--  <input type="text" ng-model="item.gymRoleName"
                                                      class="form-control" required disabled="true"
-                                                     style="padding-left: 30px;">&ndash;&gt;
-                                            {{item.gymRoleName==null?'&#45;&#45;':item.gymRoleName}}
+                                                     style="padding-left: 30px;">-->
+                                            {{item.gymRoleName==null?'--':item.gymRoleName}}
 
                                         </td>
-                                        &lt;!&ndash;2代理级别&ndash;&gt;
+                                        <!--2代理级别-->
                                         <td class="form-group col-md-3" ng-if="item.gymRoleName=='代理'">
                                             <div class="col-md-8">
                                                 <ui-select ng-model="item.proxyId" theme="bootstrap"
@@ -562,7 +510,7 @@
                                                 </ui-select>
                                             </div>
                                         </td>
-                                        &lt;!&ndash;如果是渠道方，有下拉，前端自己展现，不予后台交互-java:proxyId-web:isHasRoleId5&ndash;&gt;
+                                        <!--如果是渠道方，有下拉，前端自己展现，不予后台交互-java:proxyId-web:isHasRoleId5-->
                                         <td class="form-group col-md-3" ng-if="item.gymRoleName=='渠道方'">
                                             <div class="col-md-8">
                                                 <ui-select ng-model="item.proxyId" theme="bootstrap"
@@ -579,17 +527,17 @@
                                         </td>
                                         <td class="form-group col-md-3"
                                             ng-show="item.gymRoleName!='代理'&&item.gymRoleName!='渠道方'">
-                                            &#45;&#45;
+                                            --
                                         </td>
-                                        &lt;!&ndash;3分成比例&ndash;&gt;
+                                        <!--3分成比例-->
                                         <td class="form-group col-md-2">
-                                            {{item.percent==null?'&#45;&#45;':item.percent}}
+                                            {{item.percent==null?'--':item.percent}}
                                         </td>
-                                        &lt;!&ndash;4主体账户&ndash;&gt;
+                                        <!--4主体账户-->
                                         <td class="form-group col-md-3 gymListMain">
                                             <input type="text" class="form-control" ng-model="item.subjectName"
                                                    maxlength="50" ng-keyup="getSubject(item)"
-                                                   ng-disabled="item.gymRoleName=='场地方（场馆）' ||item.gymRoleName=='领养私教'">
+                                                   ng-disabled="item.gymRoleName=='领养私教'">
                                             <ul ng-show="item.listBodyIsShow" class="gymListBody">
                                                 <li ng-repeat="subjectItem in item.subjectListgymEditData"
                                                     ng-click="getSubjectList(subjectItem,item)">
@@ -597,9 +545,9 @@
                                                 </li>
                                             </ul>
                                         </td>
-                                        &lt;!&ndash;<td class="form-group col-md-3" ng-show="item.gymRoleId==4||item.gymRoleId==6">&ndash;&gt;
-                                        &lt;!&ndash;&#45;&#45;&ndash;&gt;
-                                        &lt;!&ndash;</td>&ndash;&gt;
+                                        <!--<td class="form-group col-md-3" ng-show="item.gymRoleId==4||item.gymRoleId==6">-->
+                                        <!------>
+                                        <!--</td>-->
                                     </tr>
                                     </tbody>
                                 </table>
@@ -622,51 +570,7 @@
                                    money max-number="999999.99">
                         </div>
                     </div>
-                    <div class="form-group col-md-12">
-                        <label class="col-md-2 text-right control-label">场地方账户类型：</label>
-                        <div class="col-md-9">
-
-                            <ui-select ng-model="gymEditData.bankType" theme="bootstrap"
-                                       name="bankType">
-                                <ui-select-match allow-clear="true" placeholder="场地方账户类型">{{$select.selected.name}}
-                                </ui-select-match>
-                                <ui-select-choices
-                                        repeat="item.id as item in bankTypeArr | orderBy:'id' | filter: $select.search.name">
-                                    <span ng-bind-html="item.name | highlight: $select.search"></span>
-                                </ui-select-choices>
-                            </ui-select>
-                        </div>
-                    </div>
-                    <div class="form-group col-md-12">
-                        <label class="col-md-2 text-right control-label">场地方开户名称：</label>
-                        <div class="col-md-9">
-                            <input type="text" class="form-control" ng-model="gymEditData.bankName" required
-                                   maxlength="50">
-                        </div>
-                    </div>
-                    <div class="form-group col-md-12">
-                        <label class="col-md-2 text-right control-label">场地方开户银行：</label>
-                        <div class="col-md-9">
-                            <ui-select ng-model="gymEditData.accountName" theme="bootstrap"
-                                       name="accountName">
-                                <ui-select-match allow-clear="true" placeholder="场地方开户银行">{{$select.selected.name}}
-                                </ui-select-match>
-                                <ui-select-choices
-                                        repeat="item.id as item in accountNameArr | orderBy:'id' | filter: $select.search.name">
-                                    <span ng-bind-html="item.name | highlight: $select.search"></span>
-                                </ui-select-choices>
-                            </ui-select>
-                        </div>
-                    </div>
-                    <div class="form-group col-md-12">
-                        <label class="col-md-2 text-right control-label">场地方银行账号：</label>
-                        <div class="col-md-9">
-                            <input type="text" class="form-control" ng-model="gymEditData.bankAccount" required
-                                   maxlength="30">
-                        </div>
-                    </div>-->
-
-                    <div class="form-group col-md-12">
+                            <div class="form-group col-md-12">
                         <label class="col-md-2 control-label text-right">所在区域：</label>
                         <div class="col-md-9">
                             <div class="col-md-4">
