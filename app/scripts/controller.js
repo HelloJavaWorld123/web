@@ -4318,6 +4318,10 @@ App.controller('incomeListController', ['$scope', '$stateParams', '$rootScope', 
         var params = {
             "page": parseInt($scope.PageIndex) - 1,
             "count": parseInt($scope.PageSize),
+            "orderNo": $scope.data.orderNo,
+            "startTime": $scope.data.startTime,
+            "endTime": $scope.data.endTime,
+
         };
         $http({
             url: $rootScope.api.getIncomeList,
