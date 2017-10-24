@@ -276,6 +276,14 @@ App.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
             controller: function ($rootScope) {
             }
         })
+
+        //*******************************权限管理-用户信息管理******************************************
+        .state('AuthUser',{
+            url: '/Saas/AuthUser',
+            templateUrl: 'app/views/Saas/AuthUser.html',
+            controller: function ($rootScope) {
+            }
+        })
 }]);
 
 //promise 按钮

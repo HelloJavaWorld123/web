@@ -287,7 +287,17 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
         shareCountExcel: $rootScope.BASEURL + "api/devMgmt/income/exportExcel",
         shareCountAmount: $rootScope.BASEURL + "api/devMgmt/income/statistics/totalAmount",
 
+        //权限管理之用户信息
+        authUserList: $rootScope.BASEURL + "/api/auth/user/list",
+        authUserInfo: $rootScope.BASEURL + "/api/auth/user/id",
+        authUserUpdate: $rootScope.BASEURL + "/api/auth/user/update",
+        authUserAdd: $rootScope.BASEURL + "/api/auth/user/add",
 
+        //角色管理
+        authRoleList: $rootScope.BASEURL + "/api/auth/role/list",
+        authRoleAdd: $rootScope.BASEURL + "/api/auth/role/add",
+        authRoleUpdate: $rootScope.BASEURL + "/api/auth/role/update",
+        authRoleInfo: $rootScope.BASEURL + "/api/auth/role/id"
 
 
 

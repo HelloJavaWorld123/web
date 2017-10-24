@@ -1,0 +1,127 @@
+<article ng-controller="AuthUserController" class="complain continer-fluid ng-scope">
+
+    <!--header 页面头部  做成一个表单提交的形式-->
+    <form action="{{}}" method="post" ng-form="AuthUser" name="AuthUser" ng-enter="query()" id="authUser">
+
+        <!--表单部分包装-->
+        <section class="row">
+            <!--第一个汉字以及输入框-->
+            <div class="form-group col-md-3">
+                <!--汉字占用的宽度-->
+                <lable class="col-md-3 text-right control-lable">账号:</lable>
+                <div class="col-md-8">
+                    <!--输入框占用的宽度 缺少model参数-->
+                    <input type="text" class="form-control ng-pristine ng-valid ng-valid-maxlength" ng-model=""
+                           maxlength="20" name="userName" aria-invalid=false>
+                </div>
+            </div>
+            <!--第二个汉字以及输入框-->
+            <div class="form-group col-md-3">
+                <!--汉字-->
+                <lable class="col-md-3  text-right control-lable">姓名:</lable>
+                <div class="col-md-8">
+                    <input type="text" class="form-control ng-pristine ng-valid ng-valid-length" ng-model=""
+                           maxlength="10" name="name" aria-invalid="false">
+                </div>
+            </div>
+            <!--第三个汉字以及输入框-->
+            <div class="form-group col-md-3">
+                <lable class="col-md-3 text-right control-lable">手机号码:</lable>
+                <div class="col-md-8">
+                    <input type="text" class="form-control ng-pristine na-valid ng-valid-length" ng-model=""
+                           maxlength="20" name="mobile" aria-invalid="false">
+                </div>
+            </div>
+            <!--第四个汉字-->
+            <div class="form-group col-md-3">
+                <lable class="col-md-3 text-right control-lable">状态:</lable>
+                <div class="col-md-8">
+                    <div class="ui-select-match" ng-hide="$select.open" ng-disabled="$select.disable"
+                         ng-class="{'btu-default-focus':$select.focus}" allow-clear="true" aria-hidden="false"
+                         aria-disabled="false">
+                        <select class="form-control">
+                            <option value="normal">正常</option>
+                            <option value="stop">停用</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!--提交的按钮  查询 重置 新增 -->
+        <div class="button-first">
+            <button type="button" class="btn btn-raised btn-primary text-right" ng-click="">查询</button>
+            <button type="reset" class="btn btn-raised btn-default" ng-click="">重置</button>
+            <button type="submit" class="btn btn-raised btn-info">新增</button>
+        </div>
+    </form>
+
+    <!--Middle 中间部分-->
+    <section >
+        <div >
+            <section>
+                <div>
+                    <table class="table table-hover table-bordered">
+                        <thead class="table-head">
+                        <tr class="active">
+                        <th>账号</th>
+                        <th>姓名</th>
+                        <th>手机号</th>
+                        <th>角色</th>
+                        <th>状态</th>
+                        <th>创建时间</th>
+                        <th>操作</th>
+                        </tr>
+                        </thead>
+                        <!--循环遍历数据-->
+                        <tbody  ng-repeat="item in authUserListData">
+                        <tr>
+                           <td>{{item.username == null ? "--" : item.username}}</td>
+                            <td>{{item.name == null ? "--" : item.name}}</td>
+                            <td>{{item.mobile == null ? "--" : item.name}}</td>
+                            <td>{{item.roleNameStr == null ? "--" : item.roleNameStr}}</td>
+                            <td>{{item.strStatus == null ? "--" : item.strStatus}}</td>
+                            <td>{{item.creataTime == null ? "--" : item.createTime}}</td>
+                            <td>
+                                <button type="button" name="编辑" ng-click=""></button>
+                                <button type="button" name="恢复"></button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="noData ng-scope" ng-if="authUserListData == null ">暂无数据</div>
+                </div>
+                <div cg-busy=""></div>
+                <!--底部-->
+                <div class="row">
+                    <div class="col-md-9">
+                        <select ng-model="PageSize" class="page-size" ng-change="">
+                            <option value="20" ng-selected="true">每页显示20条</option>
+                            <option value="40" >每页显示40条</option>
+                            <option value="60" >每页显示60条</option>
+                            <option value="80" >每页显示80条</option>
+                            <option value="100" >每页显示100条</option>
+                        </select>
+                        <!--底部中间-->
+                        <uib-pagination class="pagination-sm" ng-model="" total-items="totalCount" rotate="false" previous-text="上一页" next-text="下一页"></uib-pagination>
+                        <div class="col-md-1">
+                            <span class="tatalTxt">总计:{{}}条</span>
+                        </div>
+                        <!--底部右边-->
+                        <div class="col-md-2 text-right">
+                            <span>跳转到</span>
+                            <input type="text" class="variant-form-control">
+                            <button class="to-page-num" ng-click="">确定</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </section>
+
+
+    <!--Footer 底部部分-->
+
+
+</article>
