@@ -9,30 +9,35 @@
                         <thead class="table-head">
                         <tr class="active">
                             <th>序号</th>
-                            <th>方案名称</th>
+                            <th>订单号</th>
+                            <th>场馆名称</th>
+                            <th>订单状态</th>
 
+                            <th>订单时间</th>
+                            <th>设备类型</th>
+                            <th>设备号</th>
+                            <th>订单总价（元）</th>
 
-                            <th>阶段数</th>
-
-                            <th>总时长(min)</th>
-                            <th>操作</th>
+                            <th>实际支付金额（元）</th>
+                            <th>分成比例（元）</th>
+                            <th>分成金额（元）</th>
                         </tr>
                         </thead>
                         <tbody ng-repeat="item in incomeListData">
                         <tr>
                             <td>{{$index+1+(((PageIndex||1)-1)*PageSize)}}</td>
-                            <td>{{item.schemeName==null?"--":item.schemeName}}</td>
+                            <td>{{item.orderNo==null?"--":item.orderNo}}</td>
+                            <td>{{item.gymName==null?"--":item.gymName}}</td>
+                            <td>{{item.status==null?"--":item.status}}</td>
 
+                            <td>{{item.createTime==null?"--":item.createTime}}</td>
+                            <td>{{item.productName==null?"--":item.productName}}</td>
+                            <td>{{item.deviceID==null?"--":item.deviceID}}</td>
+                            <td>{{item.amount==null?"--":item.amount}}</td>
 
-                            <td>{{item.detailCount==null?"--":item.detailCount}}</td>
-
-                            <td>{{item.execTime==null?"--":item.execTime}}</td>
-                            <td>
-                                <a ng-click="incomeListEdit(item)" class="pointer">编辑</a>
-                                <a ng-click="incomeListDel(item)" class="pointer"
-                                   ng-disabled="checklist" confirm="确定删除吗？" confirm-title="删除" confirm-ok="确定"
-                                   confirm-cancel="取消">删除</a>
-                            </td>
+                            <td>{{item.actualAmount==null?"--":item.actualAmount}}</td>
+                            <td>{{item.sharePercent==null?"--":item.sharePercent}}</td>
+                            <td>{{item.sharingAmount==null?"--":item.sharingAmount}}</td>
                         </tr>
                         </tbody>
                     </table>

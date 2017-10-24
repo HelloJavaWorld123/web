@@ -28,7 +28,7 @@ App.controller('getMoneyListController', ['$scope', '$stateParams', '$rootScope'
             "count": parseInt($scope.PageSize),
         };
         $http({
-            url: $rootScope.api.getIncomeList,
+            url: $rootScope.api.getMoneyList,
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
@@ -36,7 +36,7 @@ App.controller('getMoneyListController', ['$scope', '$stateParams', '$rootScope'
             data: params,
         }).then(function (res) {
             if (res.data.code == 2000) {
-                $scope.incomeListData = res.data.data;
+                $scope.getMoneyListData = res.data.data;
                 $scope.totalCount = res.data.page_info.total;
                 console.log(res.data, "运动方案：");
             } else {

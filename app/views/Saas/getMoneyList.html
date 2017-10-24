@@ -9,38 +9,27 @@
                         <thead class="table-head">
                         <tr class="active">
                             <th>序号</th>
-                            <th>方案名称</th>
+                            <th>时间</th>
+                            <th>提现金额</th>
+                            <th>提现后账户余额</th>
 
-
-                            <th>阶段数</th>
-
-                            <th>总时长(min)</th>
-                            <th>操作</th>
+                            <th>提现状态</th>
                         </tr>
                         </thead>
                         <tbody ng-repeat="item in getMoneyListData">
                         <tr>
                             <td>{{$index+1+(((PageIndex||1)-1)*PageSize)}}</td>
-                            <td>{{item.schemeName==null?"--":item.schemeName}}</td>
+                            <td>{{item.createTime==null?"--":item.createTime}}</td>
+                            <td>{{item.drawMoney==null?"--":item.drawMoney}}</td>
+                            <td>{{item.leftMoney==null?"--":item.leftMoney}}</td>
 
-
-                            <td>{{item.detailCount==null?"--":item.detailCount}}</td>
-
-                            <td>{{item.execTime==null?"--":item.execTime}}</td>
-                            <td>
-                                <a ng-click="getMoneyListEdit(item)" class="pointer">编辑</a>
-                                <a ng-click="getMoneyListDel(item)" class="pointer"
-                                   ng-disabled="checklist" confirm="确定删除吗？" confirm-title="删除" confirm-ok="确定"
-                                   confirm-cancel="取消">删除</a>
-                            </td>
+                            <td>{{item.drawStatusText==null?"--":item.drawStatusText}}</td>
                         </tr>
                         </tbody>
                     </table>
                     <div ng-if="!getMoneyListData.length" class="noData ng-scope">暂无数据</div>
                 </div>
                 <div cg-busy="getMoneyListListPromise"></div>
-
-
                 <div class="row">
                     <div class="col-md-9">
                         <select class="page-size" ng-model="PageSize" ng-change="pageChanged()">
