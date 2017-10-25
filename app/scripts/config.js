@@ -287,6 +287,8 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
         shareCountExcel: $rootScope.BASEURL + "api/devMgmt/income/exportExcel",
         shareCountAmount: $rootScope.BASEURL + "api/devMgmt/income/statistics/totalAmount",
 
+        resourceList: $rootScope.BASEURL + "api/auth/resource/list",
+
 
 
 

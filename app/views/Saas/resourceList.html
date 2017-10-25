@@ -1,0 +1,49 @@
+<article ng-controller="resourceListController" class="complain container-fluid">
+
+
+
+
+    <!--下部-查询列表-->
+    <section class="row conPanelLeft">
+        <div class="gymConfigWrapper  col-lg-12">
+            <!-- 下部分 -->
+            <section>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-head">
+                        <tr class="active">
+                            <th>权限组</th>
+                            <th>序号</th>
+                            <th>权限URL地址</th>
+                            <th>是否显示</th>
+                            <th>操作</th>
+
+                        </tr>
+                        </thead>
+
+                        <tbody ng-repeat="item in resourceListData.children">
+                        <tr>
+                            <td>{{item.name}}</td>
+
+                            <td>{{item.longNumber}}</td>
+
+                            <td>{{item.url}}</td>
+                            <td>{{item.showMenu}}</td>
+                            <td>
+                                <a ng-click="confirmAuditing(item,1)"  class="pointer" ng-if="item.auditStatus!=undefined&&item.auditStatus==0">审核通过</a>
+                                <a ng-click="confirmAuditing(item,2)"  class="pointer" ng-if="item.auditStatus!=undefined&&item.auditStatus==0">审核不通过</a>
+                            </td>
+
+
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div ng-if="!depositAuditingListData.length" class="noData ng-scope">暂无数据</div>
+                </div>
+                <div cg-busy="gymListPromise"></div>
+
+            </section>
+        </div>
+
+    </section>
+</article>

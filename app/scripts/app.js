@@ -276,6 +276,13 @@ App.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
             controller: function ($rootScope) {
             }
         })
+        //场地方提现审核
+        .state('resourceList', {
+            url: '/Saas/resourceList',
+            templateUrl: 'app/views/Saas/resourceList.html',
+            controller: function ($rootScope) {
+            }
+        })
 }]);
 
 //promise 按钮
