@@ -286,7 +286,7 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
 
         //分成统计
         shareCountList: $rootScope.BASEURL + "api/devMgmt/income/statistics/list",
-        shareCountExcel: $rootScope.BASEURL + "api/devMgmt/income/exportExcel",
+        shareCountExcel: $rootScope.BASEURL + "api/devMgmt/income/statistics/exportExcel",
         shareCountAmount: $rootScope.BASEURL + "api/devMgmt/income/statistics/totalAmount",
 
 
