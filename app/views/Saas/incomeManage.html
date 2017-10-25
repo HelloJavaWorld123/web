@@ -17,7 +17,7 @@
                     <div class="form-group col-md-3">
                         <label class="col-md-3 text-right control-label" >订单号：</label>
                         <div class="col-md-8">
-                            <input type="text" class="form-control" ng-model="data.orderNo"  maxlength="20" name="orderNo">
+                            <input type="text" class="form-control" ng-model="data.orderNo"  name="orderNo">
                         </div>
                     </div>
 
@@ -32,6 +32,9 @@
                                     <datetimepicker ng-model="data.startTime" data-datetimepicker-config="{dropdownSelector: '.startTime',startView:'day',minView:'day'}" on-set-time="onEnrollstartSeleted(newDate, oldDate)"></datetimepicker>
                                 </ul>
                             </div>
+                            <!--配合后端导出功能-->
+                            <input type="hidden" name="startTime"
+                                   value="{{data.startTime|date:'yyyy-MM-dd '}}">
                         </div>
                     </div>
                     <div class="form-group col-md-2">
@@ -44,6 +47,10 @@
                                     <datetimepicker ng-model="data.endTime" data-datetimepicker-config="{dropdownSelector: '.endTime',startView:'day',minView:'day'}" on-set-time="onEnrollstartSeleted(newDate, oldDate)"></datetimepicker>
                                 </ul>
                             </div>
+
+                            <!--配合后端导出功能-->
+                            <input type="hidden" name="endTime"
+                                   value="{{data.endTime|date:'yyyy-MM-dd '}}">
                         </div>
                     </div>
 
@@ -166,10 +173,10 @@
                             <td>{{item.actualAmount}}</td>
                             <td>{{item.payTypeText}}</td>
                             <td>{{item.gymName}}</td>
-                            <td>{{item.gymName}}</td>
-                            <td>{{item.channelSharingPercent}}</td>
-                            <td>{{item.gymName}}</td>
+                            <td>{{item.gymSharingName}}</td>
                             <td>{{item.gymSharingPercent}}</td>
+                            <td>{{item.channelName}}</td>
+                            <td>{{item.channelSharingPercent}}</td>
                             <td>{{item.proxyName}}</td>
                             <td>{{item.proxySharingPercent}}</td>
                             <td>{{item.developName}}</td>
