@@ -1,53 +1,68 @@
 <article ng-controller=" dividedConfigController" class="divideConfig container-fluid">
-<!--上部分-->
+    <!--上部分-->
     <section class="row">
         <div class="form-group col-md-12">
-            <label class="col-md-2 text-right control-label">账户余额（元）：</label>
+            <label class="col-md-2  control-label">账户余额（元）：</label>
             <div class="col-md-7">
-                <input type="text" class="form-control" ng-model="data.xxx" ng-disabled=true>
+                <input type="text" class="form-control" ng-model="gymData.balance" ng-disabled=true>
             </div>
             <div class="col-md-3">
                 <button class="btn btn-raised btn-primary" type="button" ng-click="getDeposit()">提现</button>
             </div>
         </div>
         <div class="form-group col-md-12">
-            <h3 class="col-md-2 text-right control-label">账户信息：</h3>
+            <h3 class="col-md-2  control-label">账户信息：</h3>
         </div>
         <div class="form-group col-md-12">
-            <label class="col-md-2 text-right control-label">账户类型：</label>
+            <label class="col-md-2  control-label">账户类型：</label>
             <div class="col-md-7">
-                <input type="text" class="form-control" ng-model="data.xxx" ng-disabled=true>
-            </div>
-        </div><div class="form-group col-md-12">
-            <label class="col-md-2 text-right control-label">开户名称：</label>
-            <div class="col-md-7">
-                <input type="text" class="form-control" ng-model="data.xxx" ng-disabled=true>
-            </div>
-        </div><div class="form-group col-md-12">
-            <label class="col-md-2 text-right control-label">开户银行：</label>
-            <div class="col-md-7">
-                <input type="text" class="form-control" ng-model="data.xxx" ng-disabled=true>
+                <input type="text" class="form-control" ng-model="data.bankType.msg" ng-disabled=true>
             </div>
         </div>
         <div class="form-group col-md-12">
-            <label class="col-md-2 text-right control-label">银行账号：</label>
+            <label class="col-md-2  control-label">开户名称：</label>
             <div class="col-md-7">
-                <input type="text" class="form-control" ng-model="data.xxx" ng-disabled=true>
+                <input type="text" class="form-control" ng-model="data.accountName" ng-disabled=true>
             </div>
         </div>
         <div class="form-group col-md-12">
-            <label class="col-md-2 text-right control-label">校验状态：</label>
+            <label class="col-md-2  control-label">开户银行：</label>
             <div class="col-md-7">
-                <input type="text" class="form-control" ng-model="data.xxx" ng-disabled=true>
+                <input type="text" class="form-control" ng-model="data.bankName" ng-disabled=true>
             </div>
+        </div>
+        <div class="form-group col-md-12">
+            <label class="col-md-2  control-label">银行账号：</label>
+            <div class="col-md-7">
+                <input type="text" class="form-control" ng-model="data.bankAccount" ng-disabled=true>
+            </div>
+        </div>
+        <div class="form-group col-md-12">
+            <label class="col-md-2  control-label">校验状态：</label>
+            <div class="col-md-7">
+                <input type="text" class="form-control" ng-model="data.bankCheckStatus.msg" ng-disabled=true>
+            </div>
+            <div class="col-md-3" ng-if="data.bankCheckStatus.code==0">
+                <button class="btn btn-raised btn-primary" type="button" ng-click="doVerify(data.bankType,data)">校验</button>
+            </div>
+            <div class="col-md-3" ng-if="data.bankCheckStatus.code==1">
+                校验中
+            </div>
+            <div class="col-md-3" ng-if="data.bankCheckStatus.code==2">
+                校验通过
+            </div>
+            <div class="col-md-3" ng-if="data.bankCheckStatus.code==3"><!--财务确认后状态后台切换到已打款-->
+                <!--财务打款后，显示确认打款金额按钮-->
+                <button class="btn btn-raised btn-primary" type="button" ng-click="doVerifyAccountMoney(data)">确认打款金额</button>
+            </div>
+        </div>
         </div>
     </section>
     <!--下部-查询列表-->
-    <section class="row">
-        <div class="dividedConfigWrapper  col-md-12">
-            <label class="col-md-2 text-right control-label">场馆信息：</label>
+    <section class="row conPanelLeft">
+        <div class="gymConfigWrapper  col-lg-12">
             <!-- 下部分 -->
-            <section class="col-md-7">
+            <section>
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead class="table-head">
@@ -55,33 +70,91 @@
                             <th>序号</th>
                             <th>场馆名称</th>
                             <th>场馆地址</th>
-                            <th>联系人</th>
 
+                            <th>联系人</th>
                             <th>联系方式</th>
                             <th>经营状态</th>
-                            <th>经营时间</th>
+                            <th>营业时间</th>
                         </tr>
                         </thead>
-
-                        <tbody ng-repeat="item in gymListData">
+                        <tbody ng-repeat="item in gymRoleData">
                         <tr>
                             <td>{{$index+1+(((PageIndex||1)-1)*PageSize)}}</td>
-                            <td>{{item.name==null?"--":item.name}}</td>
-                            <td>{{item.createTime==null?"--":item.createTime|date:'yyyy-MM-dd HH:mm:ss'}}</td>
-                            <td>{{item.statusName==null?"--":item.statusName}}</td>
+                            <td>{{item.gymName==null?"--":item.gymName}}</td>
+                            <td>{{item.address==null?"--":item.address}}</td>
 
-                            <td>{{item.provinceName==null?"--":item.provinceName}}</td>
-                            <td>{{item.cityName==null?"--":item.cityName}}</td>
-                            <td>{{item.regionName==null?"--":item.regionName}}</td>
+                            <td>{{item.linkedName==null?"--":item.linkedName}}</td>
+                            <td>{{item.mobile==null?"--":item.mobile}}</td>
+                            <td>{{item.statusName.msg==null?"--":item.statusName.msg}}</td>
+                            -
+                            <td>{{item.endTime==null?"--":item.endTime}}</td>
                         </tr>
                         </tbody>
                     </table>
-                    <div ng-if="!gymListData.length" class="noData ng-scope">暂无数据</div>
+                    <div ng-if="!gymRoleData.length" class="noData ng-scope">暂无数据</div>
                 </div>
+                <div cg-busy="incomeListListPromise"></div>
 
 
+                <div class="row">
+                    <div class="col-md-9">
+                        <select class="page-size" ng-model="PageSize" ng-change="pageChanged()">
+                            <option value="20" ng-selected="true">每页显示20条</option>
+                            <option value="40">每页显示40条</option>
+                            <option value="60">每页显示60条</option>
+                            <option value="80">每页显示80条</option>
+                            <option value="100">每页显示100条</option>
+                        </select>
+                        <uib-pagination ng-model="PageIndex" ng-change="pageChanged()" total-items="totalCount"
+                                        max-size="maxSize" items-per-page="PageSize" class="pagination-sm"
+                                        boundary-link-numbers="true" rotate="false" previous-text="上一页"
+                                        next-text="下一页"></uib-pagination>
+                    </div>
+                    <div class="col-md-1"><span class="totalTxt">总计：{{totalCount==null?"--":totalCount }} 条</span>
+                    </div>
+                    <div class="col-md-2 ">
+                        <span>跳转到</span>
+                        <input type="text" onafterpaste="this.value=this.value.replace(/\D/g,'')"
+                               onkeyup="this.value=this.value.replace(/\D/g,'')" ng-model="toPageNum"
+                               class="variant-form-control">
+                        <button ng-click="setPage()" class="to-page-num">确定</button>
+                    </div>
+                </div>
             </section>
         </div>
 
     </section>
 </article>
+<!--弹窗公司账户校验输入约定的金额-->
+<script type="text/ng-template" id="doVerifyAccountMoney.html">
+    <div class="modal-header">
+        <h4>账户验证</h4>
+    </div>
+    <div class="modal-body">
+        <form name="doVerifyAccountMoneyForm">
+            <section class="row">
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label">打款金额：</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" placeholder="请输入对公账户收到的打款金额(0-99.99)"
+                               ng-model="data.amount" name="amount" required
+                               money max-number="100.00" maxlength="6">
+                    </div>
+                </div>
+            </section>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn withripple btn-raised btn-primary" type="button" ng-click="save()"
+                            ng-disabled="!doVerifyAccountMoneyForm.$valid">确定
+                    </button>
+                    <button class="btn withripple btn-raised btn-warning" type="button" ng-click="close()">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</script>
