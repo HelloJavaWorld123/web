@@ -4,10 +4,10 @@
         <div class="form-group col-md-12">
             <label class="col-md-2  control-label">账户余额（元）：</label>
             <div class="col-md-7">
-                <input type="text" class="form-control" ng-model="gymData.balance" ng-disabled=true>
+                <input type="text" class="form-control" ng-model="data.balance" ng-disabled=true>
             </div>
             <div class="col-md-3">
-                <button class="btn btn-raised btn-primary" type="button" ng-click="getDeposit()">提现</button>
+                <button class="btn btn-raised btn-primary" type="button" ng-click="getDeposit(data)">提现</button>
             </div>
         </div>
         <div class="form-group col-md-12">
@@ -214,6 +214,40 @@
                             ng-disabled="!doVerifyAccountMoneyForm.$valid">确定
                     </button>
                     <button class="btn withripple btn-raised btn-warning" type="button" ng-click="close(dataCode)">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</script>
+
+<!--弹窗公司+个人提现-->
+<script type="text/ng-template" id="getDeposit.html">
+    <div class="modal-header">
+        <h4>余额提现</h4>
+    </div>
+    <div class="modal-body">
+        <form name="getDepositForm">
+            <section class="row">
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label">提现金额（100-49999）：</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" placeholder="手续费为提现金额的1%，当手续费不足2元时，按2元算。"
+                               ng-model="data.amount" name="amount" required
+                               money max-number="49999.00" min-number="100.00"  maxlength="8"><!--codeR min-number-->
+                    </div>
+                </div>
+            </section>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn withripple btn-raised btn-primary" type="button" ng-click="save()"
+                            ng-disabled="!doVerifyAccountMoneyForm.$valid">确定
+                    </button>
+                    <button class="btn withripple btn-raised btn-warning" type="button" ng-click="close()">取消</button>
                 </div>
             </div>
         </div>

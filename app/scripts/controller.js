@@ -2712,10 +2712,7 @@ App.controller('DevUnbound1Controller', ['$scope', '$stateParams', '$rootScope',
  */
 //分成方设置
 'use strict';
-App.controller('dividedConfigController', ['$scope', '$stateParams', '$rootScope', '$http', 'ngProgressFactory', '$uibModal', 'toastr', function ($scope, $stateParams, $rootScope, $http, ngProgressFactory, $uibModal, toastr) {
-    $rootScope.comData = {};
-
-    $rootScope.comData.uid = "5536b420ad8c11e7b9def48e38c3c5b0";
+App.controller('dividedConfigController', ['$scope', '$stateParams', 'Session','$rootScope', '$http', 'ngProgressFactory', '$uibModal', 'toastr', function ($scope, $stateParams,Session, $rootScope, $http, ngProgressFactory, $uibModal, toastr) {
     $scope.data = {};
     $scope.gymRoleData = {};
     //分页
@@ -2737,7 +2734,7 @@ App.controller('dividedConfigController', ['$scope', '$stateParams', '$rootScope
     //查询账户信息+名下场馆
     $scope.query = function () {
         var params = {
-            "id": $rootScope.comData.uid,
+            "id": Session.$storage.accessToken,
         };
         $http({
             url: $rootScope.api.getBankInfo,
@@ -2823,7 +2820,7 @@ App.controller('dividedConfigController', ['$scope', '$stateParams', '$rootScope
         }
     }
 
-    /*确认打款金额*/
+    /*公司校验-确认打款金额*/
     $scope.doVerifyAccountMoney = function (data) {
         var item;
         $uibModal.open({
@@ -2844,13 +2841,59 @@ App.controller('dividedConfigController', ['$scope', '$stateParams', '$rootScope
         });
 
     }
+    /*提现*/
+    $scope.getDeposit=function (data) {
+        $uibModal.open({
+            templateUrl: 'personVerifyAccountMoney.html',
+            controller: 'personVerifyController',
+            size: 'md',
+            resolve: {
+                item: function () {
+                    return data;
+                }
+            }
+        }).result.then(function () {
+            //close
+            $scope.query();
+        }, function () {
+            //dismiss
+        });
+
+
+
+
+
+
+        var params = {
+            "id": $scope.data.id,/*银行id*/
+            "depositMongy": $scope.data.depositMongy
+        };
+        $http({
+            url: $rootScope.api.getBankInfo,
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: params,
+        }).then(function (res) {
+            if (res.data.code == 2000) {
+                $scope.data = res.data.data;
+                /*用于调试个人账户*/
+            } else {
+                toastr.error(res.data.msg);
+            }
+        }, function (rej) {
+            console.log("失败状态码：" + rej.code, +",失败信息：" + rej.data);
+        });
+    }
 }]);
 //公司账户
-App.controller('doVerifyAccountMoneyController', ['$scope', 'item', '$stateParams', '$rootScope', '$http', 'ngProgressFactory', '$uibModal', '$uibModalInstance', 'toastr', function ($scope, item, $stateParams, $rootScope, $http, ngProgressFactory, $uibModal, $uibModalInstance, toastr) {
+App.controller('doVerifyAccountMoneyController', ['$scope', 'item','Session', '$stateParams', '$rootScope', '$http', 'ngProgressFactory', '$uibModal', '$uibModalInstance', 'toastr', function ($scope, item,Session, $stateParams, $rootScope, $http, ngProgressFactory, $uibModal, $uibModalInstance, toastr) {
+
     //查询账户信息+名下场馆
     $scope.query = function () {
         var params = {
-            "id": $rootScope.comData.uid,
+            "id": Session.$storage.accessToken,
         };
         $http({
             url: $rootScope.api.getBankInfo,
@@ -2919,12 +2962,12 @@ App.controller('doVerifyAccountMoneyController', ['$scope', 'item', '$stateParam
 
 }]);
 //个人账户
-App.controller('personVerifyController', ['$scope', 'item', '$stateParams', '$rootScope', '$http', 'ngProgressFactory', '$uibModal', '$uibModalInstance', 'toastr', function ($scope, item, $stateParams, $rootScope, $http, ngProgressFactory, $uibModal, $uibModalInstance, toastr) {
-    $scope.data={};
+App.controller('personVerifyController', ['$scope', 'item','Session', '$stateParams', '$rootScope', '$http', 'ngProgressFactory', '$uibModal', '$uibModalInstance', 'toastr', function ($scope, item,Session, $stateParams, $rootScope, $http, ngProgressFactory, $uibModal, $uibModalInstance, toastr) {
+    $scope.data = {};
     //查询账户信息+名下场馆
     $scope.query = function () {
         var params = {
-            "id": $rootScope.comData.uid,
+            "id": Session.$storage.accessToken,
         };
         $http({
             url: $rootScope.api.getBankInfo,
@@ -2944,8 +2987,8 @@ App.controller('personVerifyController', ['$scope', 'item', '$stateParams', '$ro
         });
     };
     /*账户校验*/
-    $scope.data.bankCardNum == null ? $scope.data.bankCardNum=item.bankAccount : $scope.data.bankCardNum;
-    $scope.data.bankName == null ? $scope.data.bankName=item.bankName : $scope.data.bankName;
+    $scope.data.bankCardNum == null ? $scope.data.bankCardNum = item.bankAccount : $scope.data.bankCardNum;
+    $scope.data.bankName == null ? $scope.data.bankName = item.bankName : $scope.data.bankName;
     $scope.save = function () {
 
         var params = {
@@ -2967,7 +3010,7 @@ App.controller('personVerifyController', ['$scope', 'item', '$stateParams', '$ro
         }).then(function (res) {
             if (res.data.code == 2000) {
                 $scope.data = res.data.data;
-                $uibModalInstance.close(res.data.data);
+                $uibModalInstance.close();
                 toastr.success("校验通过");
                 $scope.query();
             } else {
@@ -2986,7 +3029,8 @@ App.controller('personVerifyController', ['$scope', 'item', '$stateParams', '$ro
  * Created by haoxb on 2017/6/23.
  */
 'use strict';
-App.controller('getMoneyListController', ['$scope', '$stateParams', '$rootScope', '$http', 'ngProgressFactory', '$uibModal', 'toastr', function ($scope, $stateParams, $rootScope, $http, ngProgressFactory, $uibModal, toastr) {
+/*提现记录*/
+App.controller('getMoneyListController', ['$scope','Session', '$stateParams', '$rootScope', '$http', 'ngProgressFactory', '$uibModal', 'toastr', function ($scope,Session, $stateParams, $rootScope, $http, ngProgressFactory, $uibModal, toastr) {
     $scope.data = {};
     //分页
     $scope.PageIndex = $rootScope.PAGINATION_CONFIG.PAGEINDEX;
@@ -3005,9 +3049,10 @@ App.controller('getMoneyListController', ['$scope', '$stateParams', '$rootScope'
         $scope.query();
     };
 
-    //查询运动方案
+    //查询
     $rootScope.query = function () {
         var params = {
+            "useid": Session.$storage.accessToken,
             "page": parseInt($scope.PageIndex) - 1,
             "count": parseInt($scope.PageSize),
         };
