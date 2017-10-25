@@ -268,7 +268,19 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
         mainIncomeExcel: $rootScope.BASEURL + "api/devMgmt/income/exportExcel",
         getDicGymList: $rootScope.BASEURL + "api/deposit/gym/info",
         getIncomeList:$rootScope.BASEURL+"api/devMgmt/income/list",
+        IncomeListEportExcel:$rootScope.BASEURL+"api/devMgmt/income/exportExcel",
         getMoneyList:$rootScope.BASEURL+"api/devMgmt/withDrawRecord/user/list",
+        //账户
+        getBankInfo:$rootScope.BASEURL+"api/deposit/gym/bank",
+        getGymInfo:$rootScope.BASEURL+"api/deposit/gym/info",
+        //提现-btn
+        drawmoney:$rootScope.BASEURL+"/api/deposit/gym/drawmoney",
+        //公司账户校验
+        companyVerify:$rootScope.BASEURL+"api/deposit/gym/bank/status",
+        //个人账户校验
+        personVerify:$rootScope.BASEURL+"api/deposit/gym/verify/self/accountmoney",
+        //场馆方公司账户汇款金额校验
+        gymVerifyAccountMoney:$rootScope.BASEURL+"api/deposit/gym/verify/company/accountmoney",
 
         //分成方后台提现记录
         withDrawRecordList: $rootScope.BASEURL + "api/devMgmt/withDrawRecord/user/list",

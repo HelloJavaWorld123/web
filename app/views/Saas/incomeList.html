@@ -1,4 +1,78 @@
 <article ng-controller=" incomeListController" class="incomeList container-fluid">
+    <!-- 上部分-联动 -->
+    <form action="{{api.IncomeListEportExcel}}" method="POST" ng-enter="query()" name="IncomeListDataFormName">
+        <section class="row">
+            <div class="form-group col-md-3">
+                <label class="col-md-3 text-right control-label">订单号：</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" ng-model="data.orderNo" name="orderNo" maxlength="20">
+                </div>
+            </div>
+
+            <div class="form-group col-md-3">
+                <label class="col-md-3 control-label">开始时间：</label>
+                <div class="col-md-9">
+                    <div class="dropdown">
+                        <input type="text" class="form-control" ng-model="data.startTime" datetime-transform
+                               format="yyyy-MM-dd" name="startTime" disabled>
+                        <i class="glyphicon glyphicon-calendar rili-icon dropdown-toggle" id="beginTime" role="button"
+                           data-toggle="dropdown"></i>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="beginTime">
+                            <datetimepicker ng-model="data.startTime"
+                                            data-datetimepicker-config="{dropdownSelector: '#beginTime',startView:'day',minView:'day'}"
+                                            on-set-time="restRadio()"></datetimepicker>
+                        </ul>
+                    </div>
+                </div>
+                <!--   <input type="hidden" name="startTime"
+                          value="{{tools.dateToTimeStamp13Bit(data.startTime)}}"
+                         >-->
+                <input type="hidden" name="startTime"
+                       value="{{data.startTime|date:'yyyy-MM-dd '}}"
+                >
+            </div>
+            <div class="form-group col-md-3">
+                <label class="col-md-3 control-label">至：</label>
+                <div class="col-md-9">
+                    <div class="dropdown">
+                        <input type="text" class="form-control" ng-model="data.endTime" datetime-transform
+                               format="yyyy-MM-dd" name="endTime" disabled>
+                        <i class="glyphicon glyphicon-calendar rili-icon dropdown-toggle" id="endTime" role="button"
+                           data-toggle="dropdown"></i>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="endTime">
+                            <datetimepicker ng-model="data.endTime"
+                                            data-datetimepicker-config="{dropdownSelector: '#endTime',startView:'day',minView:'day'}"
+                                            on-set-time="restRadio()"></datetimepicker>
+                        </ul>
+                    </div>
+                </div>
+                <!-- <input type="text" name="endTime"
+                        value="{{tools.dateToTimeStamp13Bit(data.endTime)}}"
+                        class="exportNone">-->
+                <input type="hidden" name="endTime"
+                       value="{{data.endTime|date:'yyyy-MM-dd '}}"
+                >
+                <span ng-bind="txtError" style="color: red;line-height: 52px;margin-left: 15px;"></span>
+            </div>
+            <div class="form-group col-md-3">
+                <label class="col-md-3 control-label">场地：</label>
+                <div class="col-md-8">
+
+                </div>
+                <input type="hidden" value="{{data.vipCard}}" name="vipCard">
+            </div>
+        </section>
+
+
+        <!--中部-点击弹窗-->
+        <div class="button-first">
+            <button type="button" class="btn btn-raised btn-primary" ng-click="query()">查询</button>
+            <button type="button" class="btn btn-raised btn-default" ng-click="reset()">重置</button>
+            <button type="submit" class="btn btn-raised btn-primary">导出</button>
+        </div>
+
+
+    </form>
     <!--下部-查询列表-->
     <section class="row conPanelLeft">
         <div class="gymConfigWrapper  col-lg-12">
