@@ -6,46 +6,46 @@
  */
 'use strict';
 angular.module("AdminService", [])
-    .factory("restful", function($http) {
+    .factory("restful", function ($http) {
         var promise;
         return {
-            get: function(resource, _id) {
-                promise = $http.get(resource + _id + '/').then(function(response) {
+            get: function (resource, _id) {
+                promise = $http.get(resource + _id + '/').then(function (response) {
                     return response.data;
                 });
                 return promise;
             },
-            query: function(resource, params) { //查询
+            query: function (resource, params) { //查询
                 params = (typeof params) !== 'undefined' ? params : {}; //params 请求参数，将在URL上被拼接成？key=value
 
-                promise = $http({ url: resource, method: "GET", params: params })
-                    .then(function(response) {
+                promise = $http({url: resource, method: "GET", params: params})
+                    .then(function (response) {
                         return response.data;
                     });
                 return promise;
             },
-            remove: function(resource, _id) {
-                promise = $http({ url: resource + _id + '/?type=all', method: "DELETE" })
-                    .then(function(response) {
+            remove: function (resource, _id) {
+                promise = $http({url: resource + _id + '/?type=all', method: "DELETE"})
+                    .then(function (response) {
                         return response.data;
                     });
                 return promise;
             },
-            update: function(resource, _id, data) { //更新
-                promise = $http({ url: resource + _id + '/', method: "PATCH", data: data }) //  数据，将被放入请求内发送至服务器
-                    .then(function(response) {
+            update: function (resource, _id, data) { //更新
+                promise = $http({url: resource + _id + '/', method: "PATCH", data: data}) //  数据，将被放入请求内发送至服务器
+                    .then(function (response) {
                         return response.data;
                     });
                 return promise;
             },
-            save: function(resource, data) {
-                promise = $http({ url: resource, method: "POST", data: data })
-                    .then(function(response) {
+            save: function (resource, data) {
+                promise = $http({url: resource, method: "POST", data: data})
+                    .then(function (response) {
                         return response.data;
                     });
                 return promise;
             },
-            fetch: function(resource, method, params) {
+            fetch: function (resource, method, params) {
                 var setMethod = typeof(method) == "undefined" ? "GET" : method;
                 var paramsObj = method == "POST" ? {} : params;
                 var config = {
@@ -55,36 +55,36 @@ angular.module("AdminService", [])
                     params: paramsObj
                 };
                 promise = $http(config)
-                    .then(function(response) {
+                    .then(function (response) {
                         return response.data;
                     });
                 return promise;
             }
         };
     })
-    .factory('AuthService', ['$http', 'Session', '$rootScope','toastr',function($http, Session, $rootScope,toastr) {
+    .factory('AuthService', ['$http', 'Session', '$rootScope', 'toastr', function ($http, Session, $rootScope, toastr) {
         var authService = {};
-        authService.login = function(credentials) {
+        authService.login = function (credentials) {
             //登录，成功后返回用户名
             return $http
                 .post($rootScope.api.login, credentials)
-                .then(function(res) {
+                .then(function (res) {
                     if (res.data.code == 2000) {
-                        Session.create(res.data.data.username, res.data.data.accessToken);
+                        Session.create(res.data.data.username, res.data.data.accessToken, res.data.data.id);
                     }
-                    else{
+                    else {
                         toastr.error(res.data.msg);
                     }
                     return res.data;
                 });
         };
 
-        authService.isAuthenticated = function() {
+        authService.isAuthenticated = function () {
             //是否登录，返回true或者false
             return !!Session.$storage.username;
         };
 
-        authService.isAuthorized = function(nextRoute) {
+        authService.isAuthorized = function (nextRoute) {
             //是否有权限，返回true或者false
             var refuseRoute = Session.$storage.refuseRoute;
             if (refuseRoute) {
@@ -96,25 +96,27 @@ angular.module("AdminService", [])
         };
         return authService;
     }])
-    .service('Session', ['$sessionStorage', function($sessionStorage) {
+    .service('Session', ['$sessionStorage', function ($sessionStorage) {
         this.$storage = $sessionStorage;
-        this.create = function(username, accessToken, refuseRoute) {
+        this.create = function (username, id, accessToken, refuseRoute) {
             this.$storage.username = username;
+            this.$storage.id = id;
             this.$storage.accessToken = accessToken;
             this.$storage.refuseRoute = refuseRoute;
 
         };
-        this.destroy = function() {
+        this.destroy = function () {
             delete this.$storage.username;
+            delete this.$storage.id;
             delete this.$storage.accessToken;
             delete this.$storage.refuseRoute;
         };
         return this;
     }])
-    .factory('AuthInterceptor', ['$injector', '$q','toastr', function($injector, $q,toastr) {
+    .factory('AuthInterceptor', ['$injector', '$q', 'toastr', function ($injector, $q, toastr) {
         // http拦截器
         return {
-            response: function(response) {
+            response: function (response) {
                 var errorNum = response.data.code;
                 if (errorNum == 3425) {
                     // 3425 会话超时
@@ -128,79 +130,94 @@ angular.module("AdminService", [])
             }
         };
     }])
-    .factory('msgBus', ['$rootScope', function($rootScope) {
+    .factory('msgBus', ['$rootScope', function ($rootScope) {
         //供controller之间通讯，用法参考login页面和header
         var msgBus = {};
-        msgBus.emitMsg = function(msg) {
+        msgBus.emitMsg = function (msg) {
             $rootScope.$emit(msg);
         };
-        msgBus.onMsg = function(msg, scope, func) {
+        msgBus.onMsg = function (msg, scope, func) {
             var unbind = $rootScope.$on(msg, func);
             scope.$on('$destroy', unbind);
         };
         return msgBus;
     }])
-    .factory('lifeHouseAreaSelector', ['$http', '$localStorage', '$q', '$rootScope', 'restful', function($http, $localStorage, $q, $rootScope, restful) {
+    .factory('lifeHouseAreaSelector', ['$http', '$localStorage', '$q', '$rootScope', 'restful', function ($http, $localStorage, $q, $rootScope, restful) {
         //生活馆省市联动
         var selector = {
             //获取区域
-            getAreas:function(){
-                return $http({ url:$rootScope.api.getAreas, method: "get"}).then(function(response) {
+            getAreas: function () {
+                return $http({url: $rootScope.api.getAreas, method: "get"}).then(function (response) {
                     return response.data.data;
                 });
             },
             //获取未发货大区
-            getNoDeLiveryAreas:function(){
-                return $http({ url:$rootScope.api.getNoDeLiveryAreas, method: "POST"}).then(function(response) {
+            getNoDeLiveryAreas: function () {
+                return $http({url: $rootScope.api.getNoDeLiveryAreas, method: "POST"}).then(function (response) {
                     return response.data.data;
                 });
             },
-            getProvinces: function(params) {
+            getProvinces: function (params) {
                 //获取所有省份
 
-                if(params){
-                    return $http({ url: ($rootScope.api.getprovincesbyareaid), method:"POST",data:params}).then(function(response) {
+                if (params) {
+                    return $http({
+                        url: ($rootScope.api.getprovincesbyareaid),
+                        method: "POST",
+                        data: params
+                    }).then(function (response) {
                         return response.data.data;
 
                     });
-                }else{
-                    return $http({ url: ($rootScope.api.getArea + 100000), method: "get" }).then(function(response) {
+                } else {
+                    return $http({url: ($rootScope.api.getArea + 100000), method: "get"}).then(function (response) {
                         return response.data.data;
                     });
                 }
             },
-            getCitys: function(params) {
+            getCitys: function (params) {
                 //获取所有市
-                return $http({ url: $rootScope.api.getArea + params, method: "get" }).then(function(response) {
+                return $http({url: $rootScope.api.getArea + params, method: "get"}).then(function (response) {
                     return response.data.data;
                 });
             },
-            getCountys: function(params) {
+            getCountys: function (params) {
                 //获取所有县
-                return $http({ url: $rootScope.api.getArea + params, method: "get" }).then(function(response) {
+                return $http({url: $rootScope.api.getArea + params, method: "get"}).then(function (response) {
                     return response.data.data;
                 });
             },
-            getLifeHouse: function(params) {
+            getLifeHouse: function (params) {
                 if (params == 100000) {
                     params = "";
                 }
                 //获取馆名
-                return $http({ url: $rootScope.api.getMyLifehouse, method: "POST", data: { "regionId": params } }).then(function(response) {
+                return $http({
+                    url: $rootScope.api.getMyLifehouse,
+                    method: "POST",
+                    data: {"regionId": params}
+                }).then(function (response) {
                     return response.data.data;
                 });
             },
             //
-            getNoDeliveryLifeHoustList: function(params) {
+            getNoDeliveryLifeHoustList: function (params) {
 
                 if (params == 100000) {
-                    return $http({ url: $rootScope.api.getNoDeliveryLifeHoustList, method: "POST"}).then(function(response) {
+                    return $http({
+                        url: $rootScope.api.getNoDeliveryLifeHoustList,
+                        method: "POST"
+                    }).then(function (response) {
                         return response.data.data;
                     });
                     return;
                 }
                 //获取未发货馆名
-                return $http({ url: $rootScope.api.getNoDeliveryLifeHoustList, method: "POST", data:params}).then(function(response) {
+                return $http({
+                    url: $rootScope.api.getNoDeliveryLifeHoustList,
+                    method: "POST",
+                    data: params
+                }).then(function (response) {
                     return response.data.data;
                 });
             }
@@ -208,37 +225,37 @@ angular.module("AdminService", [])
         };
         return selector;
     }])
-    .factory('AllAreaSelector', ['$http', '$localStorage', '$q', '$rootScope', 'restful', function($http, $localStorage, $q, $rootScope, restful) {
+    .factory('AllAreaSelector', ['$http', '$localStorage', '$q', '$rootScope', 'restful', function ($http, $localStorage, $q, $rootScope, restful) {
         //生活馆省市联动
         var selector = {
-            getProvinces: function() {
+            getProvinces: function () {
                 //获取所有省份
-                return restful.fetch($rootScope.api.getRegion, "POST", { "regionId": 100000 });
+                return restful.fetch($rootScope.api.getRegion, "POST", {"regionId": 100000});
             },
-            getCitys: function(params) {
+            getCitys: function (params) {
                 //获取所有市
-                return restful.fetch($rootScope.api.getRegion, "POST", { "regionId": Number(params) });
+                return restful.fetch($rootScope.api.getRegion, "POST", {"regionId": Number(params)});
             },
-            getCountys: function(params) {
+            getCountys: function (params) {
                 //获取所有县
-                return restful.fetch($rootScope.api.getRegion, "POST", { "regionId": Number(params) });
+                return restful.fetch($rootScope.api.getRegion, "POST", {"regionId": Number(params)});
             }
         };
         return selector;
     }])
-    .factory('ImageInfo', ['$q', function($q) {
+    .factory('ImageInfo', ['$q', function ($q) {
         //获取file image 的信息，依赖angular-base64-upload
         var deferred = $q.defer();
         var info = {
-            getInfo: function(base64, key) {
-                this._getInfoByKey(base64, key).then(function(imageInfo) {
+            getInfo: function (base64, key) {
+                this._getInfoByKey(base64, key).then(function (imageInfo) {
                     if (imageInfo) {
                         deferred.resolve(imageInfo);
                     }
                 });
                 return deferred.promise;
             },
-            _getInfoByKey: function(base64, key) {
+            _getInfoByKey: function (base64, key) {
                 var d = $q.defer();
                 var type = base64.filetype;
                 var code = base64.base64;
@@ -248,7 +265,7 @@ angular.module("AdminService", [])
 
                 var img = new Image();
                 img.src = src;
-                img.onload = function() {
+                img.onload = function () {
                     var imageInfos = {
                         dimension: {
                             width: img.width,
@@ -273,47 +290,9 @@ angular.module("AdminService", [])
         };
         return info;
     }])
-    .factory('AuthServiceTest', ['$http', 'Session', '$rootScope', function($http, Session, $rootScope) {
-        var authService = {};
-        authService.login = function(credentials) {
-    /*        var param={
-                username:credentials.username,
-                password:credentials.password,
-                model:"1"
-            };*/
-            //登录，成功后返回用户名
-console.log(param);
-
-            return $http
-                .post($rootScope.api.login, credentials)
-                .then(function(res) {
-                    console.log("login", res.data);
-                    if (res.data.code == 2000) {
-                        Session.create(res.data.username, res.data.data);
-                    }
-                    return res.data;
-                });
-        };
-        authService.isAuthenticated = function() {
-            //是否登录，返回true或者false
-            return !!Session.$storage.username;
-        };
-
-        authService.isAuthorized = function(nextRoute) {
-            //是否有权限，返回true或者false
-            var refuseRoute = Session.$storage.refuseRoute;
-            if (refuseRoute) {
-                return (authService.isAuthenticated() && refuseRoute.indexOf(nextRoute) == -1);
-            } else {
-                return authService.isAuthenticated();
-            }
-
-        };
-        return authService;
-    }])
-    .factory('GetLifeHouseName', ['$http', 'Session', '$rootScope', 'toastr', function($http, Session, $rootScope, toastr) {
+    .factory('GetLifeHouseName', ['$http', 'Session', '$rootScope', 'toastr', function ($http, Session, $rootScope, toastr) {
         var LifeHouseName = {
-            GetName: function(arr, key, val, name) {
+            GetName: function (arr, key, val, name) {
                 //arr-所有生活馆数组,val-val,key-对象key
                 if (arr.length) {
                     for (var i = 0; i < arr.length; i++) {
@@ -324,7 +303,7 @@ console.log(param);
                     }
                 }
             },
-            compareObj: function(arr, key1, key2, key3) {
+            compareObj: function (arr, key1, key2, key3) {
                 if (arr.length) {
                     for (var i = 0; i < arr.length; i++) {
                         for (var k = i + 1; k < arr.length; k++) {
@@ -352,7 +331,7 @@ console.log(param);
                 }
                 return false;
             },
-            checkData: function(arr, key1, key2) {
+            checkData: function (arr, key1, key2) {
                 if (arr.length) {
                     for (var i = 0; i < arr.length; i++) {
                         var value1 = arr[i].key1 || arr[i][key1] || "";
@@ -364,7 +343,7 @@ console.log(param);
                 }
                 return false;
             },
-            checkMoney: function(arr, key) {
+            checkMoney: function (arr, key) {
                 var arrC = [];
                 if (arr.length) {
                     for (var i = 0; i < arr.length; i++) {
@@ -376,7 +355,7 @@ console.log(param);
                 }
                 return arrC;
             },
-            removeArr: function(arr, key) {
+            removeArr: function (arr, key) {
                 var arr_tmp = new Array();
                 for (var key_tmp in arr) {
                     if (key_tmp != key) {
@@ -389,9 +368,9 @@ console.log(param);
         return LifeHouseName;
     }])
     //公关数据，存放多次使用到的数据
-    .factory('CommonData', ['$rootScope', 'restful', function($rootScope, restful) {
+    .factory('CommonData', ['$rootScope', 'restful', function ($rootScope, restful) {
         var data = {
-            hourArr: function() {
+            hourArr: function () {
                 //小时数组(以半小时为单位)
                 var arr = [];
                 for (var i = 0; i < 24 * 2; i++) {
@@ -410,7 +389,7 @@ console.log(param);
              * @dependencies              moment.js
              * @return {array}            返回可设置时段，单位为30分钟
              */
-            getAccessHour: function(beginTime, endTime, today) {
+            getAccessHour: function (beginTime, endTime, today) {
                 var arr = [];
                 var now = moment.unix(today || beginTime);
                 var config = {
@@ -434,28 +413,28 @@ console.log(param);
              * @param  {string} lifeId  生活馆ID
              * @return {promise} 返回课程列表promise
              */
-            getCourseList: function(lifeId) {
-                return restful.fetch($rootScope.api.getCourseList, "POST", { "lifeId": lifeId || null });
+            getCourseList: function (lifeId) {
+                return restful.fetch($rootScope.api.getCourseList, "POST", {"lifeId": lifeId || null});
             },
             /**
              * 获取私教列表
              * @param  {string} lifeId  生活馆ID
              * @return {promise}        返回私教列表promise
              */
-            getTrainerList: function(lifeId) {
-                return restful.fetch($rootScope.api.getTrainerList, "POST", { "lifeId": lifeId });
+            getTrainerList: function (lifeId) {
+                return restful.fetch($rootScope.api.getTrainerList, "POST", {"lifeId": lifeId});
             },
             //获取课时
-            getDicItem: function() {
-                return restful.fetch($rootScope.api.getDicItem, "POST", { "code": "COURSE_COUNT" });
+            getDicItem: function () {
+                return restful.fetch($rootScope.api.getDicItem, "POST", {"code": "COURSE_COUNT"});
             },
             //获取城市级别
-            getCityLevel: function() {
-                return restful.fetch($rootScope.api.getDicItem, "POST", { "code": "city_level" });
+            getCityLevel: function () {
+                return restful.fetch($rootScope.api.getDicItem, "POST", {"code": "city_level"});
             },
             //获取店铺级别
-            getLifeLevel: function() {
-                return restful.fetch($rootScope.api.getDicItem, "POST", { "code": "life_level" });
+            getLifeLevel: function () {
+                return restful.fetch($rootScope.api.getDicItem, "POST", {"code": "life_level"});
             }
         }
         return data;
