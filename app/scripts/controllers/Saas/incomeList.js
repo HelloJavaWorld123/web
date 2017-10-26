@@ -54,20 +54,21 @@ App.controller('incomeListController', ['$scope', '$stateParams', '$rootScope', 
 
     //下拉开关
     $scope.listBodyIsShow = false;
+    $scope.item={};
     //下拉单击事件。
-    $scope.getSubjectList = function (subjectItem, item) {
-        item.subjectName = subjectItem.subjectName;//
-        item.subjectId = subjectItem.subjectId;
-        item.listBodyIsShow = false;
-        console.log(item.subjectId);
+    $scope.getSubjectList = function (gymItem, data) {
+        data.gymName = gymItem.gymName;//
+        data.gymId = gymItem.gymId;
+        data.listBodyIsShow = false;
+        console.log(data);
     }
     //获取主体-支持模糊搜索-编辑-根据主体id反查出主体名字
-    $scope.getSubject = function (item) {
-        item.listBodyIsShow = true;
-        if (!item.subjectName || (item.subjectName && item.subjectName == "")) {
+    $scope.getSubject = function (data) {
+        data.listBodyIsShow = true;
+        if (!data.gymName || (data.gymName && data.gymName == "")) {
             return false;
         }
-        //subject:用户输入
+        //gym:用户输入
         var timer = setTimeout(function () {
             $http({
                 url: $rootScope.api.getIncomeGymList,
@@ -76,14 +77,14 @@ App.controller('incomeListController', ['$scope', '$stateParams', '$rootScope', 
                     'Content-Type': 'application/json'
                 },
                 data: {
-                    "subjectName": item.subjectName,
+                    "gymName": data.gymName,
                 }
             }).then(function (res) {
                 if (res.data.code == 2000) {
                     //下来列表里的备选
-                    item.subjectListData = res.data.data;
+                    data.gymListData = res.data.data;
                     //下拉开关
-                    item.listBodyIsShow = true;
+                    data.listBodyIsShow = true;
                 }
                 /*else{
                  toastr.error(res.msg);
