@@ -268,6 +268,7 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
         mainIncomeExcel: $rootScope.BASEURL + "api/devMgmt/income/exportExcel",
         getDicGymList: $rootScope.BASEURL + "api/deposit/gym/info",
         getIncomeList:$rootScope.BASEURL+"api/devMgmt/income/list",
+        getIncomeGymList:$rootScope.BASEURL+"api/devMgmt/income/gym/list",
         IncomeListEportExcel:$rootScope.BASEURL+"api/devMgmt/income/exportExcel",
         getMoneyList:$rootScope.BASEURL+"api/devMgmt/withDrawRecord/user/list",
         //账户

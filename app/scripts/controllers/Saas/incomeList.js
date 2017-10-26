@@ -51,4 +51,46 @@ App.controller('incomeListController', ['$scope', '$stateParams', '$rootScope', 
         });
     };
     $scope.query();
+
+    //下拉开关
+    $scope.listBodyIsShow = false;
+    //下拉单击事件。
+    $scope.getSubjectList = function (subjectItem, item) {
+        item.subjectName = subjectItem.subjectName;//
+        item.subjectId = subjectItem.subjectId;
+        item.listBodyIsShow = false;
+        console.log(item.subjectId);
+    }
+    //获取主体-支持模糊搜索-编辑-根据主体id反查出主体名字
+    $scope.getSubject = function (item) {
+        item.listBodyIsShow = true;
+        if (!item.subjectName || (item.subjectName && item.subjectName == "")) {
+            return false;
+        }
+        //subject:用户输入
+        var timer = setTimeout(function () {
+            $http({
+                url: $rootScope.api.getIncomeGymList,
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: {
+                    "subjectName": item.subjectName,
+                }
+            }).then(function (res) {
+                if (res.data.code == 2000) {
+                    //下来列表里的备选
+                    item.subjectListData = res.data.data;
+                    //下拉开关
+                    item.listBodyIsShow = true;
+                }
+                /*else{
+                 toastr.error(res.msg);
+                 }
+                 },function (rej) {
+                 console.info(rej);*/
+            });
+        }, 500);
+    };
 }]);
