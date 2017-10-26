@@ -14,6 +14,40 @@ App.controller('MainController',['$scope', '$state', 'AuthService', function($sc
 }]);
 
 /*
+ * @Author: 唐文雍
+ * @Date:   2016-05-04 17:26:02
+ * @Last Modified by:   snoob
+ * @Last Modified time: 2017-1-4 18:18:35
+ */
+'use strict';
+App.controller('UserLoginController', ['$scope', '$rootScope', '$state', 'AuthService', 'Session', 'msgBus', '$http', 'restful', '$interval', '$cookies', '$location', 'toastr', function($scope, $rootScope, $state, AuthService, Session, msgBus, $http, restful, $interval, $cookies, $location, toastr) {
+    //初始时将之前登录过的信息清空
+    $scope.load = function() {
+        Session.destroy();
+    };
+    $scope.credentials = {};
+    $scope.error = "";
+
+    $scope.login = function(credentials) {
+        $scope.loginPromise = AuthService.login(credentials).then(function(res) {
+            if (res.code == 1) {
+                toastr.error(res.msg);
+                return;
+            }
+            if (res.data.username) {
+                msgBus.emitMsg("login");
+
+                $state.go('dashboard');
+            } else {
+                $scope.error = data.msg || "超时";
+            }
+        });
+    };
+
+
+}]);
+
+/*
  * @Author: haoxb
  * @Date:   2017-6-7 9:01:54
  * @Last Modified by:   高帆
@@ -2712,7 +2746,7 @@ App.controller('DevUnbound1Controller', ['$scope', '$stateParams', '$rootScope',
  */
 //分成方设置
 'use strict';
-App.controller('dividedConfigController', ['$scope', '$stateParams', 'Session','$rootScope', '$http', 'ngProgressFactory', '$uibModal', 'toastr', function ($scope, $stateParams,Session, $rootScope, $http, ngProgressFactory, $uibModal, toastr) {
+App.controller('dividedConfigController', ['$scope', '$stateParams', 'Session', '$rootScope', '$http', 'ngProgressFactory', '$uibModal', 'toastr', function ($scope, $stateParams, Session, $rootScope, $http, ngProgressFactory, $uibModal, toastr) {
     $scope.data = {};
     $scope.gymRoleData = {};
     //分页
@@ -2842,11 +2876,12 @@ App.controller('dividedConfigController', ['$scope', '$stateParams', 'Session','
 
     }
     /*提现*/
-    $scope.getDeposit=function (data) {
+    $scope.getDeposit = function (data) {
+        console.log(data);
         $uibModal.open({
-            templateUrl: 'personVerifyAccountMoney.html',
-            controller: 'personVerifyController',
-            size: 'md',
+            templateUrl: 'getDeposit.html',
+            controller: 'getDepositController',
+            size: 'lg',
             resolve: {
                 item: function () {
                     return data;
@@ -2858,37 +2893,10 @@ App.controller('dividedConfigController', ['$scope', '$stateParams', 'Session','
         }, function () {
             //dismiss
         });
-
-
-
-
-
-
-        var params = {
-            "id": $scope.data.id,/*银行id*/
-            "depositMongy": $scope.data.depositMongy
-        };
-        $http({
-            url: $rootScope.api.getBankInfo,
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            data: params,
-        }).then(function (res) {
-            if (res.data.code == 2000) {
-                $scope.data = res.data.data;
-                /*用于调试个人账户*/
-            } else {
-                toastr.error(res.data.msg);
-            }
-        }, function (rej) {
-            console.log("失败状态码：" + rej.code, +",失败信息：" + rej.data);
-        });
     }
 }]);
 //公司账户
-App.controller('doVerifyAccountMoneyController', ['$scope', 'item','Session', '$stateParams', '$rootScope', '$http', 'ngProgressFactory', '$uibModal', '$uibModalInstance', 'toastr', function ($scope, item,Session, $stateParams, $rootScope, $http, ngProgressFactory, $uibModal, $uibModalInstance, toastr) {
+App.controller('doVerifyAccountMoneyController', ['$scope', 'item', 'Session', '$stateParams', '$rootScope', '$http', 'ngProgressFactory', '$uibModal', '$uibModalInstance', 'toastr', function ($scope, item, Session, $stateParams, $rootScope, $http, ngProgressFactory, $uibModal, $uibModalInstance, toastr) {
 
     //查询账户信息+名下场馆
     $scope.query = function () {
@@ -2962,7 +2970,7 @@ App.controller('doVerifyAccountMoneyController', ['$scope', 'item','Session', '$
 
 }]);
 //个人账户
-App.controller('personVerifyController', ['$scope', 'item','Session', '$stateParams', '$rootScope', '$http', 'ngProgressFactory', '$uibModal', '$uibModalInstance', 'toastr', function ($scope, item,Session, $stateParams, $rootScope, $http, ngProgressFactory, $uibModal, $uibModalInstance, toastr) {
+App.controller('personVerifyController', ['$scope', 'item', 'Session', '$stateParams', '$rootScope', '$http', 'ngProgressFactory', '$uibModal', '$uibModalInstance', 'toastr', function ($scope, item, Session, $stateParams, $rootScope, $http, ngProgressFactory, $uibModal, $uibModalInstance, toastr) {
     $scope.data = {};
     //查询账户信息+名下场馆
     $scope.query = function () {
@@ -2975,7 +2983,7 @@ App.controller('personVerifyController', ['$scope', 'item','Session', '$statePar
             headers: {
                 'Content-Type': 'application/json'
             },
-            data: params,
+            data: params
         }).then(function (res) {
             if (res.data.code == 2000) {
                 $rootScope.data = res.data.data;
@@ -3012,7 +3020,6 @@ App.controller('personVerifyController', ['$scope', 'item','Session', '$statePar
                 $scope.data = res.data.data;
                 $uibModalInstance.close();
                 toastr.success("校验通过");
-                $scope.query();
             } else {
                 toastr.error(res.data.msg);
             }
@@ -3023,7 +3030,40 @@ App.controller('personVerifyController', ['$scope', 'item','Session', '$statePar
     $scope.close = function (dataCode) {
         $uibModalInstance.close(dataCode);
     };
+}]);
 
+//提现（code为2时候方可点击，共用）
+App.controller('getDepositController', ['$scope', 'item', 'Session', '$stateParams', '$rootScope', '$http', 'ngProgressFactory', '$uibModal', '$uibModalInstance', 'toastr', function ($scope, item, Session, $stateParams, $rootScope, $http, ngProgressFactory, $uibModal, $uibModalInstance, toastr) {
+    $scope.data = {};
+
+    $scope.save = function () {
+        console.log(item.id);
+        var params = {
+            "id": item.id,
+            "depositMongy": $scope.data.depositMongy
+        };
+        $http({
+            url: $rootScope.api.drawmoney,
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: params
+        }).then(function (res) {
+            if (res.data.code == 2000) {
+                $scope.data = res.data.data;
+                toastr.success("提现成功");
+                $uibModalInstance.close();
+            } else {
+                toastr.error(res.data.msg);
+            }
+        }, function (rej) {
+            console.log("失败状态码：" + rej.code, +",失败信息：" + rej.data);
+        });
+    };
+    $scope.close = function (dataCode) {
+        $uibModalInstance.close(dataCode);
+    };
 }]);
 /**
  * Created by haoxb on 2017/6/23.
@@ -7837,40 +7877,6 @@ App.controller('withdrawDepositController', ['$scope', '$state', '$rootScope', '
     };
     $scope.query();
 
-
-
-}]);
-
-/*
- * @Author: 唐文雍
- * @Date:   2016-05-04 17:26:02
- * @Last Modified by:   snoob
- * @Last Modified time: 2017-1-4 18:18:35
- */
-'use strict';
-App.controller('UserLoginController', ['$scope', '$rootScope', '$state', 'AuthService', 'Session', 'msgBus', '$http', 'restful', '$interval', '$cookies', '$location', 'toastr', function($scope, $rootScope, $state, AuthService, Session, msgBus, $http, restful, $interval, $cookies, $location, toastr) {
-    //初始时将之前登录过的信息清空
-    $scope.load = function() {
-        Session.destroy();
-    };
-    $scope.credentials = {};
-    $scope.error = "";
-
-    $scope.login = function(credentials) {
-        $scope.loginPromise = AuthService.login(credentials).then(function(res) {
-            if (res.code == 1) {
-                toastr.error(res.msg);
-                return;
-            }
-            if (res.data.username) {
-                msgBus.emitMsg("login");
-
-                $state.go('dashboard');
-            } else {
-                $scope.error = data.msg || "超时";
-            }
-        });
-    };
 
 
 }]);
