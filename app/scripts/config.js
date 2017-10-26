@@ -46,6 +46,9 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
 
         //测试的登录-本地json
         // login: "app/scripts/loginTest.json",
+        //测试收入明细-gym-本地json
+        getIncomeGymListT: $rootScope.BASEURL +"test/incomeGymList.json",
+
 
         //小象运动登录
         login: $rootScope.BASEURL + "sail/permission/login",
@@ -268,6 +271,7 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
         mainIncomeExcel: $rootScope.BASEURL + "api/devMgmt/income/exportExcel",
         getDicGymList: $rootScope.BASEURL + "api/devMgmt/income/gym/list",
         getIncomeList:$rootScope.BASEURL+"api/devMgmt/income/list",
+        getIncomeGymList:$rootScope.BASEURL+"api/devMgmt/income/gym/list",
         IncomeListEportExcel:$rootScope.BASEURL+"api/devMgmt/income/exportExcel",
         getMoneyList:$rootScope.BASEURL+"api/devMgmt/withDrawRecord/user/list",
 

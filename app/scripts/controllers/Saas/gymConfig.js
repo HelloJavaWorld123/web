@@ -364,7 +364,7 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
     //下拉单击事件。
     $scope.getSubjectList = function (subjectItem, item) {
         item.subjectName = subjectItem.subjectName;//
-        item.subjectId = subjectItem.subjectId;
+        item.subjectId = subjectItem.id;
         item.listBodyIsShow = false;
         console.log(item.subjectId);
     }
@@ -596,7 +596,7 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
     //下拉单击事件。
     $scope.getSubjectList = function (subjectItem, item) {
         item.subjectName = subjectItem.subjectName;//
-        item.subjectId = subjectItem.subjectId;
+        item.subjectId = subjectItem.id;
         item.listBodyIsShow = false;
     }
     //获取主体-支持模糊搜索

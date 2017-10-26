@@ -135,8 +135,6 @@
             <button type="submit" class="btn btn-raised btn-primary">导出</button>
         </div>
     </form>
-
-
     <!--下部-查询列表-->
     <section class="row conPanelLeft">
         <div class="orderInfoWrapper  col-lg-12">
@@ -154,6 +152,7 @@
                             <th>实际支付金额</th>
                             <th>订单时间</th>
                             <th>付款方式</th>
+                            <th>猫号</th>
 
                             <!--<th>场馆类型</th>
                             <th>总公司分成</th>
@@ -179,6 +178,7 @@
                             <td>{{item.actualPay==null?"--":item.actualPay | number:2}}</td>
                             <td>{{item.orderTime==null?"--":item.orderTime| date:'yyyy-MM-dd HH:mm:ss'}}</td>
                             <td>{{item.payType==null?"--":item.payType}}</td>
+                            <td>{{item.mallId==null?"--":item.mallId}}</td>
 
                             <!--<td>{{item.gymType==null?"&#45;&#45;":item.gymType}}</td>
                             <td>{{item.sharing1Amount==null?"&#45;&#45;":item.sharing1Amount | number:3}}</td>
@@ -228,6 +228,5 @@
         </div>
 
     </section>
-
 </article>
 

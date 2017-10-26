@@ -2746,7 +2746,7 @@ App.controller('DevUnbound1Controller', ['$scope', '$stateParams', '$rootScope',
  */
 //分成方设置
 'use strict';
-App.controller('dividedConfigController', ['$scope', '$stateParams', 'Session','$rootScope', '$http', 'ngProgressFactory', '$uibModal', 'toastr', function ($scope, $stateParams,Session, $rootScope, $http, ngProgressFactory, $uibModal, toastr) {
+App.controller('dividedConfigController', ['$scope', '$stateParams', 'Session', '$rootScope', '$http', 'ngProgressFactory', '$uibModal', 'toastr', function ($scope, $stateParams, Session, $rootScope, $http, ngProgressFactory, $uibModal, toastr) {
     $scope.data = {};
     $scope.gymRoleData = {};
     //分页
@@ -2876,11 +2876,12 @@ App.controller('dividedConfigController', ['$scope', '$stateParams', 'Session','
 
     }
     /*提现*/
-    $scope.getDeposit=function (data) {
+    $scope.getDeposit = function (data) {
+        console.log(data);
         $uibModal.open({
-            templateUrl: 'personVerifyAccountMoney.html',
-            controller: 'personVerifyController',
-            size: 'md',
+            templateUrl: 'getDeposit.html',
+            controller: 'getDepositController',
+            size: 'lg',
             resolve: {
                 item: function () {
                     return data;
@@ -2892,37 +2893,10 @@ App.controller('dividedConfigController', ['$scope', '$stateParams', 'Session','
         }, function () {
             //dismiss
         });
-
-
-
-
-
-
-        var params = {
-            "id": $scope.data.id,/*银行id*/
-            "depositMongy": $scope.data.depositMongy
-        };
-        $http({
-            url: $rootScope.api.getBankInfo,
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            data: params,
-        }).then(function (res) {
-            if (res.data.code == 2000) {
-                $scope.data = res.data.data;
-                /*用于调试个人账户*/
-            } else {
-                toastr.error(res.data.msg);
-            }
-        }, function (rej) {
-            console.log("失败状态码：" + rej.code, +",失败信息：" + rej.data);
-        });
     }
 }]);
 //公司账户
-App.controller('doVerifyAccountMoneyController', ['$scope', 'item','Session', '$stateParams', '$rootScope', '$http', 'ngProgressFactory', '$uibModal', '$uibModalInstance', 'toastr', function ($scope, item,Session, $stateParams, $rootScope, $http, ngProgressFactory, $uibModal, $uibModalInstance, toastr) {
+App.controller('doVerifyAccountMoneyController', ['$scope', 'item', 'Session', '$stateParams', '$rootScope', '$http', 'ngProgressFactory', '$uibModal', '$uibModalInstance', 'toastr', function ($scope, item, Session, $stateParams, $rootScope, $http, ngProgressFactory, $uibModal, $uibModalInstance, toastr) {
 
     //查询账户信息+名下场馆
     $scope.query = function () {
@@ -2996,7 +2970,7 @@ App.controller('doVerifyAccountMoneyController', ['$scope', 'item','Session', '$
 
 }]);
 //个人账户
-App.controller('personVerifyController', ['$scope', 'item','Session', '$stateParams', '$rootScope', '$http', 'ngProgressFactory', '$uibModal', '$uibModalInstance', 'toastr', function ($scope, item,Session, $stateParams, $rootScope, $http, ngProgressFactory, $uibModal, $uibModalInstance, toastr) {
+App.controller('personVerifyController', ['$scope', 'item', 'Session', '$stateParams', '$rootScope', '$http', 'ngProgressFactory', '$uibModal', '$uibModalInstance', 'toastr', function ($scope, item, Session, $stateParams, $rootScope, $http, ngProgressFactory, $uibModal, $uibModalInstance, toastr) {
     $scope.data = {};
     //查询账户信息+名下场馆
     $scope.query = function () {
@@ -3009,7 +2983,7 @@ App.controller('personVerifyController', ['$scope', 'item','Session', '$statePar
             headers: {
                 'Content-Type': 'application/json'
             },
-            data: params,
+            data: params
         }).then(function (res) {
             if (res.data.code == 2000) {
                 $rootScope.data = res.data.data;
@@ -3046,7 +3020,6 @@ App.controller('personVerifyController', ['$scope', 'item','Session', '$statePar
                 $scope.data = res.data.data;
                 $uibModalInstance.close();
                 toastr.success("校验通过");
-                $scope.query();
             } else {
                 toastr.error(res.data.msg);
             }
@@ -3057,7 +3030,40 @@ App.controller('personVerifyController', ['$scope', 'item','Session', '$statePar
     $scope.close = function (dataCode) {
         $uibModalInstance.close(dataCode);
     };
+}]);
 
+//提现（code为2时候方可点击，共用）
+App.controller('getDepositController', ['$scope', 'item', 'Session', '$stateParams', '$rootScope', '$http', 'ngProgressFactory', '$uibModal', '$uibModalInstance', 'toastr', function ($scope, item, Session, $stateParams, $rootScope, $http, ngProgressFactory, $uibModal, $uibModalInstance, toastr) {
+    $scope.data = {};
+
+    $scope.save = function () {
+        console.log(item.id);
+        var params = {
+            "id": item.id,
+            "depositMongy": $scope.data.depositMongy
+        };
+        $http({
+            url: $rootScope.api.drawmoney,
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: params
+        }).then(function (res) {
+            if (res.data.code == 2000) {
+                $scope.data = res.data.data;
+                toastr.success("提现成功");
+                $uibModalInstance.close();
+            } else {
+                toastr.error(res.data.msg);
+            }
+        }, function (rej) {
+            console.log("失败状态码：" + rej.code, +",失败信息：" + rej.data);
+        });
+    };
+    $scope.close = function (dataCode) {
+        $uibModalInstance.close(dataCode);
+    };
 }]);
 /**
  * Created by haoxb on 2017/6/23.
@@ -3478,7 +3484,7 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
     //下拉单击事件。
     $scope.getSubjectList = function (subjectItem, item) {
         item.subjectName = subjectItem.subjectName;//
-        item.subjectId = subjectItem.subjectId;
+        item.subjectId = subjectItem.id;
         item.listBodyIsShow = false;
         console.log(item.subjectId);
     }
@@ -3710,7 +3716,7 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
     //下拉单击事件。
     $scope.getSubjectList = function (subjectItem, item) {
         item.subjectName = subjectItem.subjectName;//
-        item.subjectId = subjectItem.subjectId;
+        item.subjectId = subjectItem.id;
         item.listBodyIsShow = false;
     }
     //获取主体-支持模糊搜索
@@ -4688,6 +4694,49 @@ App.controller('incomeListController', ['$scope', '$stateParams', '$rootScope', 
         });
     };
     $scope.query();
+
+    //下拉开关
+    $scope.listBodyIsShow = false;
+    $scope.item={};
+    //下拉单击事件。
+    $scope.getSubjectList = function (gymItem, data) {
+        data.gymName = gymItem.gymName;//
+        data.gymId = gymItem.gymId;
+        data.listBodyIsShow = false;
+        console.log(data);
+    }
+    //获取主体-支持模糊搜索-编辑-根据主体id反查出主体名字
+    $scope.getSubject = function (data) {
+        data.listBodyIsShow = true;
+        if (!data.gymName || (data.gymName && data.gymName == "")) {
+            return false;
+        }
+        //gym:用户输入
+        var timer = setTimeout(function () {
+            $http({
+                url: $rootScope.api.getIncomeGymList,
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: {
+                    "gymName": data.gymName,
+                }
+            }).then(function (res) {
+                if (res.data.code == 2000) {
+                    //下来列表里的备选
+                    data.gymListData = res.data.data;
+                    //下拉开关
+                    data.listBodyIsShow = true;
+                }
+                /*else{
+                 toastr.error(res.msg);
+                 }
+                 },function (rej) {
+                 console.info(rej);*/
+            });
+        }, 500);
+    };
 }]);
 
 /*
