@@ -13,7 +13,7 @@ App.controller('HeaderController', function($scope, $state, restful, Session, ms
         $scope.init();
     });
     $scope.init = function() {
-        $scope.account = Session.$storage.account;
+        $scope.username = Session.$storage.username;
         $scope.userHead = 'app/images/banner.png';
     };
     $scope.init();
