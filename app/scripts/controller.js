@@ -14,6 +14,40 @@ App.controller('MainController',['$scope', '$state', 'AuthService', function($sc
 }]);
 
 /*
+ * @Author: 唐文雍
+ * @Date:   2016-05-04 17:26:02
+ * @Last Modified by:   snoob
+ * @Last Modified time: 2017-1-4 18:18:35
+ */
+'use strict';
+App.controller('UserLoginController', ['$scope', '$rootScope', '$state', 'AuthService', 'Session', 'msgBus', '$http', 'restful', '$interval', '$cookies', '$location', 'toastr', function($scope, $rootScope, $state, AuthService, Session, msgBus, $http, restful, $interval, $cookies, $location, toastr) {
+    //初始时将之前登录过的信息清空
+    $scope.load = function() {
+        Session.destroy();
+    };
+    $scope.credentials = {};
+    $scope.error = "";
+
+    $scope.login = function(credentials) {
+        $scope.loginPromise = AuthService.login(credentials).then(function(res) {
+            if (res.code == 1) {
+                toastr.error(res.msg);
+                return;
+            }
+            if (res.data.username) {
+                msgBus.emitMsg("login");
+
+                $state.go('dashboard');
+            } else {
+                $scope.error = data.msg || "超时";
+            }
+        });
+    };
+
+
+}]);
+
+/*
  * @Author: haoxb
  * @Date:   2017-6-7 9:01:54
  * @Last Modified by:   高帆
@@ -3450,7 +3484,7 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
     //下拉单击事件。
     $scope.getSubjectList = function (subjectItem, item) {
         item.subjectName = subjectItem.subjectName;//
-        item.subjectId = subjectItem.subjectId;
+        item.subjectId = subjectItem.id;
         item.listBodyIsShow = false;
         console.log(item.subjectId);
     }
@@ -3682,7 +3716,7 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
     //下拉单击事件。
     $scope.getSubjectList = function (subjectItem, item) {
         item.subjectName = subjectItem.subjectName;//
-        item.subjectId = subjectItem.subjectId;
+        item.subjectId = subjectItem.id;
         item.listBodyIsShow = false;
     }
     //获取主体-支持模糊搜索
@@ -4663,20 +4697,21 @@ App.controller('incomeListController', ['$scope', '$stateParams', '$rootScope', 
 
     //下拉开关
     $scope.listBodyIsShow = false;
+    $scope.item={};
     //下拉单击事件。
-    $scope.getSubjectList = function (subjectItem, item) {
-        item.subjectName = subjectItem.subjectName;//
-        item.subjectId = subjectItem.subjectId;
-        item.listBodyIsShow = false;
-        console.log(item.subjectId);
+    $scope.getSubjectList = function (gymItem, data) {
+        data.gymName = gymItem.gymName;//
+        data.gymId = gymItem.gymId;
+        data.listBodyIsShow = false;
+        console.log(data);
     }
     //获取主体-支持模糊搜索-编辑-根据主体id反查出主体名字
-    $scope.getSubject = function (item) {
-        item.listBodyIsShow = true;
-        if (!item.subjectName || (item.subjectName && item.subjectName == "")) {
+    $scope.getSubject = function (data) {
+        data.listBodyIsShow = true;
+        if (!data.gymName || (data.gymName && data.gymName == "")) {
             return false;
         }
-        //subject:用户输入
+        //gym:用户输入
         var timer = setTimeout(function () {
             $http({
                 url: $rootScope.api.getIncomeGymList,
@@ -4685,14 +4720,14 @@ App.controller('incomeListController', ['$scope', '$stateParams', '$rootScope', 
                     'Content-Type': 'application/json'
                 },
                 data: {
-                    "subjectName": item.subjectName,
+                    "gymName": data.gymName,
                 }
             }).then(function (res) {
                 if (res.data.code == 2000) {
                     //下来列表里的备选
-                    item.subjectListData = res.data.data;
+                    data.gymListData = res.data.data;
                     //下拉开关
-                    item.listBodyIsShow = true;
+                    data.listBodyIsShow = true;
                 }
                 /*else{
                  toastr.error(res.msg);
@@ -7885,40 +7920,6 @@ App.controller('withdrawDepositController', ['$scope', '$state', '$rootScope', '
     };
     $scope.query();
 
-
-
-}]);
-
-/*
- * @Author: 唐文雍
- * @Date:   2016-05-04 17:26:02
- * @Last Modified by:   snoob
- * @Last Modified time: 2017-1-4 18:18:35
- */
-'use strict';
-App.controller('UserLoginController', ['$scope', '$rootScope', '$state', 'AuthService', 'Session', 'msgBus', '$http', 'restful', '$interval', '$cookies', '$location', 'toastr', function($scope, $rootScope, $state, AuthService, Session, msgBus, $http, restful, $interval, $cookies, $location, toastr) {
-    //初始时将之前登录过的信息清空
-    $scope.load = function() {
-        Session.destroy();
-    };
-    $scope.credentials = {};
-    $scope.error = "";
-
-    $scope.login = function(credentials) {
-        $scope.loginPromise = AuthService.login(credentials).then(function(res) {
-            if (res.code == 1) {
-                toastr.error(res.msg);
-                return;
-            }
-            if (res.data.username) {
-                msgBus.emitMsg("login");
-
-                $state.go('dashboard');
-            } else {
-                $scope.error = data.msg || "超时";
-            }
-        });
-    };
 
 
 }]);
