@@ -204,7 +204,6 @@ angular.module("AdminService", [])
                     return response.data.data;
                 });
             }
-
         };
         return selector;
     }])

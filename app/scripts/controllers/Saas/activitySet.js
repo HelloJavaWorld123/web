@@ -196,13 +196,6 @@ App.controller("activityAddController", ['$scope', '$uibModalInstance', 'restful
     };
 
 
-
-
-
-
-
-
-
     //省市区-类型联动查询
     lifeHouseAreaSelector.getProvinces().then(function (provinces) {
         //获取省份
@@ -220,7 +213,6 @@ App.controller("activityAddController", ['$scope', '$uibModalInstance', 'restful
                 $scope.data.areaCode = provinces;
             });
         }
-
     };
 
 

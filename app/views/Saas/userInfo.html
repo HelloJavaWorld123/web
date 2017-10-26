@@ -20,12 +20,11 @@
             <div class="form-group col-md-2">
                 <label class="col-md-4 control-label">城市：</label>
                 <div class="col-md-8">
-                    <ui-select ng-model="data.cityId" theme="bootstrap" on-select="getCountys($item)"
-                               ng-disabled="data.provinceId==undefined?true:false" name="cityId">
-                        <ui-select-match allow-clear="true" placeholder="全部">{{$select.selected.name}}
+                    <ui-select ng-model="data.cityId" theme="bootstrap" on-select="getCountys($item)" ng-disabled="data.provinceId==undefined?true:false" name="cityId">
+                        <ui-select-match allow-clear="true" placeholder="全部">
+                            {{$select.selected.name}}
                         </ui-select-match>
-                        <ui-select-choices
-                                repeat="item.id as item in citys | orderBy:'id' | filter: $select.search.id">
+                        <ui-select-choices repeat="item.id as item in citys | orderBy:'id' | filter: $select.search.id">
                             <span ng-bind-html="item.name | highlight: $select.search"></span>
                         </ui-select-choices>
                     </ui-select>
@@ -36,8 +35,9 @@
             <div class="form-group col-md-3">
                 <label class="col-md-3 control-label">会员卡类型：</label>
                 <div class="col-md-8">
-                                       <ui-select ng-model="data.vipCard" theme="bootstrap" on-select="getMemberTypeData($item)">
-                        <ui-select-match allow-clear="true" placeholder="全部">{{$select.selected.dicValue}}</ui-select-match>
+                    <ui-select ng-model="data.vipCard" theme="bootstrap" on-select="getMemberTypeData($item)">
+                        <ui-select-match allow-clear="true" placeholder="全部">{{$select.selected.dicValue}}
+                        </ui-select-match>
 
 
                         <ui-select-choices
@@ -52,7 +52,8 @@
             <div class="form-group col-md-3">
                 <label class="col-md-3 text-right control-label">手机号：</label>
                 <div class="col-md-8">
-                    <input type="text" class="form-control" ng-model="data.phone"  name="phone" ng-pattern="PATTERN_CONFIG.TEL">
+                    <input type="text" class="form-control" ng-model="data.phone" name="phone"
+                           ng-pattern="PATTERN_CONFIG.TEL">
                 </div>
                 <div ng-show="userInfoDataFormName.phone.$error.pattern" class="col-lg-12">
                     <label class="col-md-offset-3 col-md-9" style="color:red">请输入正确的手机号码或固话</label>
@@ -74,9 +75,9 @@
                         </ul>
                     </div>
                 </div>
-             <!--   <input type="hidden" name="startTime"
-                       value="{{tools.dateToTimeStamp13Bit(data.startTime)}}"
-                      >-->
+                <!--   <input type="hidden" name="startTime"
+                          value="{{tools.dateToTimeStamp13Bit(data.startTime)}}"
+                         >-->
                 <input type="hidden" name="startTime"
                        value="{{data.startTime|date:'yyyy-MM-dd '}}"
                 >
@@ -96,9 +97,9 @@
                         </ul>
                     </div>
                 </div>
-               <!-- <input type="text" name="endTime"
-                       value="{{tools.dateToTimeStamp13Bit(data.endTime)}}"
-                       class="exportNone">-->
+                <!-- <input type="text" name="endTime"
+                        value="{{tools.dateToTimeStamp13Bit(data.endTime)}}"
+                        class="exportNone">-->
                 <input type="hidden" name="endTime"
                        value="{{data.endTime|date:'yyyy-MM-dd '}}"
                 >
@@ -221,8 +222,10 @@
                                         boundary-link-numbers="true" rotate="false" previous-text="上一页"
                                         next-text="下一页"></uib-pagination>
                     </div>
-                    <div class="col-md-1"><span class="totalTxt">总计：{{totalCount==null?"--":totalCount }} 条</span>
+                    <div class="col-md-1">
+                        <span class="totalTxt">总计：{{totalCount==null?"--":totalCount }} 条</span>
                     </div>
+
                     <div class="col-md-2 text-right">
                         <span>跳转到</span>
                         <input type="text" onafterpaste="this.value=this.value.replace(/\D/g,'')"

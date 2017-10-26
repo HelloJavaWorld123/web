@@ -292,10 +292,17 @@ App.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
         })
 
         //*******************************权限管理-用户信息管理******************************************
-        .state('AuthUser',{
-            url: '/Saas/AuthUser',
-            templateUrl: 'app/views/Saas/AuthUser.html',
+        .state('authuser',{
+            url: '/Saas/authuser',
+            templateUrl: 'app/views/Saas/authuser.html',
             controller: function ($rootScope) {
+            }
+        })
+        .state('authrole',{
+            url: '/Saas/authrole',
+            templateUrl: 'app/views/Saas/authrole.html',
+            controller: function($rootScope){
+
             }
         })
 }]);
