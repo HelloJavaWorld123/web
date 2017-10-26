@@ -57,7 +57,15 @@
             <div class="form-group col-md-3">
                 <label class="col-md-3 control-label">场地：</label>
                 <div class="col-md-8">
-
+                    <input type="text" class="form-control" ng-model="item.subjectName"
+                           maxlength="50" ng-keyup="getSubject(item)"
+                           ng-disabled="item.gymRoleName=='领养私教'">
+                    <ul ng-show="item.listBodyIsShow" class="gymListBody">
+                        <li ng-repeat="subjectItem in item.subjectListData"
+                            ng-click="getSubjectList(subjectItem,item)">
+                            {{subjectItem.subjectName}}
+                        </li>
+                    </ul>
                 </div>
                 <input type="hidden" value="{{data.vipCard}}" name="vipCard">
             </div>
