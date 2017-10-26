@@ -44,7 +44,7 @@ App.controller('mainIncomeController', ['$scope', '$state', '$rootScope', '$http
             'Content-Type': 'application/json'
         },
         data: {
-            "userName":"dl1709300001"
+            'gymName': 'data.gymId'
         }
     }).then(function (res) {
         if (res.data.code == 2000) {
@@ -53,7 +53,7 @@ App.controller('mainIncomeController', ['$scope', '$state', '$rootScope', '$http
 
 
             $scope.getMemberTypeData = function (item) {
-                $scope.memberTypeDatas.gymName = item.gymName;
+                $scope.data.gymId = item.gymId;
 
             };
 

@@ -14,6 +14,40 @@ App.controller('MainController',['$scope', '$state', 'AuthService', function($sc
 }]);
 
 /*
+ * @Author: 唐文雍
+ * @Date:   2016-05-04 17:26:02
+ * @Last Modified by:   snoob
+ * @Last Modified time: 2017-1-4 18:18:35
+ */
+'use strict';
+App.controller('UserLoginController', ['$scope', '$rootScope', '$state', 'AuthService', 'Session', 'msgBus', '$http', 'restful', '$interval', '$cookies', '$location', 'toastr', function($scope, $rootScope, $state, AuthService, Session, msgBus, $http, restful, $interval, $cookies, $location, toastr) {
+    //初始时将之前登录过的信息清空
+    $scope.load = function() {
+        Session.destroy();
+    };
+    $scope.credentials = {};
+    $scope.error = "";
+
+    $scope.login = function(credentials) {
+        $scope.loginPromise = AuthService.login(credentials).then(function(res) {
+            if (res.code == 1) {
+                toastr.error(res.msg);
+                return;
+            }
+            if (res.data.username) {
+                msgBus.emitMsg("login");
+
+                $state.go('dashboard');
+            } else {
+                $scope.error = data.msg || "超时";
+            }
+        });
+    };
+
+
+}]);
+
+/*
  * @Author: haoxb
  * @Date:   2017-6-7 9:01:54
  * @Last Modified by:   高帆
@@ -4778,7 +4812,7 @@ App.controller('mainIncomeController', ['$scope', '$state', '$rootScope', '$http
             'Content-Type': 'application/json'
         },
         data: {
-            "userName":"dl1709300001"
+            'gymName': 'data.gymId'
         }
     }).then(function (res) {
         if (res.data.code == 2000) {
@@ -4787,7 +4821,7 @@ App.controller('mainIncomeController', ['$scope', '$state', '$rootScope', '$http
 
 
             $scope.getMemberTypeData = function (item) {
-                $scope.memberTypeDatas.gymName = item.gymName;
+                $scope.data.gymId = item.gymId;
 
             };
 
@@ -6168,6 +6202,34 @@ App.controller('shareCountController', ['$scope', '$state', '$rootScope', '$http
     }
 
 
+
+    //会员卡类型
+    $scope.memberTypeDatas = {};
+    $scope.memberTypeData = [];
+
+
+    $scope.memberTypePromise = $http({
+        url: $rootScope.api.shareCountDicList,
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: {
+            'subjectName': 'data.subjectId'
+        }
+    }).then(function (res) {
+        if (res.data.code == 2000) {
+            $scope.memberTypeData = res.data.data;
+            console.log($scope.memberTypeData);
+
+
+            $scope.getMemberTypeData = function (item) {
+                $scope.data.subjectId = item.id;
+
+            };
+
+        }
+    });
 
     $rootScope.query = function () {
         $scope.shareCountListPromise = $http({
@@ -7837,40 +7899,6 @@ App.controller('withdrawDepositController', ['$scope', '$state', '$rootScope', '
     };
     $scope.query();
 
-
-
-}]);
-
-/*
- * @Author: 唐文雍
- * @Date:   2016-05-04 17:26:02
- * @Last Modified by:   snoob
- * @Last Modified time: 2017-1-4 18:18:35
- */
-'use strict';
-App.controller('UserLoginController', ['$scope', '$rootScope', '$state', 'AuthService', 'Session', 'msgBus', '$http', 'restful', '$interval', '$cookies', '$location', 'toastr', function($scope, $rootScope, $state, AuthService, Session, msgBus, $http, restful, $interval, $cookies, $location, toastr) {
-    //初始时将之前登录过的信息清空
-    $scope.load = function() {
-        Session.destroy();
-    };
-    $scope.credentials = {};
-    $scope.error = "";
-
-    $scope.login = function(credentials) {
-        $scope.loginPromise = AuthService.login(credentials).then(function(res) {
-            if (res.code == 1) {
-                toastr.error(res.msg);
-                return;
-            }
-            if (res.data.username) {
-                msgBus.emitMsg("login");
-
-                $state.go('dashboard');
-            } else {
-                $scope.error = data.msg || "超时";
-            }
-        });
-    };
 
 
 }]);

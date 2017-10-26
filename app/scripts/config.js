@@ -266,10 +266,11 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
         //分成方后台收入明细
         mainIncomeList: $rootScope.BASEURL + "api/devMgmt/income/list",
         mainIncomeExcel: $rootScope.BASEURL + "api/devMgmt/income/exportExcel",
-        getDicGymList: $rootScope.BASEURL + "api/deposit/gym/info",
+        getDicGymList: $rootScope.BASEURL + "api/devMgmt/income/gym/list",
         getIncomeList:$rootScope.BASEURL+"api/devMgmt/income/list",
         IncomeListEportExcel:$rootScope.BASEURL+"api/devMgmt/income/exportExcel",
         getMoneyList:$rootScope.BASEURL+"api/devMgmt/withDrawRecord/user/list",
+
         //账户
         getBankInfo:$rootScope.BASEURL+"api/deposit/gym/bank",
         getGymInfo:$rootScope.BASEURL+"api/deposit/gym/info",
@@ -298,6 +299,7 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
 
         //分成统计
         shareCountList: $rootScope.BASEURL + "api/devMgmt/income/statistics/list",
+        shareCountDicList: $rootScope.BASEURL + "api/devMgmt/income/subject/list",
         shareCountExcel: $rootScope.BASEURL + "api/devMgmt/income/statistics/exportExcel",
         shareCountAmount: $rootScope.BASEURL + "api/devMgmt/income/statistics/totalAmount",
 
