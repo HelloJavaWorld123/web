@@ -43,7 +43,7 @@ App.controller('shareCountController', ['$scope', '$state', '$rootScope', '$http
             'Content-Type': 'application/json'
         },
         data: {
-            'subjectName': 'data.subjectId'
+            'subjectName': $scope.data.subjectId
         }
     }).then(function (res) {
         if (res.data.code == 2000) {

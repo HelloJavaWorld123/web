@@ -44,7 +44,7 @@ App.controller('mainIncomeController', ['$scope', '$state', '$rootScope', '$http
             'Content-Type': 'application/json'
         },
         data: {
-            'gymName': 'data.gymId'
+            'gymName': $scope.data.gymId
         }
     }).then(function (res) {
         if (res.data.code == 2000) {
