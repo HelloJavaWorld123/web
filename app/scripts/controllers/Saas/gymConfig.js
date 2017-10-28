@@ -371,6 +371,12 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
     //获取主体-支持模糊搜索-编辑-根据主体id反查出主体名字
     $scope.getSubject = function (item) {
         item.listBodyIsShow = true;
+        //用户输入为空的时候下来面板关闭,并且把挂在item上的数据清除
+        if (item.subjectName == "") {
+            item.listBodyIsShow = false;
+            item.subjectName = "";
+            item.subjectId = null;
+        }
         if (!item.subjectName || (item.subjectName && item.subjectName == "")) {
             return false;
         }
@@ -601,7 +607,16 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
     }
     //获取主体-支持模糊搜索
     $scope.getSubject = function (item) {
+        console.log(item.subjectName);
         item.listBodyIsShow = true;
+
+        //用户输入为空的时候下来面板关闭,并且把挂在item上的数据清除
+        if (item.subjectName == "") {
+            item.listBodyIsShow = false;
+            item.subjectName = "";
+            item.subjectId = null;
+        }
+
         if (!item.subjectName || (item.subjectName && item.subjectName == "")) {
             return false;
         }
