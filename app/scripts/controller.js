@@ -14,40 +14,6 @@ App.controller('MainController',['$scope', '$state', 'AuthService', function($sc
 }]);
 
 /*
- * @Author: 唐文雍
- * @Date:   2016-05-04 17:26:02
- * @Last Modified by:   snoob
- * @Last Modified time: 2017-1-4 18:18:35
- */
-'use strict';
-App.controller('UserLoginController', ['$scope', '$rootScope', '$state', 'AuthService', 'Session', 'msgBus', '$http', 'restful', '$interval', '$cookies', '$location', 'toastr', function($scope, $rootScope, $state, AuthService, Session, msgBus, $http, restful, $interval, $cookies, $location, toastr) {
-    //初始时将之前登录过的信息清空
-    $scope.load = function() {
-        Session.destroy();
-    };
-    $scope.credentials = {};
-    $scope.error = "";
-
-    $scope.login = function(credentials) {
-        $scope.loginPromise = AuthService.login(credentials).then(function(res) {
-            if (res.code == 1) {
-                toastr.error(res.msg);
-                return;
-            }
-            if (res.data.username) {
-                msgBus.emitMsg("login");
-
-                $state.go('dashboard');
-            } else {
-                $scope.error = data.msg || "超时";
-            }
-        });
-    };
-
-
-}]);
-
-/*
  * @Author: haoxb
  * @Date:   2017-6-7 9:01:54
  * @Last Modified by:   高帆
@@ -3491,6 +3457,12 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
     //获取主体-支持模糊搜索-编辑-根据主体id反查出主体名字
     $scope.getSubject = function (item) {
         item.listBodyIsShow = true;
+        //用户输入为空的时候下来面板关闭,并且把挂在item上的数据清除
+        if (item.subjectName == "") {
+            item.listBodyIsShow = false;
+            item.subjectName = "";
+            item.subjectId = null;
+        }
         if (!item.subjectName || (item.subjectName && item.subjectName == "")) {
             return false;
         }
@@ -3721,7 +3693,16 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
     }
     //获取主体-支持模糊搜索
     $scope.getSubject = function (item) {
+        console.log(item.subjectName);
         item.listBodyIsShow = true;
+
+        //用户输入为空的时候下来面板关闭,并且把挂在item上的数据清除
+        if (item.subjectName == "") {
+            item.listBodyIsShow = false;
+            item.subjectName = "";
+            item.subjectId = null;
+        }
+
         if (!item.subjectName || (item.subjectName && item.subjectName == "")) {
             return false;
         }
@@ -7920,6 +7901,40 @@ App.controller('withdrawDepositController', ['$scope', '$state', '$rootScope', '
     };
     $scope.query();
 
+
+
+}]);
+
+/*
+ * @Author: 唐文雍
+ * @Date:   2016-05-04 17:26:02
+ * @Last Modified by:   snoob
+ * @Last Modified time: 2017-1-4 18:18:35
+ */
+'use strict';
+App.controller('UserLoginController', ['$scope', '$rootScope', '$state', 'AuthService', 'Session', 'msgBus', '$http', 'restful', '$interval', '$cookies', '$location', 'toastr', function($scope, $rootScope, $state, AuthService, Session, msgBus, $http, restful, $interval, $cookies, $location, toastr) {
+    //初始时将之前登录过的信息清空
+    $scope.load = function() {
+        Session.destroy();
+    };
+    $scope.credentials = {};
+    $scope.error = "";
+
+    $scope.login = function(credentials) {
+        $scope.loginPromise = AuthService.login(credentials).then(function(res) {
+            if (res.code == 1) {
+                toastr.error(res.msg);
+                return;
+            }
+            if (res.data.username) {
+                msgBus.emitMsg("login");
+
+                $state.go('dashboard');
+            } else {
+                $scope.error = data.msg || "超时";
+            }
+        });
+    };
 
 
 }]);
