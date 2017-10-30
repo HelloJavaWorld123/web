@@ -385,7 +385,7 @@
                     <button class="btn withripple btn-raised btn-warning" type="button" ng-click="close()"
                             style="float: right;">取消
                     </button>
-                    <button class="btn withripple btn-raised btn-primary" type="button" ng-click="save()"
+                    <button class="btn withripple btn-raised btn-primary" type="button" ng-click="save()" promise-btn="savePromise"
                             ng-disabled="!gymViewAddForm.$valid" style="float: right;margin-right: 6px;">确定
                     </button>
                 </div>
@@ -645,7 +645,7 @@
                             style="float: right;">取消
                     </button>
                     <button class="btn withripple btn-raised btn-primary" type="button"
-                            ng-click="saveGymEdit(positionLngAndLat)"
+                            ng-click="saveGymEdit(positionLngAndLat)" promise-btn="savePromise"
 
                             ng-disabled="!gymViewEditForm.$valid" style="float: right;margin-right: 6px;">确定
                     </button>
