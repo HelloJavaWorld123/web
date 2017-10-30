@@ -1,7 +1,9 @@
 <article ng-controller="resourceListController" class="complain container-fluid">
 
 
-
+    <div class="button-first">
+        <button type="button" class="btn btn-raised btn-info" ng-click="mainResourceAdd()">新增主菜单项</button>
+    </div>
 
     <!--下部-查询列表-->
     <section class="row conPanelLeft">
@@ -21,21 +23,26 @@
                         </tr>
                         </thead>
 
-                        <tbody ng-repeat="item in resourceListData.children">
-                        <tr>
-                            <td>{{item.name}}</td>
-
-                            <td>{{item.longNumber}}</td>
-
-                            <td>{{item.url}}</td>
-                            <td>{{item.showMenu}}</td>
-                            <td>
-                                <a ng-click="confirmAuditing(item,1)"  class="pointer" ng-if="item.auditStatus!=undefined&&item.auditStatus==0">审核通过</a>
-                                <a ng-click="confirmAuditing(item,2)"  class="pointer" ng-if="item.auditStatus!=undefined&&item.auditStatus==0">审核不通过</a>
+                        <tbody ng-repeat="item in resourceListData"  ng-show="item.show">
+                        <tr >
+                            <td style="width: 25%" ng-style="treeStyle(item)">
+                                <span ng-if="item.children.length > 0" ng-class="{true: 'glyphicon glyphicon-chevron-up', false: 'glyphicon glyphicon-chevron-down'}[item.up]"  ng-click="resourceShow(item)"></span>
+                                <span ng-if="item.children.length == 0" >&nbsp;&nbsp;&nbsp;</span>
+                                {{item.name}}
                             </td>
 
+                            <td style="width: 25%">{{item.longNumber}}</td>
 
+                            <td style="width: 25%">{{item.url}}</td>
+                            <td style="width: 5%">{{item.parentId==0?item.showText:''}}</td>
+                            <td style="width: 20%">
+                                <a ng-click="ResourceAdd(item)" ng-if="item.type == 0"  class="pointer" >新增</a>
+                                <a ng-click="ResourceAdd(item)" ng-if="item.type == 1"  class="pointer" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                                <a ng-click="ResourceEdit(item,item.level)"  class="pointer" >编辑</a>
+                                <a ng-click="deleteResource(item)"  class="pointer" ng-disabled="checklist" confirm="确定删除吗？" confirm-title="删除" confirm-ok="确定" confirm-cancel="取消">删除</a>
+                            </td>
                         </tr>
+
                         </tbody>
                     </table>
                     <div ng-if="!depositAuditingListData.length" class="noData ng-scope">暂无数据</div>
@@ -47,3 +54,282 @@
 
     </section>
 </article>
+
+<!--蒙版-弹窗1-新增权限-->
+<script type="text/ng-template" id="mainResourceAdd.html">
+    <div class="modal-header">
+        <h4>新增主菜单项</h4>
+    </div>
+    <div class="modal-body">
+        <form name="sportProgramViewAddForm" class="sportProgramViewAddForm" ng-submit="save()">
+            <section class="row">
+                <div class="form-group col-md-12">
+                    <label class="col-md-1 text-right control-label">权限类型：</label>
+                    <div class="col-md-11">
+                            <input type="text" value="主菜单项" disabled="disabled" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <label class="col-md-1 text-right control-label">菜单名称：</label>
+                    <div class="col-md-11">
+                        <input type="text" class="form-control" ng-model="data.name" required maxlength="20"
+                               placeholder="请输入菜单名" value="">
+                    </div>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-1 text-right control-label">序号：</label>
+                    <div class="col-md-11">
+                        <input type="number" class="form-control" ng-model="data.orderNum" min="0" max="99"
+                               placeholder="请输入序号" value="">
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <label class="col-md-1 text-right control-label" >是否显示</label>
+                    <div class="col-md-9 memberAdd">
+                        <input type="checkbox" ng-model="data.showMenu">
+                    </div>
+                </div>
+                <!--<div class="form-group col-md-12">-->
+                    <!--<label class="col-md-1 text-right control-label">序号：</label>-->
+                    <!--<div class="col-md-11">-->
+                        <!--<input type="checkbox">-->
+                    <!--</div>-->
+                <!--</div>-->
+
+            </section>
+            <div class="modal-footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn withripple btn-raised btn-primary" type="submit">确定
+                                <!--ng-disabled="!sportProgramViewAddForm.$valid"-->
+                            </button>
+                            <button class="btn withripple btn-raised btn-warning" type="button" ng-click="close()">取消
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    </div>
+</script>
+
+
+<!--蒙版-弹窗1-新增权限-->
+<script type="text/ng-template" id="mainResourceEdit.html">
+    <div class="modal-header">
+        <h4>编辑主菜单项</h4>
+    </div>
+    <div class="modal-body">
+        <form name="sportProgramViewAddForm" class="sportProgramViewAddForm" ng-submit="save()">
+            <section class="row">
+                <div class="form-group col-md-12">
+                    <label class="col-md-1 text-right control-label">权限类型：</label>
+                    <div class="col-md-11">
+                        <input type="text" value="主菜单项" disabled="disabled" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <label class="col-md-1 text-right control-label">菜单名称：</label>
+                    <div class="col-md-11">
+                        <input type="text" class="form-control" ng-model="data.name" required maxlength="20"
+                               placeholder="请输入菜单名" value="">
+                    </div>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-1 text-right control-label">序号：</label>
+                    <div class="col-md-11">
+                        <input type="number" class="form-control" ng-model="data.orderNum" min="0" max="99"
+                               placeholder="请输入序号" value="">
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <label class="col-md-1 text-right control-label" >是否显示</label>
+                    <div class="col-md-9 memberAdd">
+                        <input type="checkbox" ng-model="data.showMenu">
+                    </div>
+                </div>
+
+            </section>
+            <div class="modal-footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn withripple btn-raised btn-primary" type="submit">确定
+                                <!--ng-disabled="!sportProgramViewAddForm.$valid"-->
+                            </button>
+                            <button class="btn withripple btn-raised btn-warning" type="button" ng-click="close()">取消
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    </div>
+</script>
+
+    <!--蒙版-弹窗1-新增权限-->
+    <script type="text/ng-template" id="ResourceAdd.html">
+        <div class="modal-header">
+            <h4>新增菜单项</h4>
+        </div>
+        <!--{{item}}-->
+        <div class="modal-body">
+            <form name="sportProgramViewAddForm" class="sportProgramViewAddForm" ng-submit="save()">
+                <section class="row">
+                    <div class="form-group col-md-12">
+                        <label class="col-md-1 text-right control-label">菜单名称：</label>
+                        <div class="col-md-11">
+                            <input type="text" class="form-control" ng-model="data.parentName" required maxlength="20"
+                                   placeholder="请输入菜单名">
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label class="col-md-1 text-right control-label">权限类型：</label>
+                        <div  class="col-md-11">
+                            <ui-select ng-model="selected.type" theme="bootstrap" on-select="getType($item)" ng-disabled="false">
+                                <ui-select-match>
+                                     <span ng-bind="$select.selected.name">
+                                     </span>
+                                </ui-select-match>
+                                <ui-select-choices
+                                        repeat="item in (itemArray | filter:$select.search) track by item.id">
+                                       <span ng-bind="item.name">
+                                       </span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label class="col-md-1 text-right control-label">节点名称：</label>
+                        <div class="col-md-11">
+                            <input type="text" class="form-control" ng-model="data.name" required maxlength="20"
+                                   placeholder="请输入节点名称">
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label class="col-md-1 text-right control-label">序号：</label>
+                        <div class="col-md-11">
+                            <input type="number" class="form-control" ng-model="data.orderNum" min="0" max="99"
+                                   placeholder="请输入序号" value="">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12" ng-if="showUrl">
+                        <label class="col-md-1 text-right control-label">URL：</label>
+                        <div class="col-md-11">
+                            <input type="text" class="form-control" ng-model="data.url" required maxlength="20"
+                                   placeholder="请输入url">
+                        </div>
+                    </div>
+                    <!--<div class="form-group col-md-12">-->
+                    <!--<label class="col-md-1 text-right control-label">序号：</label>-->
+                    <!--<div class="col-md-11">-->
+                    <!--<input type="checkbox">-->
+                    <!--</div>-->
+                    <!--</div>-->
+
+                </section>
+                <div class="modal-footer">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button class="btn withripple btn-raised btn-primary" type="submit">确定
+                                    <!--ng-disabled="!sportProgramViewAddForm.$valid"-->
+                                </button>
+                                <button class="btn withripple btn-raised btn-warning" type="button" ng-click="close()">取消
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        </div>
+
+</script>
+
+
+<!--蒙版-弹窗1-新增权限-->
+<script type="text/ng-template" id="ResourceEdit.html">
+    <div class="modal-header">
+        <h4>编辑菜单项</h4>
+    </div>
+    <!--{{item}}-->
+    <div class="modal-body">
+        <form name="sportProgramViewAddForm" class="sportProgramViewAddForm" ng-submit="save()">
+            <section class="row">
+                <div class="form-group col-md-12">
+                    <label class="col-md-1 text-right control-label">菜单名称：</label>
+                    <div class="col-md-11">
+                        <input type="text" class="form-control" ng-model="data.parentName" required maxlength="20"
+                               placeholder="请输入菜单名">
+                    </div>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-1 text-right control-label">权限类型：</label>
+                    <div  class="col-md-11">
+                        <input type="text" class="form-control" ng-model="data.typeName" disabled="disabled"
+                               placeholder="">
+                    </div>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-1 text-right control-label">节点名称：</label>
+                    <div class="col-md-11">
+                        <input type="text" class="form-control" ng-model="data.name" required maxlength="20"
+                               placeholder="请输入节点名称">
+                    </div>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-1 text-right control-label">序号：</label>
+                    <div class="col-md-11">
+                        <input type="number" class="form-control" ng-model="data.orderNum" min="0" max="99"
+                               placeholder="请输入序号" value="">
+                    </div>
+                </div>
+                <div class="form-group col-md-12" ng-if="showUrl">
+                    <label class="col-md-1 text-right control-label">URL：</label>
+                    <div class="col-md-11">
+                        <input type="text" class="form-control" ng-model="data.url" required maxlength="20"
+                               placeholder="请输入url">
+                    </div>
+                </div>
+                <!--<div class="form-group col-md-12">-->
+                <!--<label class="col-md-1 text-right control-label">序号：</label>-->
+                <!--<div class="col-md-11">-->
+                <!--<input type="checkbox">-->
+                <!--</div>-->
+                <!--</div>-->
+
+            </section>
+            <div class="modal-footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn withripple btn-raised btn-primary" type="submit">确定
+                                <!--ng-disabled="!sportProgramViewAddForm.$valid"-->
+                            </button>
+                            <button class="btn withripple btn-raised btn-warning" type="button" ng-click="close()">取消
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    </div>
+
+</script>

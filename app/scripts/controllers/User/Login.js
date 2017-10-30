@@ -19,7 +19,7 @@ App.controller('UserLoginController', ['$scope', '$rootScope', '$state', 'AuthSe
                 toastr.error(res.msg);
                 return;
             }
-            if (res.data.account) {
+            if (res.data.username) {
                 msgBus.emitMsg("login");
 
                 $state.go('dashboard');

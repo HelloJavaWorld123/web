@@ -126,7 +126,7 @@
 
 
                                             <div class="row">
-                                                <div class="col-md-9">
+                                                <div class="col-md-8">
                                                     <select class="page-size" ng-model="PageSize" ng-change="pageChanged()">
                                                         <option value="20" ng-selected="true">每页显示20条</option>
                                                         <option value="40">每页显示40条</option>
@@ -139,6 +139,7 @@
                                                                     boundary-link-numbers="true" rotate="false" previous-text="上一页"
                                                                     next-text="下一页"></uib-pagination>
                                                 </div>
+                                                <div class="col-md-1"><span class="totalTxt">总计：{{cashPledgeDataCount==null?"--":cashPledgeDataCount }} 条</span></div>
                                                 <div class="col-md-3 text-right">
                                                     <span>跳转到</span>
                                                     <input type="text" onafterpaste="this.value=this.value.replace(/\D/g,'')"
@@ -415,7 +416,7 @@
 
 
                                             <div class="row">
-                                                <div class="col-md-9">
+                                                <div class="col-md-8">
                                                     <select class="page-size" ng-model="PageSize" ng-change="pageChanged()">
                                                         <option value="20" ng-selected="true">每页显示20条</option>
                                                         <option value="40">每页显示40条</option>
@@ -428,6 +429,7 @@
                                                                     boundary-link-numbers="true" rotate="false" previous-text="上一页"
                                                                     next-text="下一页"></uib-pagination>
                                                 </div>
+                                                <div class="col-md-1"><span class="totalTxt">总计：{{cashPledgeDataCount==null?"--":cashPledgeDataCount }} 条</span></div>
                                                 <div class="col-md-3 text-right">
                                                     <span>跳转到</span>
                                                     <input type="text" onafterpaste="this.value=this.value.replace(/\D/g,'')"

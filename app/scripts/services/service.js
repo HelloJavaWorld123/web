@@ -70,7 +70,7 @@ angular.module("AdminService", [])
                 .post($rootScope.api.login, credentials)
                 .then(function(res) {
                     if (res.data.code == 2000) {
-                        Session.create(res.data.data.account, res.data.data.accessToken);
+                        Session.create(res.data.data.username, res.data.data.accessToken);
                     }
                     else{
                         toastr.error(res.data.msg);
@@ -81,7 +81,7 @@ angular.module("AdminService", [])
 
         authService.isAuthenticated = function() {
             //是否登录，返回true或者false
-            return !!Session.$storage.account;
+            return !!Session.$storage.username;
         };
 
         authService.isAuthorized = function(nextRoute) {
@@ -98,14 +98,14 @@ angular.module("AdminService", [])
     }])
     .service('Session', ['$sessionStorage', function($sessionStorage) {
         this.$storage = $sessionStorage;
-        this.create = function(account, accessToken, refuseRoute) {
-            this.$storage.account = account;
+        this.create = function(username, accessToken, refuseRoute) {
+            this.$storage.username = username;
             this.$storage.accessToken = accessToken;
             this.$storage.refuseRoute = refuseRoute;
 
         };
         this.destroy = function() {
-            delete this.$storage.account;
+            delete this.$storage.username;
             delete this.$storage.accessToken;
             delete this.$storage.refuseRoute;
         };
@@ -277,8 +277,8 @@ angular.module("AdminService", [])
         var authService = {};
         authService.login = function(credentials) {
     /*        var param={
-                account:credentials.account,
-                passWord:credentials.passWord,
+                username:credentials.username,
+                password:credentials.password,
                 model:"1"
             };*/
             //登录，成功后返回用户名
@@ -289,14 +289,14 @@ console.log(param);
                 .then(function(res) {
                     console.log("login", res.data);
                     if (res.data.code == 2000) {
-                        Session.create(res.data.account, res.data.data);
+                        Session.create(res.data.username, res.data.data);
                     }
                     return res.data;
                 });
         };
         authService.isAuthenticated = function() {
             //是否登录，返回true或者false
-            return !!Session.$storage.account;
+            return !!Session.$storage.username;
         };
 
         authService.isAuthorized = function(nextRoute) {

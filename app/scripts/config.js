@@ -267,6 +267,8 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
         mainIncomeList: $rootScope.BASEURL + "api/devMgmt/income/list",
         mainIncomeExcel: $rootScope.BASEURL + "api/devMgmt/income/exportExcel",
         getDicGymList: $rootScope.BASEURL + "api/deposit/gym/info",
+        getIncomeList:$rootScope.BASEURL+"api/devMgmt/income/list",
+        getMoneyList:$rootScope.BASEURL+"api/devMgmt/withDrawRecord/user/list",
 
         //分成方后台提现记录
         withDrawRecordList: $rootScope.BASEURL + "api/devMgmt/withDrawRecord/user/list",
@@ -288,6 +290,10 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
         shareCountAmount: $rootScope.BASEURL + "api/devMgmt/income/statistics/totalAmount",
 
         resourceList: $rootScope.BASEURL + "api/auth/resource/list",
+        resourceAdd: $rootScope.BASEURL + "api/auth/resource/add",
+        getResource: $rootScope.BASEURL + "api/auth/resource/id",
+        resourceEdit: $rootScope.BASEURL + "api/auth/resource/update",
+        resourceDel: $rootScope.BASEURL + "api/auth/resource/del",
 
 
 

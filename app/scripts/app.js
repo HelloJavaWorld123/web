@@ -70,6 +70,20 @@ App.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
             controller: function ($rootScope) {
             }
         })
+        //收入明细
+        .state('incomeList', {
+            url: '/Saas/incomeList',
+            templateUrl: 'app/views/Saas/incomeList.html',
+            controller: function ($rootScope) {
+            }
+        })
+        //提现明细
+        .state('getMoneyList', {
+            url: '/Saas/getMoneyList',
+            templateUrl: 'app/views/Saas/getMoneyList.html',
+            controller: function ($rootScope) {
+            }
+        })
         //用户信息
         .state('userInfo', {
             url: '/Saas/userInfo',
