@@ -135,8 +135,6 @@
             <button type="submit" class="btn btn-raised btn-primary">导出</button>
         </div>
     </form>
-
-
     <!--下部-查询列表-->
     <section class="row conPanelLeft">
         <div class="orderInfoWrapper  col-lg-12">
@@ -154,6 +152,7 @@
                             <th>实际支付金额</th>
                             <th>订单时间</th>
                             <th>付款方式</th>
+                            <th>猫号</th>
 
                             <!--<th>场馆类型</th>
                             <th>总公司分成</th>
@@ -161,7 +160,7 @@
                             <th>私教分成</th>
                             <th>场地分成</th>-->
 
-                            <th>猫号</th>
+
                             <th>用户手机号</th>
                             <th>场馆名称</th>
                             <th>设备类型</th>
@@ -179,6 +178,7 @@
                             <td>{{item.actualPay==null?"--":item.actualPay | number:2}}</td>
                             <td>{{item.orderTime==null?"--":item.orderTime| date:'yyyy-MM-dd HH:mm:ss'}}</td>
                             <td>{{item.payType==null?"--":item.payType}}</td>
+                            <td>{{item.mallId==null?"--":item.mallId}}</td>
 
                             <!--<td>{{item.gymType==null?"&#45;&#45;":item.gymType}}</td>
                             <td>{{item.sharing1Amount==null?"&#45;&#45;":item.sharing1Amount | number:3}}</td>
@@ -186,11 +186,10 @@
                             <td>{{item.sharing3Amount==null?"&#45;&#45;":item.sharing3Amount | number:3}}</td>
                             <td>{{item.sharing4Amount==null?"&#45;&#45;":item.sharing4Amount | number:3}}</td>-->
 
-                            <td>{{item.mallId==null?"--":item.mallId}}</td>
+
                             <td>{{item.mobile==null?"--":item.mobile}}</td>
                             <td>{{item.gymName==null?"--":item.gymName}}</td>
                             <td>{{item.productName==null?"--":item.productName}}</td>
-
                             <td>{{item.deviceNum==null?"--":item.deviceNum}}</td>
                         </tr>
                         </tbody>
@@ -229,6 +228,5 @@
         </div>
 
     </section>
-
 </article>
 

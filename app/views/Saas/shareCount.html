@@ -7,11 +7,22 @@
                 <section class="row">
 
                     <div class="form-group col-md-3">
-                        <label class="col-md-3 text-right control-label" >主体名称：</label>
+                        <label class="col-md-4 text-right control-label" >主体名称：</label>
                         <div class="col-md-8">
-                            <input type="text" class="form-control" ng-model="data.subjectId"  maxlength="20" name="subjectId">
+                            <ui-select ng-model="data.subjectId" theme="bootstrap" on-select="getMemberTypeData($item)">
+                                <ui-select-match allow-clear="true" placeholder="点击选择">{{$select.selected.subjectName}}</ui-select-match>
+
+
+                                <ui-select-choices
+                                        repeat="item.id as item in memberTypeData | orderBy:'id' | filter: $select.search.subjectName">
+                                    <span ng-bind-html="item.subjectName | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
                         </div>
                     </div>
+
+                    <input type="hidden"  value="{{data.subjectId}}" name="subjectId">
+
 
 
                     <div class="form-group col-md-3">

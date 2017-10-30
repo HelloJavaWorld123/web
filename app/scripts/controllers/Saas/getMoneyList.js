@@ -2,7 +2,8 @@
  * Created by haoxb on 2017/6/23.
  */
 'use strict';
-App.controller('getMoneyListController', ['$scope', '$stateParams', '$rootScope', '$http', 'ngProgressFactory', '$uibModal', 'toastr', function ($scope, $stateParams, $rootScope, $http, ngProgressFactory, $uibModal, toastr) {
+/*提现记录*/
+App.controller('getMoneyListController', ['$scope','Session', '$stateParams', '$rootScope', '$http', 'ngProgressFactory', '$uibModal', 'toastr', function ($scope,Session, $stateParams, $rootScope, $http, ngProgressFactory, $uibModal, toastr) {
     $scope.data = {};
     //分页
     $scope.PageIndex = $rootScope.PAGINATION_CONFIG.PAGEINDEX;
@@ -21,9 +22,10 @@ App.controller('getMoneyListController', ['$scope', '$stateParams', '$rootScope'
         $scope.query();
     };
 
-    //查询运动方案
+    //查询
     $rootScope.query = function () {
         var params = {
+            "useid": Session.$storage.accessToken,
             "page": parseInt($scope.PageIndex) - 1,
             "count": parseInt($scope.PageSize),
         };
