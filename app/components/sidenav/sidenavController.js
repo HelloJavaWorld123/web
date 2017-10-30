@@ -11,6 +11,7 @@ App.controller('SideNavController', function ($scope, Session, msgBus, restful, 
     $scope.init = function () {
         $scope.refuseRoute = Session.$storage.refuseRoute;
         $scope.account = Session.$storage.account;
+        $rootScope.userType = Session.$storage.userType;
         // $scope.sideNavPromise = restful.fetch($rootScope.api.getSideNav, "POST").then(function (res) {
         //     if(res.code == 2000 && res.data){
         //         $scope.sideNavList = res.data;

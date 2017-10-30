@@ -70,7 +70,12 @@ angular.module("AdminService", [])
                 .post($rootScope.api.login, credentials)
                 .then(function (res) {
                     if (res.data.code == 2000) {
-                        Session.create(res.data.data.username, res.data.data.accessToken, res.data.data.id);
+                        debugger
+                        $rootScope.userType = res.data.data.userType;
+
+                        var obj = {username:res.data.data.username,accessToken:res.data.data.accessToken,id:res.data.data.id,userType:$rootScope.userType}
+                        Session.create(obj);
+
                     }
                     else {
                         toastr.error(res.data.msg);
@@ -98,11 +103,12 @@ angular.module("AdminService", [])
     }])
     .service('Session', ['$sessionStorage', function ($sessionStorage) {
         this.$storage = $sessionStorage;
-        this.create = function (username, id, accessToken, refuseRoute) {
-            this.$storage.username = username;
-            this.$storage.id = id;
-            this.$storage.accessToken = accessToken;
-            this.$storage.refuseRoute = refuseRoute;
+        this.create = function (obj) {
+            this.$storage.username = obj.username;
+            this.$storage.id = obj.id;
+            this.$storage.accessToken = obj.accessToken;
+            this.$storage.refuseRoute = obj.refuseRoute;
+            this.$storage.userType = obj.userType;
 
         };
         this.destroy = function () {
@@ -110,6 +116,7 @@ angular.module("AdminService", [])
             delete this.$storage.id;
             delete this.$storage.accessToken;
             delete this.$storage.refuseRoute;
+            delete this.$storage.userType;
         };
         return this;
     }])
