@@ -437,7 +437,7 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
         };
         console.log("编辑场馆要丢给后台的字段");
         console.log(params);
-        restful.fetch($rootScope.api.EditGym, "POST", params).then(function (res) {
+        $scope.savePromise=restful.fetch($rootScope.api.EditGym, "POST", params).then(function (res) {
             if (res.code == 2000) {
                 toastr.success("编辑成功");
                 console.log("编辑场馆后台返回：");
@@ -672,7 +672,7 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
             "roleRelList": $scope.ShareRoles,//有些字段是自己添加此对象。
         };
         console.log(params, "添加场馆要丢给后台的字段:");
-        restful.fetch($rootScope.api.addGym, "POST", params).then(function (res) {
+        $scope.savePromise=restful.fetch($rootScope.api.addGym, "POST", params).then(function (res) {
             if (res.code == 2000) {
                 toastr.success("添加成功");
                 console.log(res);
