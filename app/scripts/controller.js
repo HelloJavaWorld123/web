@@ -696,7 +696,7 @@ App.controller("editActivityController", ['$scope', '$uibModalInstance', 'restfu
  *权限管理-用户信息模块
  */
 'use strict';
-App.controller("AuthUserController", ['$scope', '$state', '$rootScope', '$http','$uibModal', 'restful', 'ngProgressFactory', 'lifeHouseAreaSelector', 'toastr',function ($scope, $state, $rootScope, $http, $uibModal, restful, ngProgressFactory, lifeHouseAreaSelector, toastr) {
+App.controller("AuthUserController", ['$scope', '$state', '$rootScope', '$http', '$uibModal', 'restful', 'ngProgressFactory', 'lifeHouseAreaSelector', 'toastr', function ($scope, $state, $rootScope, $http, $uibModal, restful, ngProgressFactory, lifeHouseAreaSelector, toastr) {
 
 	$scope.data = {};
 
@@ -712,9 +712,9 @@ App.controller("AuthUserController", ['$scope', '$state', '$rootScope', '$http',
 		}
 	];
 
-	$scope.getUserStatus = function (item){
+	$scope.getUserStatus = function (item) {
 		item = {};
-		$scope.userStatus.id = item.id ;
+		$scope.userStatus.id = item.id;
 	};
 
 	//分页信息
@@ -723,25 +723,25 @@ App.controller("AuthUserController", ['$scope', '$state', '$rootScope', '$http',
 	$scope.maxSize = $rootScope.PAGINATION_CONFIG.MAXSIZE;
 
 	//重置函数
-	$scope.reset = function(){
+	$scope.reset = function () {
 		$scope.data = {};
 		$scope.query();
 	};
 
-	$scope.getUserNameStatus = function(item){
+	$scope.getUserNameStatus = function (item) {
 
 	};
 
 	//设置每页显示的条数
-	$scope.PageChange = function () {
+	$scope.pageChanged = function () {
 		//每次设置完成 显示的条数 都要去调用接口 查询一遍
 		$scope.query();
 	};
 
 
 	//设置跳转的页数
-	$scope.setPage = function (){
-		$scope.PageIndex = $scope.toPageNum > Math.ceil($scope.userDetailCount / $scope.PageSize ) ? Math.ceil($scope.userDatailCount / $scope.PageSize ) : $scope.toPageNum;
+	$scope.setPage = function () {
+		$scope.PageIndex = $scope.toPageNum > Math.ceil($scope.userDetailCount / $scope.PageSize) ? Math.ceil($scope.userDatailCount / $scope.PageSize) : $scope.toPageNum;
 		$scope.query();
 	};
 
@@ -757,7 +757,7 @@ App.controller("AuthUserController", ['$scope', '$state', '$rootScope', '$http',
 			$rootScope.api.authUserStatus, "POST", param
 		).then(function (res) {
 			if (res.code == 2000) {
-				toastr.success("切换状态成功", res.msg);
+				toastr.success("账号切换状态成功", res.msg);
 				$scope.query();
 			} else {
 				toastr.error("切换状态失败", res.msg);
@@ -768,9 +768,9 @@ App.controller("AuthUserController", ['$scope', '$state', '$rootScope', '$http',
 	};
 
 	//定义一个query的查询 用于调用后台的接口 进行查询
-	$scope.query = function (){
+	$scope.query = function () {
 		var params = {
-			"page": parseInt($scope.PageIndex)-1,
+			"page": parseInt($scope.PageIndex) - 1,
 			"count": parseInt($scope.PageSize),
 			"username": $scope.data.username,
 			"name": $scope.data.name,
@@ -784,40 +784,40 @@ App.controller("AuthUserController", ['$scope', '$state', '$rootScope', '$http',
 				'Content-Type': 'application/json',
 			},
 			data: params,
-		}).then(function (res){
+		}).then(function (res) {
 			$scope.authUserListData = res.data.data;
 			$scope.totalCount = res.data.page_info.total;
-			$scope.toPageNum = $scope.PageIndex ;
+			$scope.toPageNum = $scope.PageIndex;
 		});
 	};
 	$scope.query();
 
 	//编辑按钮
-	$scope.authUserEdit = function(data){
-		var item ;
+	$scope.authUserEdit = function (data) {
+		var item;
 		var modalInstance = $uibModal.open({
 			templateUrl: 'authUserViewEdit.html',
 			controller: 'AuthUserEditController',
 			size: 'md',
 			resolve: {
-				item: function(){
+				item: function () {
 					return data;
 				}
 			}
 		});
 		modalInstance.result.then(function () {
-				$scope.query();
-			}, function () {
-				$scope.query();
-			})
+			$scope.query();
+		}, function () {
+			$scope.query();
+		})
 	};
 
 	/*新增按钮 跳转页面*/
-	$scope.addAuthUser = function(data){
-		var item ;
+	$scope.addAuthUser = function (data) {
+		var item;
 		var modalInstance = $uibModal.open({
-			templateUrl: 'conAddView.html',
-			controler: 'conAddView',
+			templateUrl: 'authUserViewAdd.html',
+			controller: 'authUserAddController',
 			size: 'md',
 			resolve: {
 				item: function () {
@@ -825,10 +825,10 @@ App.controller("AuthUserController", ['$scope', '$state', '$rootScope', '$http',
 				}
 			}
 		})
-		modalInstance.result.then(function(){
+		modalInstance.result.then(function () {
 			//close
 			$scope.query();
-		},function(){
+		}, function () {
 			//dismissed
 			$scope.query();
 		})
@@ -836,11 +836,11 @@ App.controller("AuthUserController", ['$scope', '$state', '$rootScope', '$http',
 }]);
 
 /*
------------------------
-用户编辑弹窗
-------------------------
-*/
-App.controller('AuthUserEditController',['$scope','$uibModalInstance', 'restful', '$state', '$rootScope', '$uibModal','toastr',  'lifeHouseAreaSelector','item',function ($scope,$uibModalInstance, restful, $state, $rootScope, $uibModal,toastr, lifeHouseAreaSelector,item ){
+ -----------------------
+ 用户编辑弹窗
+ ------------------------
+ */
+App.controller('AuthUserEditController', ['$scope', '$uibModalInstance', 'restful', '$state', '$rootScope', '$uibModal', 'toastr', 'lifeHouseAreaSelector', 'item', function ($scope, $uibModalInstance, restful, $state, $rootScope, $uibModal, toastr, lifeHouseAreaSelector, item) {
 	$scope.data = {};
 
 	//根据Id查询关于用户的详细信息
@@ -850,19 +850,22 @@ App.controller('AuthUserEditController',['$scope','$uibModalInstance', 'restful'
 
 	/*获取用户详情*/
 	restful.fetch(
-		$rootScope.api.authUserInfo,"POST",params
+		$rootScope.api.authUserInfo, "POST", params
 	).then(
-		function(res){
-			if(res.code == 2000){
-				for(var key in res.data){
+		function (res) {
+			if (res.code == 2000) {
+				for (var key in res.data) {
 					$scope.data[key] = res.data[key];
 				}
+				$scope.data.roleIds == null ? null : $scope.roleIds = $scope.data.roleIds.split(",");
 
-			}else{
+				$scope.data.roleNameStr == null ? null : $scope.roleNameStr = $scope.data.roleNameStr.split(",");
+
+			} else {
 				toastr.error(res.msg);
 			}
 
-		},function(rej){
+		}, function (rej) {
 			console.info(rej);
 		});
 
@@ -870,7 +873,6 @@ App.controller('AuthUserEditController',['$scope','$uibModalInstance', 'restful'
 	$scope.close = function () {
 		$uibModalInstance.dismiss('close');
 	};
-
 
 
 	/*编辑保存*/
@@ -889,7 +891,6 @@ App.controller('AuthUserEditController',['$scope','$uibModalInstance', 'restful'
 				toastr.success("更新成功");
 				console.log(res);
 				$uibModalInstance.dismiss('close');
-				$scope.query();
 			} else {
 				toastr.info(res.msg);
 			}
@@ -904,37 +905,36 @@ App.controller('AuthUserEditController',['$scope','$uibModalInstance', 'restful'
 
 	/*选择角色*/
 	lifeHouseAreaSelector.getRoles().then(function (roles) {
-		$scope.data.id  = "";
+		$scope.data.id = "";
 		$scope.roles = roles;
 	});
 
 
-
 	$scope.roleIds = [];
 	$scope.roleNameStr = [];
-	$scope.chooseRole = function(){
+	$scope.chooseRole = function () {
 		var isCanPush = true;
-		for(var i= 0;i<$scope.roleIds.length;i++){
-			if($scope.roleIds[i] == $scope.data.id){
+		for (var i = 0; i < $scope.roleIds.length; i++) {
+			if ($scope.roleIds[i] == $scope.data.id) {
 				isCanPush = false;
 			}
 		}
-		if(isCanPush){
+		if (isCanPush) {
 			$scope.roleIds.push($scope.data.id);
-			for(var j= 0;j<$scope.roles.length;j++){
-				if($scope.roles[j].id == $scope.data.id){
+			for (var j = 0; j < $scope.roles.length; j++) {
+				if ($scope.roles[j].id == $scope.data.id) {
 					$scope.name = $scope.roles[j].name
 
 				}
 			}
 			$scope.roleNameStr.push($scope.name);
 			/*console.log($scope.roleIds.join(','));
-			console.log($scope.roleNameStr.join(','));*/
+			 console.log($scope.roleNameStr.join(','));*/
 		}
 	}
-	$scope.delRole = function(index){
-		$scope.roleIds.splice(index,1);
-		$scope.roleNameStr.splice(index,1);
+	$scope.delRole = function (index) {
+		$scope.roleIds.splice(index, 1);
+		$scope.roleNameStr.splice(index, 1);
 		/*console.log($scope.roleNameStr);*/
 	}
 
@@ -944,14 +944,11 @@ App.controller('AuthUserEditController',['$scope','$uibModalInstance', 'restful'
  ----------------------------------
  新增窗口
  ----------------------------------
-*/
-App.controller('authUserAddController',['$scope','$uibModalInstance', 'restful', '$rootScope', '$uibModal','toastr','item',function ($scope,$uibModalInstance,restful, $rootScope, $uibModal,toastr,item){
-	debugger;
+ */
+App.controller('authUserAddController', ['$scope', '$uibModalInstance', 'lifeHouseAreaSelector', 'restful', '$rootScope', '$uibModal', 'toastr', function ($scope, $uibModalInstance, lifeHouseAreaSelector, restful, $rootScope, $uibModal, toastr) {
 	$scope.data = {};
-
 	/*保存*/
 	$scope.addUser = function () {
-debugger;
 		var params = {
 			"name": $scope.data.name,
 			"password": $scope.data.password,
@@ -966,7 +963,6 @@ debugger;
 				toastr.success("添加成功");
 				console.log(res);
 				$uibModalInstance.dismiss('close');
-				$scope.query();
 			} else {
 				toastr.error(res.msg);
 			}
@@ -979,7 +975,6 @@ debugger;
 	};
 
 
-
 	/*选择角色*/
 	lifeHouseAreaSelector.getRoles().then(function (roles) {
 		$scope.data.id = "";
@@ -990,36 +985,37 @@ debugger;
 	$scope.roleIds = [];
 	$scope.roleNameStr = [];
 
-	$scope.chooseRole = function(){
+	$scope.chooseRole = function () {
 		var isCanPush = true;
-		for(var i= 0;i<$scope.roleIds.length;i++){
-			if($scope.roleIds[i] == $scope.data.id){
+		for (var i = 0; i < $scope.roleIds.length; i++) {
+			if ($scope.roleIds[i] == $scope.data.id) {
 				isCanPush = false;
 			}
 		}
-		if(isCanPush){
+		if (isCanPush) {
 			$scope.roleIds.push($scope.data.id);
-			for(var j= 0;j<$scope.roles.length;j++){
-				if($scope.roles[j].id == $scope.data.id){
+			for (var j = 0; j < $scope.roles.length; j++) {
+				if ($scope.roles[j].id == $scope.data.id) {
 					$scope.name = $scope.roles[j].name
 
 				}
 			}
 			$scope.roleNameStr.push($scope.name);
-			/*console.log($scope.roleIds.join(','));
-			console.log($scope.roleNameStr.join(','));*/
+			console.log($scope.roleIds.join(','));
+			console.log($scope.roleNameStr.join(','));
 		}
 	};
-	$scope.delRole = function(index){
-		$scope.roleIds.splice(index,1);
-		$scope.roleNameStr.splice(index,1);
-		/*console.log($scope.roleNameStr);*/
+	$scope.delRole = function (index) {
+		$scope.roleIds.splice(index, 1);
+		$scope.roleNameStr.splice(index, 1);
+		console.log($scope.roleNameStr);
 	}
 
 }]);
-App.controller('conAddView',['$scope','$uibModalInstance', 'restful', '$state', '$rootScope', '$uibModal','toastr',  'lifeHouseAreaSelector','item',function ($scope,$uibModalInstance, restful, $state, $rootScope, $uibModal,toastr, lifeHouseAreaSelector,item){
-	console.log(0)
-}])
+
+
+
+
 /*
  * @Author: haoxb
  * @Date:   2017-6-7 9:01:54

@@ -305,6 +305,13 @@ App.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
 
             }
         })
+        .state('forgetpassword',{
+            url: '/Saas/forgetpassword',
+            templateUrl: 'app/views/Saas/forgetpassword.html',
+            controller: function($rootScope){
+
+            }
+        })
 }]);
 
 //promise 按钮

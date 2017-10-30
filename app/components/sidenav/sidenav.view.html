@@ -169,14 +169,23 @@
                                                                          aria-hidden="true"></i>
         </p>
             <p>场馆软件升级管理</p></a></li>-->
-        <li>
-            <a href="#/Saas/authuser" class="list-tree">
+        <li ng-class="{true:'active'}['#/Saas/authuser'==UrlHash]">
+            <a class=" list-tree" ng-href="#/Saas/authuser">
                 <p>
                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                 </p>
                 <p>账号管理</p>
             </a>
         </li>
+        <li ng-class="{true:'active'}['#/Saas/authuser'==UrlHash]">
+            <a class=" list-tree" ng-href="#/Saas/forgetpassword">
+                <p>
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                </p>
+                <p>忘记密码</p>
+            </a>
+        </li>
+
     </ul>
     </li>
 </ul>
