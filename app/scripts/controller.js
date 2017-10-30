@@ -2913,6 +2913,8 @@ App.controller('doVerifyAccountMoneyController', ['$scope', 'item', 'Session', '
         }).then(function (res) {
             if (res.data.code == 2000) {
                 $scope.data = res.data.data;
+                toastr.success("校验成功");
+                $uibModalInstance.close();
             } else {
                 toastr.error(res.data.msg);
             }
@@ -3034,9 +3036,19 @@ App.controller('personVerifyController', ['$scope', 'item', 'Session', '$statePa
 
 //提现（code为2时候方可点击，共用）
 App.controller('getDepositController', ['$scope', 'item', 'Session', '$stateParams', '$rootScope', '$http', 'ngProgressFactory', '$uibModal', '$uibModalInstance', 'toastr', function ($scope, item, Session, $stateParams, $rootScope, $http, ngProgressFactory, $uibModal, $uibModalInstance, toastr) {
-    $scope.data = {};
 
-    $scope.save = function () {
+    $scope.data = {};
+    //监听表单输入
+    $scope.data.isTagShow = false;
+    $scope.save = function (val) {
+        //监听表单输入-min
+        if (val < 100) {
+            $scope.data.isTagShow = true;
+            return
+
+        } else {
+            $scope.data.isTagShow = false;
+        }
         console.log(item.id);
         var params = {
             "id": item.id,
@@ -3491,6 +3503,12 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
     //获取主体-支持模糊搜索-编辑-根据主体id反查出主体名字
     $scope.getSubject = function (item) {
         item.listBodyIsShow = true;
+        //用户输入为空的时候下来面板关闭,并且把挂在item上的数据清除
+        if (item.subjectName == "") {
+            item.listBodyIsShow = false;
+            item.subjectName = "";
+            item.subjectId = null;
+        }
         if (!item.subjectName || (item.subjectName && item.subjectName == "")) {
             return false;
         }
@@ -3551,7 +3569,7 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
         };
         console.log("编辑场馆要丢给后台的字段");
         console.log(params);
-        restful.fetch($rootScope.api.EditGym, "POST", params).then(function (res) {
+        $scope.savePromise=restful.fetch($rootScope.api.EditGym, "POST", params).then(function (res) {
             if (res.code == 2000) {
                 toastr.success("编辑成功");
                 console.log("编辑场馆后台返回：");
@@ -3721,7 +3739,16 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
     }
     //获取主体-支持模糊搜索
     $scope.getSubject = function (item) {
+        console.log(item.subjectName);
         item.listBodyIsShow = true;
+
+        //用户输入为空的时候下来面板关闭,并且把挂在item上的数据清除
+        if (item.subjectName == "") {
+            item.listBodyIsShow = false;
+            item.subjectName = "";
+            item.subjectId = null;
+        }
+
         if (!item.subjectName || (item.subjectName && item.subjectName == "")) {
             return false;
         }
@@ -3777,7 +3804,7 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
             "roleRelList": $scope.ShareRoles,//有些字段是自己添加此对象。
         };
         console.log(params, "添加场馆要丢给后台的字段:");
-        restful.fetch($rootScope.api.addGym, "POST", params).then(function (res) {
+        $scope.savePromise=restful.fetch($rootScope.api.addGym, "POST", params).then(function (res) {
             if (res.code == 2000) {
                 toastr.success("添加成功");
                 console.log(res);

@@ -7,7 +7,7 @@
                 <input type="text" class="form-control" ng-model="data.balance" ng-disabled=true>
             </div>
             <div class="col-md-3">
-                <button class="btn btn-raised btn-primary" type="button" ng-click="getDeposit(data)" ng-disabled="data.bankCheckStatus.code!=2">提现</button>
+                <button class="btn btn-raised btn-primary" type="button" ng-click="getDeposit(data)" ng-disabled="data.bankCheckStatus.code!=2" >提现</button>
             </div>
         </div>
         <div class="form-group col-md-12">
@@ -136,7 +136,7 @@
                 <div class="form-group col-md-12">
                     <label class="col-md-3 text-right control-label">打款金额：</label>
                     <div class="col-md-9">
-                        <input type="text" class="form-control" placeholder="请输入对公账户收到的打款金额(0-99.99)"
+                        <input type="text" class="form-control" placeholder="请输入对公账户收到的打款金额(0-100.00)"
                                ng-model="data.amount" name="amount" required
                                money max-number="100.00" maxlength="6">
                     </div>
@@ -235,7 +235,8 @@
                     <div class="col-md-9">
                         <input type="text" class="form-control" placeholder="手续费为提现金额的1%，当手续费不足2元时，按2元算。"
                                ng-model="data.depositMongy" name="depositMongy" required
-                               money max-number="49999.00" min-number="100.00"  maxlength="8"><!--codeR min-number-->
+                               money max-number="49999.00" min-number="100.00"  maxlength="8" ><!--codeR min-number-->
+                        <span ng-show="data.isTagShow" style="color:red">输入大于100的金额</span>
                     </div>
                 </div>
             </section>
@@ -245,7 +246,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <button class="btn withripple btn-raised btn-primary" type="button" ng-click="save()"
+                    <button class="btn withripple btn-raised btn-primary" type="button" ng-click="save(data.depositMongy)"
                             ng-disabled="!getDepositForm.$valid">确定
                     </button>
                     <button class="btn withripple btn-raised btn-warning" type="button" ng-click="close()">取消</button>

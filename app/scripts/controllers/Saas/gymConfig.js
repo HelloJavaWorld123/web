@@ -371,6 +371,12 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
     //获取主体-支持模糊搜索-编辑-根据主体id反查出主体名字
     $scope.getSubject = function (item) {
         item.listBodyIsShow = true;
+        //用户输入为空的时候下来面板关闭,并且把挂在item上的数据清除
+        if (item.subjectName == "") {
+            item.listBodyIsShow = false;
+            item.subjectName = "";
+            item.subjectId = null;
+        }
         if (!item.subjectName || (item.subjectName && item.subjectName == "")) {
             return false;
         }
@@ -431,7 +437,7 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
         };
         console.log("编辑场馆要丢给后台的字段");
         console.log(params);
-        restful.fetch($rootScope.api.EditGym, "POST", params).then(function (res) {
+        $scope.savePromise=restful.fetch($rootScope.api.EditGym, "POST", params).then(function (res) {
             if (res.code == 2000) {
                 toastr.success("编辑成功");
                 console.log("编辑场馆后台返回：");
@@ -601,7 +607,16 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
     }
     //获取主体-支持模糊搜索
     $scope.getSubject = function (item) {
+        console.log(item.subjectName);
         item.listBodyIsShow = true;
+
+        //用户输入为空的时候下来面板关闭,并且把挂在item上的数据清除
+        if (item.subjectName == "") {
+            item.listBodyIsShow = false;
+            item.subjectName = "";
+            item.subjectId = null;
+        }
+
         if (!item.subjectName || (item.subjectName && item.subjectName == "")) {
             return false;
         }
@@ -657,7 +672,7 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
             "roleRelList": $scope.ShareRoles,//有些字段是自己添加此对象。
         };
         console.log(params, "添加场馆要丢给后台的字段:");
-        restful.fetch($rootScope.api.addGym, "POST", params).then(function (res) {
+        $scope.savePromise=restful.fetch($rootScope.api.addGym, "POST", params).then(function (res) {
             if (res.code == 2000) {
                 toastr.success("添加成功");
                 console.log(res);
