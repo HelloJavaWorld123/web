@@ -294,12 +294,11 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
         authUserInfo: $rootScope.BASEURL + "/api/auth/user/id",
         authUserUpdate: $rootScope.BASEURL + "/api/auth/user/update",
         authUserAdd: $rootScope.BASEURL + "/api/auth/user/add",
+        authUserStatus: $rootScope.BASEURL + "/api/auth/user/status",
 
-        //角色管理
+        //角色列表
         authRoleList: $rootScope.BASEURL + "/api/auth/role/list",
-        authRoleAdd: $rootScope.BASEURL + "/api/auth/role/add",
-        authRoleUpdate: $rootScope.BASEURL + "/api/auth/role/update",
-        authRoleInfo: $rootScope.BASEURL + "/api/auth/role/id"
+
 
 
 

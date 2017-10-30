@@ -203,6 +203,12 @@ angular.module("AdminService", [])
                 return $http({ url: $rootScope.api.getNoDeliveryLifeHoustList, method: "POST", data:params}).then(function(response) {
                     return response.data.data;
                 });
+            },
+            getRoles: function() {
+                //获取所有角色
+                return $http({ url: $rootScope.api.authRoleList, method: "post" ,data:{}}).then(function(response) {
+                    return response.data.data;
+                });
             }
         };
         return selector;

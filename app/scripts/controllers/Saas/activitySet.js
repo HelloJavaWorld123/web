@@ -215,10 +215,7 @@ App.controller("activityAddController", ['$scope', '$uibModalInstance', 'restful
         }
     };
 
-
-
-
-    //选择城市
+    //选择角色
 
     $scope.cityIdAll = [];
     $scope.cityNameAll = [];
