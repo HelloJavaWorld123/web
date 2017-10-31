@@ -299,9 +299,8 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
         //角色列表
         authRoleList: $rootScope.BASEURL + "/api/auth/role/list",
 
-
-
-
+        //修改密码
+        updatePassword: $rootScope.BASEURL + "/sail/permission/updatePassword"
     };
 }]);
 //全局工具类
