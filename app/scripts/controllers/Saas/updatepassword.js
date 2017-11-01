@@ -7,7 +7,7 @@
 */
 
  'use strict'
-App.controller('forgetPasswordController',['$scope', '$state', '$rootScope', '$http', '$uibModal', 'restful','$location', 'ngProgressFactory', 'toastr', function ($scope, $state, $rootScope, $http, $uibModal, restful,$location, ngProgressFactory, toastr){
+App.controller('updatePasswordController',['$scope', '$state', '$rootScope', '$http', '$uibModal', 'restful','$location', 'ngProgressFactory', 'toastr', function ($scope, $state, $rootScope, $http, $uibModal, restful,$location, ngProgressFactory, toastr){
 
 	var data = {};
 
@@ -22,7 +22,7 @@ App.controller('forgetPasswordController',['$scope', '$state', '$rootScope', '$h
 			$rootScope.api.updatePassword,"POST",params
 		).then(function(res){
 			if(res.code == 2000){
-				toastr.info("修改密码成功",res.msg);
+				toastr.info("修改密码成功,请重新登录",res.msg);
 				$location.path(path);
 			}else{
 				toastr.info("修改密码失败",res.msg);

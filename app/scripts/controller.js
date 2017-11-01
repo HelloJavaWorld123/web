@@ -14,6 +14,40 @@ App.controller('MainController',['$scope', '$state', 'AuthService', function($sc
 }]);
 
 /*
+ * @Author: 唐文雍
+ * @Date:   2016-05-04 17:26:02
+ * @Last Modified by:   snoob
+ * @Last Modified time: 2017-1-4 18:18:35
+ */
+'use strict';
+App.controller('UserLoginController', ['$scope', '$rootScope', '$state', 'AuthService', 'Session', 'msgBus', '$http', 'restful', '$interval', '$cookies', '$location', 'toastr', function($scope, $rootScope, $state, AuthService, Session, msgBus, $http, restful, $interval, $cookies, $location, toastr) {
+    //初始时将之前登录过的信息清空
+    $scope.load = function() {
+        Session.destroy();
+    };
+    $scope.credentials = {};
+    $scope.error = "";
+
+    $scope.login = function(credentials) {
+        $scope.loginPromise = AuthService.login(credentials).then(function(res) {
+            if (res.code == 1) {
+                toastr.error(res.msg);
+                return;
+            }
+            if (res.data.username) {
+                msgBus.emitMsg("login");
+
+                $state.go('dashboard');
+            } else {
+                $scope.error = data.msg || "超时";
+            }
+        });
+    };
+
+
+}]);
+
+/*
  * @Author: haoxb
  * @Date:   2017-6-7 9:01:54
  * @Last Modified by:   高帆
@@ -3037,39 +3071,6 @@ App.controller('dividedConfigController', ['$scope', function ($scope) {
 
 }]);
 
- /*
-* Created By User: RXK
-* Date: 2017/10/30
-* Time: 22:13
-* Version: V1.0
-* Description: 
-*/
-
- 'use strict'
-App.controller('forgetPasswordController',['$scope', '$state', '$rootScope', '$http', '$uibModal', 'restful','$location', 'ngProgressFactory', 'toastr', function ($scope, $state, $rootScope, $http, $uibModal, restful,$location, ngProgressFactory, toastr){
-
-	var data = {};
-
-	//忘记密码
-	$scope.save = function (path){
-
-		var params = {
-			"password": $scope.data.password,
-			"newPassword": $scope.data.new_password
-		};
-		restful.fetch(
-			$rootScope.api.updatePassword,"POST",params
-		).then(function(res){
-			if(res.code == 2000){
-				toastr.info("修改密码成功",res.msg);
-				$location.path(path);
-			}else{
-				toastr.info("修改密码失败",res.msg);
-			}
-		});
-	};
-}]);
- 
 /**
  * Created by haoxb on 2017/6/23.
  */
@@ -7460,6 +7461,39 @@ App.controller("editSwitchController", ['$scope', '$uibModalInstance', 'restful'
     };
 
 }]);
+ /*
+* Created By User: RXK
+* Date: 2017/10/30
+* Time: 22:13
+* Version: V1.0
+* Description: 
+*/
+
+ 'use strict'
+App.controller('updatePasswordController',['$scope', '$state', '$rootScope', '$http', '$uibModal', 'restful','$location', 'ngProgressFactory', 'toastr', function ($scope, $state, $rootScope, $http, $uibModal, restful,$location, ngProgressFactory, toastr){
+
+	var data = {};
+
+	//忘记密码
+	$scope.save = function (path){
+
+		var params = {
+			"password": $scope.data.password,
+			"newPassword": $scope.data.new_password
+		};
+		restful.fetch(
+			$rootScope.api.updatePassword,"POST",params
+		).then(function(res){
+			if(res.code == 2000){
+				toastr.info("修改密码成功,请重新登录",res.msg);
+				$location.path(path);
+			}else{
+				toastr.info("修改密码失败",res.msg);
+			}
+		});
+	};
+}]);
+ 
 /*
  * @Author: haoxb
  * @Date:   2017-6-20 9:01:54
@@ -7874,40 +7908,6 @@ App.controller('withdrawDepositController', ['$scope', '$state', '$rootScope', '
     };
     $scope.query();
 
-
-
-}]);
-
-/*
- * @Author: 唐文雍
- * @Date:   2016-05-04 17:26:02
- * @Last Modified by:   snoob
- * @Last Modified time: 2017-1-4 18:18:35
- */
-'use strict';
-App.controller('UserLoginController', ['$scope', '$rootScope', '$state', 'AuthService', 'Session', 'msgBus', '$http', 'restful', '$interval', '$cookies', '$location', 'toastr', function($scope, $rootScope, $state, AuthService, Session, msgBus, $http, restful, $interval, $cookies, $location, toastr) {
-    //初始时将之前登录过的信息清空
-    $scope.load = function() {
-        Session.destroy();
-    };
-    $scope.credentials = {};
-    $scope.error = "";
-
-    $scope.login = function(credentials) {
-        $scope.loginPromise = AuthService.login(credentials).then(function(res) {
-            if (res.code == 1) {
-                toastr.error(res.msg);
-                return;
-            }
-            if (res.data.username) {
-                msgBus.emitMsg("login");
-
-                $state.go('dashboard');
-            } else {
-                $scope.error = data.msg || "超时";
-            }
-        });
-    };
 
 
 }]);

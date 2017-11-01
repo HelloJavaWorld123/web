@@ -6,7 +6,7 @@
  */
 
 'use strict';
-App.controller('HeaderController', function($scope, $state, restful, Session, msgBus, $rootScope, toastr) {
+App.controller('HeaderController',function($scope, $state, restful, Session, msgBus,$location, $rootScope, toastr) {
     $rootScope.title = "";
 
     msgBus.onMsg('login', $scope, function() {
@@ -29,5 +29,9 @@ App.controller('HeaderController', function($scope, $state, restful, Session, ms
         }, function(rej) {
             console.info(rej);
         });
+    };
+    $scope.changePassword = function(){
+       $state.go('updatepassword');
+
     };
 });
