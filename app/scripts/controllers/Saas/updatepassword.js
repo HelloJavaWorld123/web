@@ -7,13 +7,16 @@
 */
 
  'use strict'
-App.controller('updatePasswordController',['$scope', '$state', '$rootScope', '$http', '$uibModal', 'restful','$location', 'ngProgressFactory', 'toastr', function ($scope, $state, $rootScope, $http, $uibModal, restful,$location, ngProgressFactory, toastr){
+App.controller('updatePasswordController',['$scope', '$state', '$rootScope', '$http', '$stateParams','$uibModal', 'restful','$location', 'urlService','ngProgressFactory', 'toastr', function ($scope, $state, $rootScope,$http, $uibModal, restful,$location,$stateParams, urlService,ngProgressFactory, toastr){
 
 	var data = {};
 
+
+	 var u = urlService.get();
+	console.log(u,"5555555555555");
+
 	//忘记密码
 	$scope.save = function (path){
-
 		var params = {
 			"password": $scope.data.password,
 			"newPassword": $scope.data.new_password
@@ -29,5 +32,17 @@ App.controller('updatePasswordController',['$scope', '$state', '$rootScope', '$h
 			}
 		});
 	};
+	/*取消按钮*/
+	$scope.close = function(){
+		/*$location.path($scope.u).replace();*/
+		/*$location.path('/gymConfig');*/
+		/*$location.absUrl($scope.u);*/
+		/*$location.constructor($scope.u);*/
+		/*$state.go('http://127.0.0.1:12001/index_dev.html#/Saas/gymIotConfig');*/
+		/*window.goBack;*/
+		/*$state.$$absUrl($scope.u);*/
+		$state.go(u);
+	};
+
 }]);
  

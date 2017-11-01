@@ -6,7 +6,7 @@
  */
 
 'use strict';
-App.controller('HeaderController',function($scope, $state, restful, Session, msgBus,$location, $rootScope, toastr) {
+App.controller('HeaderController',function($scope, $state, restful, Session, msgBus,$location,urlService, $rootScope,$localStorage, toastr) {
     $rootScope.title = "";
 
     msgBus.onMsg('login', $scope, function() {
@@ -30,7 +30,15 @@ App.controller('HeaderController',function($scope, $state, restful, Session, msg
             console.info(rej);
         });
     };
+
+
     $scope.changePassword = function(){
+
+        /*获取跳转之前页面的url*/
+         var pathUrl = $location.path().substring(6);
+        console.log(pathUrl);
+
+        urlService.set(pathUrl);
        $state.go('updatepassword');
 
     };

@@ -14,40 +14,6 @@ App.controller('MainController',['$scope', '$state', 'AuthService', function($sc
 }]);
 
 /*
- * @Author: 唐文雍
- * @Date:   2016-05-04 17:26:02
- * @Last Modified by:   snoob
- * @Last Modified time: 2017-1-4 18:18:35
- */
-'use strict';
-App.controller('UserLoginController', ['$scope', '$rootScope', '$state', 'AuthService', 'Session', 'msgBus', '$http', 'restful', '$interval', '$cookies', '$location', 'toastr', function($scope, $rootScope, $state, AuthService, Session, msgBus, $http, restful, $interval, $cookies, $location, toastr) {
-    //初始时将之前登录过的信息清空
-    $scope.load = function() {
-        Session.destroy();
-    };
-    $scope.credentials = {};
-    $scope.error = "";
-
-    $scope.login = function(credentials) {
-        $scope.loginPromise = AuthService.login(credentials).then(function(res) {
-            if (res.code == 1) {
-                toastr.error(res.msg);
-                return;
-            }
-            if (res.data.username) {
-                msgBus.emitMsg("login");
-
-                $state.go('dashboard');
-            } else {
-                $scope.error = data.msg || "超时";
-            }
-        });
-    };
-
-
-}]);
-
-/*
  * @Author: haoxb
  * @Date:   2017-6-7 9:01:54
  * @Last Modified by:   高帆
@@ -7470,13 +7436,16 @@ App.controller("editSwitchController", ['$scope', '$uibModalInstance', 'restful'
 */
 
  'use strict'
-App.controller('updatePasswordController',['$scope', '$state', '$rootScope', '$http', '$uibModal', 'restful','$location', 'ngProgressFactory', 'toastr', function ($scope, $state, $rootScope, $http, $uibModal, restful,$location, ngProgressFactory, toastr){
+App.controller('updatePasswordController',['$scope', '$state', '$rootScope', '$http', '$stateParams','$uibModal', 'restful','$location', 'urlService','ngProgressFactory', 'toastr', function ($scope, $state, $rootScope,$http, $uibModal, restful,$location,$stateParams, urlService,ngProgressFactory, toastr){
 
 	var data = {};
 
+
+	 var u = urlService.get();
+	console.log(u,"5555555555555");
+
 	//忘记密码
 	$scope.save = function (path){
-
 		var params = {
 			"password": $scope.data.password,
 			"newPassword": $scope.data.new_password
@@ -7492,6 +7461,18 @@ App.controller('updatePasswordController',['$scope', '$state', '$rootScope', '$h
 			}
 		});
 	};
+	/*取消按钮*/
+	$scope.close = function(){
+		/*$location.path($scope.u).replace();*/
+		/*$location.path('/gymConfig');*/
+		/*$location.absUrl($scope.u);*/
+		/*$location.constructor($scope.u);*/
+		/*$state.go('http://127.0.0.1:12001/index_dev.html#/Saas/gymIotConfig');*/
+		/*window.goBack;*/
+		/*$state.$$absUrl($scope.u);*/
+		$state.go(u);
+	};
+
 }]);
  
 /*
@@ -7908,6 +7889,40 @@ App.controller('withdrawDepositController', ['$scope', '$state', '$rootScope', '
     };
     $scope.query();
 
+
+
+}]);
+
+/*
+ * @Author: 唐文雍
+ * @Date:   2016-05-04 17:26:02
+ * @Last Modified by:   snoob
+ * @Last Modified time: 2017-1-4 18:18:35
+ */
+'use strict';
+App.controller('UserLoginController', ['$scope', '$rootScope', '$state', 'AuthService', 'Session', 'msgBus', '$http', 'restful', '$interval', '$cookies', '$location', 'toastr', function($scope, $rootScope, $state, AuthService, Session, msgBus, $http, restful, $interval, $cookies, $location, toastr) {
+    //初始时将之前登录过的信息清空
+    $scope.load = function() {
+        Session.destroy();
+    };
+    $scope.credentials = {};
+    $scope.error = "";
+
+    $scope.login = function(credentials) {
+        $scope.loginPromise = AuthService.login(credentials).then(function(res) {
+            if (res.code == 1) {
+                toastr.error(res.msg);
+                return;
+            }
+            if (res.data.username) {
+                msgBus.emitMsg("login");
+
+                $state.go('dashboard');
+            } else {
+                $scope.error = data.msg || "超时";
+            }
+        });
+    };
 
 
 }]);
