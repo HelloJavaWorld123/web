@@ -36,8 +36,6 @@ App.controller('HeaderController',function($scope, $state, restful, Session, msg
 
         /*获取跳转之前页面的url*/
          var pathUrl = $location.path().substring(6);
-        console.log(pathUrl);
-
         urlService.set(pathUrl);
        $state.go('updatepassword');
 

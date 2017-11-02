@@ -11,9 +11,7 @@ App.controller('updatePasswordController',['$scope', '$state', '$rootScope', '$h
 
 	var data = {};
 
-
 	 var u = urlService.get();
-	console.log(u,"5555555555555");
 
 	//忘记密码
 	$scope.save = function (path){
@@ -34,13 +32,6 @@ App.controller('updatePasswordController',['$scope', '$state', '$rootScope', '$h
 	};
 	/*取消按钮*/
 	$scope.close = function(){
-		/*$location.path($scope.u).replace();*/
-		/*$location.path('/gymConfig');*/
-		/*$location.absUrl($scope.u);*/
-		/*$location.constructor($scope.u);*/
-		/*$state.go('http://127.0.0.1:12001/index_dev.html#/Saas/gymIotConfig');*/
-		/*window.goBack;*/
-		/*$state.$$absUrl($scope.u);*/
 		$state.go(u);
 	};
 
