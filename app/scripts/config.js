@@ -307,10 +307,18 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
         shareCountExcel: $rootScope.BASEURL + "api/devMgmt/income/statistics/exportExcel",
         shareCountAmount: $rootScope.BASEURL + "api/devMgmt/income/statistics/totalAmount",
 
+        //权限管理之用户信息
+        authUserList: $rootScope.BASEURL + "/api/auth/user/list",
+        authUserInfo: $rootScope.BASEURL + "/api/auth/user/id",
+        authUserUpdate: $rootScope.BASEURL + "/api/auth/user/update",
+        authUserAdd: $rootScope.BASEURL + "/api/auth/user/add",
+        authUserStatus: $rootScope.BASEURL + "/api/auth/user/status",
 
+        //角色列表
+        authRoleList: $rootScope.BASEURL + "/api/auth/role/list",
 
-
-
+        //修改密码
+        updatePassword: $rootScope.BASEURL + "/sail/permission/updatePassword"
     };
 }]);
 //全局工具类

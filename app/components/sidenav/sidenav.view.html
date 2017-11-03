@@ -144,6 +144,23 @@
                                                                          aria-hidden="true"></i>
         </p>
             <p>场馆软件升级管理</p></a></li>-->
+        <li ng-class="{true:'active'}['#/Saas/authuser'==UrlHash]" ng-show="userType == 1">
+            <a class=" list-tree" ng-href="#/Saas/authuser">
+                <p>
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                </p>
+                <p>账号管理</p>
+            </a>
+        </li>
+        <li ng-class="{true:'active'}['#/Saas/authuser'==UrlHash]" ng-show="userType == 1">
+            <a class=" list-tree" ng-href="#/Saas/updatepassword">
+                <p>
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                </p>
+                <p>修改密码</p>
+            </a>
+        </li>
+
     </ul>
     </li>
 </ul>

@@ -6,7 +6,6 @@
  * @Last Modified by:   郝晓波
  * @Last Modified time: 2017-05-10 17:24:03
  */
-
 var App, modules;
 modules = ['ngAria', 'ngCookies', 'ngMessages', 'ngResource', 'ngRoute', 'ui.router', 'ngSanitize', 'ui.bootstrap',
     'ngTouch', 'ngProgress', 'ui.select', 'checklist-model', "ajoslin.promise-tracker", 'angularPromiseButtons', 'AdminFilters',
@@ -288,6 +287,29 @@ App.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
             url: '/Saas/depositAuditing',
             templateUrl: 'app/views/Saas/depositAuditing.html',
             controller: function ($rootScope) {
+            }
+        })
+
+        //*******************************权限管理-用户信息管理******************************************
+        .state('authuser',{
+            url: '/Saas/authuser',
+            templateUrl: 'app/views/Saas/authuser.html',
+            controller: function ($rootScope) {
+            }
+        })
+        .state('authrole',{
+            url: '/Saas/authrole',
+            templateUrl: 'app/views/Saas/authrole.html',
+            controller: function($rootScope){
+
+            }
+        })
+        //修改密码
+        .state('updatepassword',{
+            url: '/Saas/updatepassword',
+            templateUrl: 'app/views/Saas/updatepassword.html',
+            controller: function($rootScope){
+
             }
         })
 }]);

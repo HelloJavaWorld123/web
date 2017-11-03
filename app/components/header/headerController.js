@@ -6,14 +6,14 @@
  */
 
 'use strict';
-App.controller('HeaderController', function($scope, $state, restful, Session, msgBus, $rootScope, toastr) {
+App.controller('HeaderController',function($scope, $state, restful, Session, msgBus,$location,urlService, $rootScope, toastr) {
     $rootScope.title = "";
 
     msgBus.onMsg('login', $scope, function() {
         $scope.init();
     });
     $scope.init = function() {
-        $scope.username = Session.$storage.username;
+        $scope.account = Session.$storage.account;
         $scope.userHead = 'app/images/banner.png';
     };
     $scope.init();
@@ -29,5 +29,15 @@ App.controller('HeaderController', function($scope, $state, restful, Session, ms
         }, function(rej) {
             console.info(rej);
         });
+    };
+
+
+    $scope.changePassword = function(){
+
+        /*获取跳转之前页面的url*/
+         var pathUrl = $location.path().substring(6);
+        urlService.set(pathUrl);
+       $state.go('updatepassword');
+
     };
 });
