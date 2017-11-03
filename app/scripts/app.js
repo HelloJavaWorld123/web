@@ -283,10 +283,18 @@ App.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
             }
         })
 
-        //场地方提现审核
+        //分成提现审核
         .state('depositAuditing', {
             url: '/Saas/depositAuditing',
             templateUrl: 'app/views/Saas/depositAuditing.html',
+            controller: function ($rootScope) {
+            }
+        })
+
+        //角色管理
+        .state('actorManage', {
+            url: '/Saas/actorManage',
+            templateUrl: 'app/views/Saas/actorManage.html',
             controller: function ($rootScope) {
             }
         })

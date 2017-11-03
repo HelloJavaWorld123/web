@@ -308,6 +308,15 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
         shareCountAmount: $rootScope.BASEURL + "api/devMgmt/income/statistics/totalAmount",
 
 
+        //角色管理
+        actorManageList: $rootScope.BASEURL + "api/auth/role/list",
+        actorManageDel: $rootScope.BASEURL + "api/auth/role/delete",
+        actorManageAdd: $rootScope.BASEURL + "api/auth/role/add",
+        actorManageId: $rootScope.BASEURL + "api/auth/role/id",
+        actorManageUpdate: $rootScope.BASEURL + "api/auth/role/update",
+        actorManageRoleList: $rootScope.BASEURL + "api/auth/resource/role/list",
+        actorManageRoleAdd: $rootScope.BASEURL + "api/auth/resource/role/add",
+
 
 
 
