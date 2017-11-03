@@ -31,6 +31,34 @@ App.controller('shareCountController', ['$scope', '$state', '$rootScope', '$http
 
 
 
+    //会员卡类型
+    $scope.memberTypeDatas = {};
+    $scope.memberTypeData = [];
+
+
+    $scope.memberTypePromise = $http({
+        url: $rootScope.api.shareCountDicList,
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: {
+            'subjectName': $scope.data.subjectId
+        }
+    }).then(function (res) {
+        if (res.data.code == 2000) {
+            $scope.memberTypeData = res.data.data;
+            console.log($scope.memberTypeData);
+
+
+            $scope.getMemberTypeData = function (item) {
+                $scope.data.subjectId = item.id;
+
+            };
+
+        }
+    });
+
     $rootScope.query = function () {
         $scope.shareCountListPromise = $http({
             url: $rootScope.api.shareCountList,

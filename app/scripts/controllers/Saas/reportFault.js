@@ -102,8 +102,8 @@ App.controller('reportFaultController', ['$scope','$state', '$rootScope', '$http
             data: {
                 "page": parseInt($scope.PageIndex) - 1,
                 "count": parseInt($scope.PageSize),
-                "startTime": $scope.data.startTime,
-                "endTime": $scope.data.endTime,
+                "startTime": $rootScope.tools.dateToTimeStamp13Bit($scope.data.startTime),
+                "endTime": $rootScope.tools.dateToTimeStamp13Bit($scope.data.endTime),
                 "deviceIdentity": $scope.data.deviceIdentity,
                 "mallName": $scope.data.mallName,
                 "mobile": $scope.data.mobile,

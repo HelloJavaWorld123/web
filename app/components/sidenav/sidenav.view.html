@@ -6,38 +6,36 @@
         </a>
     </li>
     <ul class="nav nav-list tree navHidden">
-        <li ng-class="{true:'active'}['#/Saas/gymConfig'==UrlHash]"><a class=" list-tree" ng-href="#/Saas/gymConfig"><p>
+        <li ng-class="{true:'active'}['#/Saas/gymConfig'==UrlHash]" ng-show= "userType == 1"><a class=" list-tree" ng-href="#/Saas/gymConfig"><p>
             <i class="fa fa-desktop"
                aria-hidden="true"></i></p>
             <p>sail场馆配置</p></a></li>
 
-        <li ng-class="{true:'active'}['#/Saas/gymIotConfig'==UrlHash]"><a class=" list-tree"
-                                                                          ng-href="#/Saas/gymIotConfig"><p>
+        <li ng-class="{true:'active'}['#/Saas/gymIotConfig'==UrlHash]" ng-show= "userType == 1"><a class=" list-tree" ng-href="#/Saas/gymIotConfig"><p>
             <i class="fa fa-desktop"
                aria-hidden="true"></i></p>
             <p>iot场馆配置</p></a></li>
-        <!--<li><a class=" list-tree" ng-href="#/Saas/devConfig"><p><i class="fa fa-life-ring"
-                                                                   aria-hidden="true"></i></p>
+         <!--<li><a class=" list-tree" ng-href="#/Saas/devConfig"><p><i class="fa fa-life-ring"
+                                                                    aria-hidden="true"></i></p>
 
-            <p>设备配置</p></a></li>-->
+             <p>设备配置</p></a></li>-->
         <!-- <li><a class=" list-tree" ng-href="#/Saas/devUnbound"><p><i class="fa fa-life-ring"
                                                                     aria-hidden="true"></i></p>
              <p>设备解绑</p></a></li>-->
 
-        <li ng-class="{true:'active'}['#/Saas/dividedConfig'==UrlHash]"><a class=" list-tree"
-                                                                           ng-href="#/Saas/dividedConfig"><p><i
-                class="fa fa-user"
-                aria-hidden="true"></i></p>
+        <li ng-class="{true:'active'}['#/Saas/dividedConfig'==UrlHash]" ng-show= "userType == 2"><a class=" list-tree" ng-href="#/Saas/dividedConfig"><p><i class="fa fa-user"
+                                                                  aria-hidden="true"></i></p>
             <p>分成方</p></a></li>
-        <li ng-class="{true:'active'}['#/Saas/incomeList'==UrlHash]"><a class=" list-tree" ng-href="#/Saas/incomeList"><p><i class="fa fa-user"
+
+        <!--<li ng-class="{true:'active'}['#/Saas/incomeList'==UrlHash]"><a class=" list-tree" ng-href="#/Saas/incomeList"><p><i class="fa fa-user"
                                                                                                                                    aria-hidden="true"></i></p>
             <p>收入明细</p></a></li>
 
         <li ng-class="{true:'active'}['#/Saas/getMoneyList'==UrlHash]"><a class=" list-tree" ng-href="#/Saas/getMoneyList"><p><i class="fa fa-user"
                                                                                                                              aria-hidden="true"></i></p>
-            <p>提现记录</p></a></li>
+            <p>提现记录</p></a></li>-->
 
-        <li ng-class="{true:'active'}['#/Saas/userInfo'==UrlHash]"><a class=" list-tree" ng-href="#/Saas/userInfo"><p><i class="fa fa-user"
+        <li ng-class="{true:'active'}['#/Saas/userInfo'==UrlHash]" ng-show= "userType == 1"><a class=" list-tree" ng-href="#/Saas/userInfo"><p><i class="fa fa-user"
                                                                   aria-hidden="true"></i></p>
             <p>用户信息</p></a></li>
         <!--        <li><a class=" list-tree" ng-href="#/Saas/userBodyReport01"><p><i class="fa fa-user"
@@ -46,117 +44,94 @@
                 <li><a class=" list-tree" ng-href="#/Saas/userBodyReport02"><p><i class="fa fa-user"
                                                                                   aria-hidden="true"></i></p>
                     <p>体测报告02（东华原）</p></a></li>-->
-        <li ng-class="{true:'active'}['#/Saas/sportProgram'==UrlHash]"><a class=" list-tree"
-                                                                          ng-href="#/Saas/sportProgram"><p><i
-                class="fa fa-user"
-                aria-hidden="true"></i></p>
+        <li ng-class="{true:'active'}['#/Saas/sportProgram'==UrlHash]" ng-show= "userType == 1"><a class=" list-tree" ng-href="#/Saas/sportProgram"><p><i class="fa fa-user"
+                                                                      aria-hidden="true"></i></p>
             <p>跑步方案</p></a></li>
 
-        <li ng-class="{true:'active'}['#/Saas/orderInfo'==UrlHash]"><a class=" list-tree" ng-href="#/Saas/orderInfo"><p>
-            <i class="fa fa-user"
-               aria-hidden="true"></i></p>
+        <li ng-class="{true:'active'}['#/Saas/orderInfo'==UrlHash]" ng-show= "userType == 1"><a class=" list-tree" ng-href="#/Saas/orderInfo"><p><i class="fa fa-user"
+                                                                   aria-hidden="true"></i></p>
             <p>订单信息</p></a></li>
 
 
-        <li ng-class="{true:'active'}['#/Saas/accountCharge'==UrlHash]"><a class=" list-tree"
-                                                                           ng-href="#/Saas/accountCharge"><p><i
-                class="fa fa-money"
-                aria-hidden="true"></i></p>
+        <li ng-class="{true:'active'}['#/Saas/accountCharge'==UrlHash]" ng-show= "userType == 1"><a class=" list-tree" ng-href="#/Saas/accountCharge"><p><i class="fa fa-money"
+                                                                       aria-hidden="true"></i></p>
             <p>账户充值</p></a></li>
 
 
-        <li ng-class="{true:'active'}['#/Saas/makeOrder'==UrlHash]"><a class=" list-tree" ng-href="#/Saas/makeOrder"><p>
-            <i class="fa fa-file-text-o"
-               aria-hidden="true"></i></p>
+        <li ng-class="{true:'active'}['#/Saas/makeOrder'==UrlHash]" ng-show= "userType == 1"><a class=" list-tree" ng-href="#/Saas/makeOrder"><p><i class="fa fa-file-text-o"
+                                                                     aria-hidden="true"></i></p>
             <p>预约列表</p></a></li>
-        <li ng-class="{true:'active'}['#/Saas/rankList'==UrlHash]"><a class=" list-tree" ng-href="#/Saas/rankList"><p><i
-                class="fa fa-list-alt"
-                aria-hidden="true"></i></p>
+
+        <li ng-class="{true:'active'}['#/Saas/rankList'==UrlHash]" ng-show= "userType == 1"><a class=" list-tree" ng-href="#/Saas/rankList"><p><i class="fa fa-list-alt"
+                                                                  aria-hidden="true"></i></p>
             <p>排行榜</p></a></li>
-        <li ng-class="{true:'active'}['#/Saas/sendDiscount'==UrlHash]"><a class=" list-tree"
-                                                                          ng-href="#/Saas/sendDiscount"><p><i
-                class="fa fa-ticket" aria-hidden="true"></i>
+
+        <li ng-class="{true:'active'}['#/Saas/sendDiscount'==UrlHash]" ng-show= "userType == 1"><a class=" list-tree" ng-href="#/Saas/sendDiscount"><p><i class="fa fa-ticket" aria-hidden="true"></i>
         </p>
             <p>卡券列表</p></a></li>
 
 
-        <li ng-class="{true:'active'}['#/Saas/chargeSet'==UrlHash]"><a class=" list-tree" ng-href="#/Saas/chargeSet"><p>
-            <i class="fa fa-money"
-               aria-hidden="true"></i></p>
+        <li ng-class="{true:'active'}['#/Saas/chargeSet'==UrlHash]" ng-show= "userType == 1"><a class=" list-tree" ng-href="#/Saas/chargeSet"><p><i class="fa fa-money"
+                                                                                                                                   aria-hidden="true"></i></p>
             <p>充值设置</p></a></li>
 
-        <li ng-class="{true:'active'}['#/Saas/activitySet'==UrlHash]"><a class=" list-tree"
-                                                                         ng-href="#/Saas/activitySet"><p><i
-                class="fa fa-cloud" aria-hidden="true"></i>
+        <li ng-class="{true:'active'}['#/Saas/activitySet'==UrlHash]" ng-show= "userType == 1"><a class=" list-tree" ng-href="#/Saas/activitySet"><p><i class="fa fa-cloud" aria-hidden="true"></i>
         </p>
             <p>活动设置</p></a></li>
-        <li ng-class="{true:'active'}['#/Saas/reportFault'==UrlHash]"><a class=" list-tree"
-                                                                         ng-href="#/Saas/reportFault"><p><i
-                class="fa fa-cubes" aria-hidden="true"></i></p>
+
+        <li ng-class="{true:'active'}['#/Saas/reportFault'==UrlHash]" ng-show= "userType == 1"><a class=" list-tree" ng-href="#/Saas/reportFault"><p><i class="fa fa-cubes" aria-hidden="true"></i></p>
             <p>报障</p></a></li>
 
         <!-- <li><a class=" list-tree" ng-href="#/Saas/complain"><p><i class="fa fa-key" aria-hidden="true"></i>
          </p>
              <p>投诉</p></a></li>-->
-        <li ng-class="{true:'active'}['#/Saas/cashPledge'==UrlHash]"><a class=" list-tree" ng-href="#/Saas/cashPledge">
-            <p><i class="fa fa-money" aria-hidden="true"></i>
-            </p>
+        <li ng-class="{true:'active'}['#/Saas/cashPledge'==UrlHash]" ng-show= "userType == 1"><a class=" list-tree" ng-href="#/Saas/cashPledge"><p><i class="fa fa-money" aria-hidden="true"></i>
+        </p>
             <p>押金</p></a></li>
 
-        <li ng-class="{true:'active'}['#/Saas/memberCard'==UrlHash]"><a class=" list-tree" ng-href="#/Saas/memberCard">
-            <p><i class="fa fa-key" aria-hidden="true"></i>
-            </p>
+        <li ng-class="{true:'active'}['#/Saas/memberCard'==UrlHash]" ng-show= "userType == 1"><a class=" list-tree" ng-href="#/Saas/memberCard"><p><i class="fa fa-key" aria-hidden="true"></i>
+        </p>
             <p>会员卡</p></a></li>
-        <li ng-class="{true:'active'}['#/Saas/devCostManage'==UrlHash]"><a class=" list-tree"
-                                                                           ng-href="#/Saas/devCostManage"><p><i
-                class="fa fa-pencil-square-o"
-                aria-hidden="true"></i>
+
+        <li ng-class="{true:'active'}['#/Saas/devCostManage'==UrlHash]" ng-show= "userType == 1"><a class=" list-tree" ng-href="#/Saas/devCostManage"><p><i class="fa fa-pencil-square-o"
+                                                                       aria-hidden="true"></i>
         </p>
             <p>设备费用</p></a></li>
-        <li ng-class="{true:'active'}['#/Saas/accountAuditing'==UrlHash]"><a class=" list-tree"
-                                                                             ng-href="#/Saas/accountAuditing"><p><i
-                class="fa fa-pencil-square-o"
-                aria-hidden="true"></i>
+
+        <li ng-class="{true:'active'}['#/Saas/accountAuditing'==UrlHash]" ng-show= "userType == 1"><a class=" list-tree" ng-href="#/Saas/accountAuditing"><p><i class="fa fa-pencil-square-o"
+                                                                                                                                   aria-hidden="true"></i>
         </p>
             <p>对公账户审核</p></a></li>
-        <li ng-class="{true:'active'}['#/Saas/shareholder'==UrlHash]"><a class=" list-tree"
-                                                                         ng-href="#/Saas/shareholder"><p><i
-                class="fa fa-pencil-square-o"
-                aria-hidden="true"></i>
+
+        <li ng-class="{true:'active'}['#/Saas/shareholder'==UrlHash]" ng-show= "userType == 1"><a class=" list-tree" ng-href="#/Saas/shareholder"><p><i class="fa fa-pencil-square-o"
+                                                                                                                                       aria-hidden="true"></i>
         </p>
             <p>分成主体</p></a></li>
-        <li ng-class="{true:'active'}['#/Saas/mainIncome'==UrlHash]"><a class=" list-tree" ng-href="#/Saas/mainIncome">
-            <p><i class="fa fa-pencil-square-o"
-                  aria-hidden="true"></i>
-            </p>
-            <p>分成方后台收入明细</p></a></li>
 
-        <li ng-class="{true:'active'}['#/Saas/withdrawDeposit'==UrlHash]"><a class=" list-tree"
-                                                                             ng-href="#/Saas/withdrawDeposit"><p><i
-                class="fa fa-pencil-square-o"
-                aria-hidden="true"></i>
+        <li ng-class="{true:'active'}['#/Saas/mainIncome'==UrlHash]" ng-show= "userType == 2"><a class=" list-tree" ng-href="#/Saas/mainIncome"><p><i class="fa fa-pencil-square-o"
+                                                                                                                               aria-hidden="true"></i>
         </p>
-            <p>分成方后台提现记录</p></a></li>
+            <p>收入明细</p></a></li>
 
-        <li ng-class="{true:'active'}['#/Saas/incomeManage'==UrlHash]"><a class=" list-tree"
-                                                                          ng-href="#/Saas/incomeManage"><p><i
-                class="fa fa-pencil-square-o"
-                aria-hidden="true"></i>
+        <li ng-class="{true:'active'}['#/Saas/withdrawDeposit'==UrlHash]" ng-show= "userType == 2"><a class=" list-tree" ng-href="#/Saas/withdrawDeposit"><p><i class="fa fa-pencil-square-o"
+                                                                                                                             aria-hidden="true"></i>
+        </p>
+            <p>提现记录</p></a></li>
+
+        <li ng-class="{true:'active'}['#/Saas/incomeManage'==UrlHash]" ng-show= "userType == 1"><a class=" list-tree" ng-href="#/Saas/incomeManage"><p><i class="fa fa-pencil-square-o"
+                                                                                                                             aria-hidden="true"></i>
         </p>
             <p>订单分成管理</p></a></li>
-        <li ng-class="{true:'active'}['#/Saas/shareCount'==UrlHash]"><a class=" list-tree" ng-href="#/Saas/shareCount">
-            <p><i class="fa fa-pencil-square-o"
-                  aria-hidden="true"></i>
-            </p>
+
+        <li ng-class="{true:'active'}['#/Saas/shareCount'==UrlHash]" ng-show= "userType == 1"><a class=" list-tree" ng-href="#/Saas/shareCount"><p><i class="fa fa-pencil-square-o"
+                                                                                                                                 aria-hidden="true"></i>
+        </p>
             <p>分成统计</p></a></li>
-        <li ng-class="{true:'active'}['#/Saas/depositAuditing'==UrlHash]">
-            <a class=" list-tree" ng-href="#/Saas/depositAuditing">
-                <p>
-                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                </p>
-                <p>场地方提现审核</p>
-            </a>
-        </li>
+
+        <li ng-class="{true:'active'}['#/Saas/depositAuditing'==UrlHash]" ng-show= "userType == 1"><a class=" list-tree" ng-href="#/Saas/depositAuditing"><p><i class="fa fa-pencil-square-o"
+                                                                                                                                 aria-hidden="true"></i>
+        </p>
+            <p>场地方提现审核</p></a></li>
         <!--<li><a class=" list-tree" ng-href="#/Saas/treadmillAdmin"><p><i class="fa fa-camera-retro"
                                                                        aria-hidden="true"></i>
         </p>
@@ -169,7 +144,7 @@
                                                                          aria-hidden="true"></i>
         </p>
             <p>场馆软件升级管理</p></a></li>-->
-        <li ng-class="{true:'active'}['#/Saas/authuser'==UrlHash]">
+        <li ng-class="{true:'active'}['#/Saas/authuser'==UrlHash]" ng-show="userType == 1">
             <a class=" list-tree" ng-href="#/Saas/authuser">
                 <p>
                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
@@ -177,7 +152,7 @@
                 <p>账号管理</p>
             </a>
         </li>
-        <li ng-class="{true:'active'}['#/Saas/authuser'==UrlHash]">
+        <li ng-class="{true:'active'}['#/Saas/authuser'==UrlHash]" ng-show="userType == 1">
             <a class=" list-tree" ng-href="#/Saas/updatepassword">
                 <p>
                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>

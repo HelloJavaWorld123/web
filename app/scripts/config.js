@@ -46,6 +46,9 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
 
         //测试的登录-本地json
         // login: "app/scripts/loginTest.json",
+        //测试收入明细-gym-本地json
+        getIncomeGymListT: $rootScope.BASEURL +"test/incomeGymList.json",
+
 
         //小象运动登录
         login: $rootScope.BASEURL + "sail/permission/login",
@@ -266,9 +269,23 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
         //分成方后台收入明细
         mainIncomeList: $rootScope.BASEURL + "api/devMgmt/income/list",
         mainIncomeExcel: $rootScope.BASEURL + "api/devMgmt/income/exportExcel",
-        getDicGymList: $rootScope.BASEURL + "api/deposit/gym/info",
+        getDicGymList: $rootScope.BASEURL + "api/devMgmt/income/gym/list",
         getIncomeList:$rootScope.BASEURL+"api/devMgmt/income/list",
+        getIncomeGymList:$rootScope.BASEURL+"api/devMgmt/income/gym/list",
+        IncomeListEportExcel:$rootScope.BASEURL+"api/devMgmt/income/exportExcel",
         getMoneyList:$rootScope.BASEURL+"api/devMgmt/withDrawRecord/user/list",
+
+        //账户
+        getBankInfo:$rootScope.BASEURL+"api/deposit/gym/bank",
+        getGymInfo:$rootScope.BASEURL+"api/deposit/gym/info",
+        //提现-btn
+        drawmoney:$rootScope.BASEURL+"/api/deposit/gym/drawmoney",
+        //公司账户校验
+        companyVerify:$rootScope.BASEURL+"api/deposit/gym/bank/status",
+        //个人账户校验
+        personVerify:$rootScope.BASEURL+"api/deposit/gym/verify/self/accountmoney",
+        //场馆方公司账户汇款金额校验
+        gymVerifyAccountMoney:$rootScope.BASEURL+"api/deposit/gym/verify/company/accountmoney",
 
         //分成方后台提现记录
         withDrawRecordList: $rootScope.BASEURL + "api/devMgmt/withDrawRecord/user/list",
@@ -286,7 +303,8 @@ App.run(['$rootScope', 'Session', function ($rootScope, Session) {
 
         //分成统计
         shareCountList: $rootScope.BASEURL + "api/devMgmt/income/statistics/list",
-        shareCountExcel: $rootScope.BASEURL + "api/devMgmt/income/exportExcel",
+        shareCountDicList: $rootScope.BASEURL + "api/devMgmt/income/subject/list",
+        shareCountExcel: $rootScope.BASEURL + "api/devMgmt/income/statistics/exportExcel",
         shareCountAmount: $rootScope.BASEURL + "api/devMgmt/income/statistics/totalAmount",
 
         //权限管理之用户信息

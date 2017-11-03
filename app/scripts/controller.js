@@ -3067,15 +3067,343 @@ App.controller('DevUnbound1Controller', ['$scope', '$stateParams', '$rootScope',
  */
 //分成方设置
 'use strict';
-App.controller('dividedConfigController', ['$scope', function ($scope) {
+App.controller('dividedConfigController', ['$scope', '$stateParams', 'Session', '$rootScope', '$http', 'ngProgressFactory', '$uibModal', 'toastr', function ($scope, $stateParams, Session, $rootScope, $http, ngProgressFactory, $uibModal, toastr) {
+    $scope.data = {};
+    $scope.gymRoleData = {};
+    //分页
+    $scope.PageIndex = $rootScope.PAGINATION_CONFIG.PAGEINDEX;
+    $scope.PageSize = $rootScope.PAGINATION_CONFIG.PAGESIZE;
+    $scope.maxSize = $rootScope.PAGINATION_CONFIG.MAXSIZE;
+    $scope.pageChanged = function () {
+        $scope.query();
+    };
+
+    $scope.setPage = function () {
+        $scope.PageIndex = $scope.toPageNum > Math.ceil($scope.totalCount / $scope.PageSize) ? Math.ceil($scope.totalCount / $scope.PageSize) : $scope.toPageNum;
+        $scope.query();
+    };
+    $scope.reset = function () {
+        $scope.data = {};
+        $scope.query();
+    };
+    //查询账户信息+名下场馆
+    $scope.query = function () {
+        var params = {
+            "id": Session.$storage.accessToken,
+        };
+        $http({
+            url: $rootScope.api.getBankInfo,
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: params,
+        }).then(function (res) {
+            if (res.data.code == 2000) {
+                $scope.data = res.data.data;
+                /*用于调试个人账户*/
+            } else {
+                toastr.error(res.data.msg);
+            }
+        }, function (rej) {
+            console.log("失败状态码：" + rej.code, +",失败信息：" + rej.data);
+        });
+
+        $http({
+            url: $rootScope.api.getGymInfo,
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: params,
+        }).then(function (res) {
+            if (res.data.code == 2000) {
+                $scope.gymRoleData = res.data.data;
+                $scope.totalCount = res.data.page_info.total;
+            } else {
+                toastr.error(res.data.msg);
+            }
+        }, function (rej) {
+            console.log("失败状态码：" + rej.code, +",失败信息：" + rej.data);
+        });
+    };
+    $scope.query();
+
+    /*账户校验*/
+    $scope.doVerify = function (bankType, item) {
+        var params = {
+            "bankCheckStatus": 1,
+            "id": item.id,
+        };
+        if (bankType.code == 0) {//公司账户
+            $http({
+                url: $rootScope.api.companyVerify,
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: params,
+            }).then(function (res) {
+                if (res.data.code == 2000) {
+                    toastr.success("我们会给该账户汇入一笔非常小的金额，请在收到后，登录平台进行验证");
+                    //变成校验中
+                    var timer = setTimeout(function () {
+                        $scope.data.bankCheckStatus.code = 1;
+                    }, 700);
+                } else {
+                    toastr.error(res.data.msg);
+                }
+            }, function (rej) {
+                console.log("失败状态码：" + rej.code, +",失败信息：" + rej.data);
+            });
+        } else {//个人账户
+            $uibModal.open({
+                templateUrl: 'personVerifyAccountMoney.html',
+                controller: 'personVerifyController',
+                size: 'md',
+                resolve: {
+                    item: function () {
+                        return item;
+                    }
+                }
+            }).result.then(function () {
+                //close
+                $scope.query();
+            }, function () {
+                //dismiss
+            });
+        }
+    }
+
+    /*公司校验-确认打款金额*/
+    $scope.doVerifyAccountMoney = function (data) {
+        var item;
+        $uibModal.open({
+            templateUrl: 'doVerifyAccountMoney.html',
+            controller: 'doVerifyAccountMoneyController',
+            size: 'md',
+            resolve: {
+                item: function () {
+                    return data;
+                }
+            }
+        }).result.then(function () {
+            //close
+            $scope.query();
+        }, function () {
+            //dismiss
+            $scope.query();
+        });
+
+    }
+    /*提现*/
+    $scope.getDeposit = function (data) {
+        console.log(data);
+        $uibModal.open({
+            templateUrl: 'getDeposit.html',
+            controller: 'getDepositController',
+            size: 'lg',
+            resolve: {
+                item: function () {
+                    return data;
+                }
+            }
+        }).result.then(function () {
+            //close
+            $scope.query();
+        }, function () {
+            //dismiss
+        });
+    }
+}]);
+//公司账户
+App.controller('doVerifyAccountMoneyController', ['$scope', 'item', 'Session', '$stateParams', '$rootScope', '$http', 'ngProgressFactory', '$uibModal', '$uibModalInstance', 'toastr', function ($scope, item, Session, $stateParams, $rootScope, $http, ngProgressFactory, $uibModal, $uibModalInstance, toastr) {
+
+    //查询账户信息+名下场馆
+    $scope.query = function () {
+        var params = {
+            "id": Session.$storage.accessToken,
+        };
+        $http({
+            url: $rootScope.api.getBankInfo,
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: params,
+        }).then(function (res) {
+            if (res.data.code == 2000) {
+                $scope.data = res.data.data;
+                toastr.success("校验成功");
+                $uibModalInstance.close();
+            } else {
+                toastr.error(res.data.msg);
+            }
+        }, function (rej) {
+            console.log("失败状态码：" + rej.code, +",失败信息：" + rej.data);
+        });
+
+        $http({
+            url: $rootScope.api.getGymInfo,
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: params,
+        }).then(function (res) {
+            if (res.data.code == 2000) {
+                $scope.gymRoleData = res.data.data;
+                $scope.totalCount = res.data.page_info.total;
+            } else {
+                toastr.error(res.data.msg);
+            }
+        }, function (rej) {
+            console.log("失败状态码：" + rej.code, +",失败信息：" + rej.data);
+        });
+    };
+    /*账户校验*/
+    $scope.save = function () {
+        var params = {
+            "id": item.id,
+            "amount": $scope.data.amount
+
+        };
+        $http({
+            url: $rootScope.api.gymVerifyAccountMoney,
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: params
+        }).then(function (res) {
+            if (res.data.code == 2000) {
+                $scope.data = res.data.data;
+                toastr.success($scope.data.data);
+                $scope.query();
+            } else {
+                toastr.error(res.data.msg);
+            }
+        }, function (rej) {
+            console.log("失败状态码：" + rej.code, +",失败信息：" + rej.data);
+        });
+    };
+    $scope.close = function () {
+        $uibModalInstance.dismiss('close');
+    };
 
 }]);
+//个人账户
+App.controller('personVerifyController', ['$scope', 'item', 'Session', '$stateParams', '$rootScope', '$http', 'ngProgressFactory', '$uibModal', '$uibModalInstance', 'toastr', function ($scope, item, Session, $stateParams, $rootScope, $http, ngProgressFactory, $uibModal, $uibModalInstance, toastr) {
+    $scope.data = {};
+    //查询账户信息+名下场馆
+    $scope.query = function () {
+        var params = {
+            "id": Session.$storage.accessToken,
+        };
+        $http({
+            url: $rootScope.api.getBankInfo,
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: params
+        }).then(function (res) {
+            if (res.data.code == 2000) {
+                $rootScope.data = res.data.data;
+            } else {
+                toastr.error(res.data.msg);
+            }
+        }, function (rej) {
+            console.log("失败状态码：" + rej.code, +",失败信息：" + rej.data);
+        });
+    };
+    /*账户校验*/
+    $scope.data.bankCardNum == null ? $scope.data.bankCardNum = item.bankAccount : $scope.data.bankCardNum;
+    $scope.data.bankName == null ? $scope.data.bankName = item.bankName : $scope.data.bankName;
+    $scope.save = function () {
 
+        var params = {
+            "id": item.id,
+            "bankCardNum": $scope.data.bankCardNum == null ? item.bankAccount : $scope.data.bankCardNum,
+            "bankName": $scope.data.bankName == null ? item.bankName : $scope.data.bankName,
+            "idCardName": $scope.data.idCardName,
+            "idCard": $scope.data.idCard,
+            "mobile": $scope.data.mobile,
+
+        };
+        $http({
+            url: $rootScope.api.personVerify,
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: params
+        }).then(function (res) {
+            if (res.data.code == 2000) {
+                $scope.data = res.data.data;
+                $uibModalInstance.close();
+                toastr.success("校验通过");
+            } else {
+                toastr.error(res.data.msg);
+            }
+        }, function (rej) {
+            console.log("失败状态码：" + rej.code, +",失败信息：" + rej.data);
+        });
+    };
+    $scope.close = function (dataCode) {
+        $uibModalInstance.close(dataCode);
+    };
+}]);
+
+//提现（code为2时候方可点击，共用）
+App.controller('getDepositController', ['$scope', 'item', 'Session', '$stateParams', '$rootScope', '$http', 'ngProgressFactory', '$uibModal', '$uibModalInstance', 'toastr', function ($scope, item, Session, $stateParams, $rootScope, $http, ngProgressFactory, $uibModal, $uibModalInstance, toastr) {
+
+    $scope.data = {};
+    //监听表单输入
+    $scope.data.isTagShow = false;
+    $scope.save = function (val) {
+        //监听表单输入-min
+        if (val < 100) {
+            $scope.data.isTagShow = true;
+            return
+
+        } else {
+            $scope.data.isTagShow = false;
+        }
+        console.log(item.id);
+        var params = {
+            "id": item.id,
+            "depositMongy": $scope.data.depositMongy
+        };
+        $http({
+            url: $rootScope.api.drawmoney,
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: params
+        }).then(function (res) {
+            if (res.data.code == 2000) {
+                $scope.data = res.data.data;
+                toastr.success("提现成功");
+                $uibModalInstance.close();
+            } else {
+                toastr.error(res.data.msg);
+            }
+        }, function (rej) {
+            console.log("失败状态码：" + rej.code, +",失败信息：" + rej.data);
+        });
+    };
+    $scope.close = function (dataCode) {
+        $uibModalInstance.close(dataCode);
+    };
+}]);
 /**
  * Created by haoxb on 2017/6/23.
  */
 'use strict';
-App.controller('getMoneyListController', ['$scope', '$stateParams', '$rootScope', '$http', 'ngProgressFactory', '$uibModal', 'toastr', function ($scope, $stateParams, $rootScope, $http, ngProgressFactory, $uibModal, toastr) {
+/*提现记录*/
+App.controller('getMoneyListController', ['$scope','Session', '$stateParams', '$rootScope', '$http', 'ngProgressFactory', '$uibModal', 'toastr', function ($scope,Session, $stateParams, $rootScope, $http, ngProgressFactory, $uibModal, toastr) {
     $scope.data = {};
     //分页
     $scope.PageIndex = $rootScope.PAGINATION_CONFIG.PAGEINDEX;
@@ -3094,9 +3422,10 @@ App.controller('getMoneyListController', ['$scope', '$stateParams', '$rootScope'
         $scope.query();
     };
 
-    //查询运动方案
+    //查询
     $rootScope.query = function () {
         var params = {
+            "useid": Session.$storage.accessToken,
             "page": parseInt($scope.PageIndex) - 1,
             "count": parseInt($scope.PageSize),
         };
@@ -3488,13 +3817,19 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
     //下拉单击事件。
     $scope.getSubjectList = function (subjectItem, item) {
         item.subjectName = subjectItem.subjectName;//
-        item.subjectId = subjectItem.subjectId;
+        item.subjectId = subjectItem.id;
         item.listBodyIsShow = false;
         console.log(item.subjectId);
     }
     //获取主体-支持模糊搜索-编辑-根据主体id反查出主体名字
     $scope.getSubject = function (item) {
         item.listBodyIsShow = true;
+        //用户输入为空的时候下来面板关闭,并且把挂在item上的数据清除
+        if (item.subjectName == "") {
+            item.listBodyIsShow = false;
+            item.subjectName = "";
+            item.subjectId = null;
+        }
         if (!item.subjectName || (item.subjectName && item.subjectName == "")) {
             return false;
         }
@@ -3555,7 +3890,7 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
         };
         console.log("编辑场馆要丢给后台的字段");
         console.log(params);
-        restful.fetch($rootScope.api.EditGym, "POST", params).then(function (res) {
+        $scope.savePromise=restful.fetch($rootScope.api.EditGym, "POST", params).then(function (res) {
             if (res.code == 2000) {
                 toastr.success("编辑成功");
                 console.log("编辑场馆后台返回：");
@@ -3720,12 +4055,21 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
     //下拉单击事件。
     $scope.getSubjectList = function (subjectItem, item) {
         item.subjectName = subjectItem.subjectName;//
-        item.subjectId = subjectItem.subjectId;
+        item.subjectId = subjectItem.id;
         item.listBodyIsShow = false;
     }
     //获取主体-支持模糊搜索
     $scope.getSubject = function (item) {
+        console.log(item.subjectName);
         item.listBodyIsShow = true;
+
+        //用户输入为空的时候下来面板关闭,并且把挂在item上的数据清除
+        if (item.subjectName == "") {
+            item.listBodyIsShow = false;
+            item.subjectName = "";
+            item.subjectId = null;
+        }
+
         if (!item.subjectName || (item.subjectName && item.subjectName == "")) {
             return false;
         }
@@ -3781,7 +4125,7 @@ App.controller('gymConfigController', ['$scope', 'CommonData', '$state', '$rootS
             "roleRelList": $scope.ShareRoles,//有些字段是自己添加此对象。
         };
         console.log(params, "添加场馆要丢给后台的字段:");
-        restful.fetch($rootScope.api.addGym, "POST", params).then(function (res) {
+        $scope.savePromise=restful.fetch($rootScope.api.addGym, "POST", params).then(function (res) {
             if (res.code == 2000) {
                 toastr.success("添加成功");
                 console.log(res);
@@ -4673,6 +5017,10 @@ App.controller('incomeListController', ['$scope', '$stateParams', '$rootScope', 
         var params = {
             "page": parseInt($scope.PageIndex) - 1,
             "count": parseInt($scope.PageSize),
+            "orderNo": $scope.data.orderNo,
+            "startTime": $scope.data.startTime,
+            "endTime": $scope.data.endTime,
+
         };
         $http({
             url: $rootScope.api.getIncomeList,
@@ -4694,6 +5042,49 @@ App.controller('incomeListController', ['$scope', '$stateParams', '$rootScope', 
         });
     };
     $scope.query();
+
+    //下拉开关
+    $scope.listBodyIsShow = false;
+    $scope.item={};
+    //下拉单击事件。
+    $scope.getSubjectList = function (gymItem, data) {
+        data.gymName = gymItem.gymName;//
+        data.gymId = gymItem.gymId;
+        data.listBodyIsShow = false;
+        console.log(data);
+    }
+    //获取主体-支持模糊搜索-编辑-根据主体id反查出主体名字
+    $scope.getSubject = function (data) {
+        data.listBodyIsShow = true;
+        if (!data.gymName || (data.gymName && data.gymName == "")) {
+            return false;
+        }
+        //gym:用户输入
+        var timer = setTimeout(function () {
+            $http({
+                url: $rootScope.api.getIncomeGymList,
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: {
+                    "gymName": data.gymName,
+                }
+            }).then(function (res) {
+                if (res.data.code == 2000) {
+                    //下来列表里的备选
+                    data.gymListData = res.data.data;
+                    //下拉开关
+                    data.listBodyIsShow = true;
+                }
+                /*else{
+                 toastr.error(res.msg);
+                 }
+                 },function (rej) {
+                 console.info(rej);*/
+            });
+        }, 500);
+    };
 }]);
 
 /*
@@ -4818,7 +5209,7 @@ App.controller('mainIncomeController', ['$scope', '$state', '$rootScope', '$http
             'Content-Type': 'application/json'
         },
         data: {
-            "userName":"dl1709300001"
+            'gymName': $scope.data.gymId
         }
     }).then(function (res) {
         if (res.data.code == 2000) {
@@ -4827,7 +5218,7 @@ App.controller('mainIncomeController', ['$scope', '$state', '$rootScope', '$http
 
 
             $scope.getMemberTypeData = function (item) {
-                $scope.memberTypeDatas.gymName = item.gymName;
+                $scope.data.gymId = item.gymId;
 
             };
 
@@ -5952,8 +6343,8 @@ App.controller('reportFaultController', ['$scope','$state', '$rootScope', '$http
             data: {
                 "page": parseInt($scope.PageIndex) - 1,
                 "count": parseInt($scope.PageSize),
-                "startTime": $scope.data.startTime,
-                "endTime": $scope.data.endTime,
+                "startTime": $rootScope.tools.dateToTimeStamp13Bit($scope.data.startTime),
+                "endTime": $rootScope.tools.dateToTimeStamp13Bit($scope.data.endTime),
                 "deviceIdentity": $scope.data.deviceIdentity,
                 "mallName": $scope.data.mallName,
                 "mobile": $scope.data.mobile,
@@ -6208,6 +6599,34 @@ App.controller('shareCountController', ['$scope', '$state', '$rootScope', '$http
     }
 
 
+
+    //会员卡类型
+    $scope.memberTypeDatas = {};
+    $scope.memberTypeData = [];
+
+
+    $scope.memberTypePromise = $http({
+        url: $rootScope.api.shareCountDicList,
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: {
+            'subjectName': $scope.data.subjectId
+        }
+    }).then(function (res) {
+        if (res.data.code == 2000) {
+            $scope.memberTypeData = res.data.data;
+            console.log($scope.memberTypeData);
+
+
+            $scope.getMemberTypeData = function (item) {
+                $scope.data.subjectId = item.id;
+
+            };
+
+        }
+    });
 
     $rootScope.query = function () {
         $scope.shareCountListPromise = $http({

@@ -26,6 +26,10 @@ App.controller('incomeListController', ['$scope', '$stateParams', '$rootScope', 
         var params = {
             "page": parseInt($scope.PageIndex) - 1,
             "count": parseInt($scope.PageSize),
+            "orderNo": $scope.data.orderNo,
+            "startTime": $scope.data.startTime,
+            "endTime": $scope.data.endTime,
+
         };
         $http({
             url: $rootScope.api.getIncomeList,
@@ -47,4 +51,47 @@ App.controller('incomeListController', ['$scope', '$stateParams', '$rootScope', 
         });
     };
     $scope.query();
+
+    //下拉开关
+    $scope.listBodyIsShow = false;
+    $scope.item={};
+    //下拉单击事件。
+    $scope.getSubjectList = function (gymItem, data) {
+        data.gymName = gymItem.gymName;//
+        data.gymId = gymItem.gymId;
+        data.listBodyIsShow = false;
+        console.log(data);
+    }
+    //获取主体-支持模糊搜索-编辑-根据主体id反查出主体名字
+    $scope.getSubject = function (data) {
+        data.listBodyIsShow = true;
+        if (!data.gymName || (data.gymName && data.gymName == "")) {
+            return false;
+        }
+        //gym:用户输入
+        var timer = setTimeout(function () {
+            $http({
+                url: $rootScope.api.getIncomeGymList,
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: {
+                    "gymName": data.gymName,
+                }
+            }).then(function (res) {
+                if (res.data.code == 2000) {
+                    //下来列表里的备选
+                    data.gymListData = res.data.data;
+                    //下拉开关
+                    data.listBodyIsShow = true;
+                }
+                /*else{
+                 toastr.error(res.msg);
+                 }
+                 },function (rej) {
+                 console.info(rej);*/
+            });
+        }, 500);
+    };
 }]);
