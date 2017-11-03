@@ -6,14 +6,14 @@
  */
 
 'use strict';
-App.controller('HeaderController',function($scope, $state, restful, Session, msgBus,$location,urlService, $rootScope,$localStorage, toastr) {
+App.controller('HeaderController',function($scope, $state, restful, Session, msgBus,$location,urlService, $rootScope, toastr) {
     $rootScope.title = "";
 
     msgBus.onMsg('login', $scope, function() {
         $scope.init();
     });
     $scope.init = function() {
-        $scope.username = Session.$storage.username;
+        $scope.account = Session.$storage.account;
         $scope.userHead = 'app/images/banner.png';
     };
     $scope.init();
