@@ -290,6 +290,14 @@ App.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
             }
         })
 
+        //角色管理
+        .state('actorManage', {
+            url: '/Saas/actorManage',
+            templateUrl: 'app/views/Saas/actorManage.html',
+            controller: function ($rootScope) {
+            }
+        })
+
         //*******************************权限管理-用户信息管理******************************************
         .state('authuser',{
             url: '/Saas/authuser',

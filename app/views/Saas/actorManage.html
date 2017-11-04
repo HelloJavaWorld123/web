@@ -1,0 +1,214 @@
+<article ng-controller="actorManageController" class="complain container-fluid">
+
+    <section class="row">
+        <div class="reportFaultWrapper col-lg-12">
+            <form action="{{api.shareholderExport}}" method="POST" ng-enter="query()" name="shareholderListDataFormName" id="shareholder">
+
+                <section class="row">
+
+                    <div class="form-group col-md-3">
+                        <label class="col-md-3 text-right control-label" >角色：</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" ng-model="data.name"  maxlength="20" name="name">
+                        </div>
+                    </div>
+
+
+                </section>
+
+
+                <!--中部-点击搜索-->
+                <div class="button-first">
+                    <button type="button" class="btn btn-raised btn-primary" ng-click="query()">查询</button>
+                    <button type="button" class="btn btn-raised btn-default" ng-click="reset()">重置</button>
+                    <button type="button" class="btn btn-raised btn-info" ng-click="addActor()">新增</button>
+
+                </div>
+            </form>
+        </div>
+
+
+    </section>
+
+
+    <!--下部-查询列表-->
+    <section class="row conPanelLeft">
+        <div class="gymConfigWrapper  col-lg-12">
+            <!-- 下部分 -->
+            <section>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-head">
+                        <tr class="active">
+                            <th>角色</th>
+                            <th>描述</th>
+                            <th>操作</th>
+
+                        </tr>
+                        </thead>
+
+                        <tbody ng-repeat="item in actorManageListData">
+                        <tr>
+                            <td>{{item.name}}</td>
+                            <td>{{item.description}}</td>
+                            <td>
+                                <!--0.修改 1.删除 -->
+                                <a ng-click="editActorList(item)" class="pointer">设置权限组</a>
+                                <a ng-click="editActor(item)" class="pointer">编辑</a>
+
+                                <a ng-click="deleteActor(item)"  class="pointer" ng-disabled="checklist" confirm="确定删除吗？" confirm-title="删除" confirm-ok="确定" confirm-cancel="取消">删除</a>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div ng-if="!actorManageListData.length" class="noData ng-scope">暂无数据</div>
+                </div>
+                <div cg-busy="gymListPromise"></div>
+
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <select class="page-size" ng-model="PageSize" ng-change="pageChanged()">
+                            <option value="20" ng-selected="true">每页显示20条</option>
+                            <option value="40">每页显示40条</option>
+                            <option value="60">每页显示60条</option>
+                            <option value="80">每页显示80条</option>
+                            <option value="100">每页显示100条</option>
+                        </select>
+                        <uib-pagination ng-model="PageIndex" ng-change="pageChanged()" total-items="actorManageListDataCount"
+                                        max-size="maxSize" items-per-page="PageSize" class="pagination-sm"
+                                        boundary-link-numbers="true" rotate="false" previous-text="上一页"
+                                        next-text="下一页"></uib-pagination>
+                    </div>
+                    <div class="col-md-1"><span class="totalTxt">总计：{{actorManageListDataCount==null?"--":actorManageListDataCount }} 条</span></div>
+                    <div class="col-md-3 text-right">
+                        <span>跳转到</span>
+                        <input type="text" onafterpaste="this.value=this.value.replace(/\D/g,'')"
+                               onkeyup="this.value=this.value.replace(/\D/g,'')" ng-model="toPageNum"
+                               class="variant-form-control">
+                        <button ng-click="setPage()" class="to-page-num">确定</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </section>
+</article>
+
+
+
+<!--蒙版-弹窗1-新增-->
+<script type="text/ng-template" id="actorViewAdd.html">
+    <div class="modal-header">
+        <h4></h4>
+    </div>
+    <div class="modal-body">
+        <form name="gymViewAddForm">
+            <section class="row">
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label" >角色名：</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" ng-model="data.name" required maxlength="10">
+                    </div>
+                </div>
+
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label" >角色描述：</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" ng-model="data.description" required maxlength="100">
+                    </div>
+                </div>
+
+
+            </section>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn withripple btn-raised btn-primary" type="button" ng-click="save()"
+                            ng-disabled="!gymViewAddForm.$valid">确认
+                    </button>
+                    <button class="btn withripple btn-raised btn-warning" type="button" ng-click="close()">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</script>
+
+
+
+<!--蒙版-弹窗2-修改-->
+<script type="text/ng-template" id="editActor.html">
+    <div class="modal-header">
+        <h4></h4>
+    </div>
+    <div class="modal-body">
+        <form name="gymViewAddForm">
+            <section class="row">
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label" >角色名：</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" ng-model="data.name" required maxlength="10">
+                    </div>
+                </div>
+
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label" >角色描述：</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" ng-model="data.description" required maxlength="100">
+                    </div>
+                </div>
+
+
+            </section>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn withripple btn-raised btn-primary" type="button" ng-click="save()"
+                            ng-disabled="!gymViewAddForm.$valid">确认
+                    </button>
+                    <button class="btn withripple btn-raised btn-warning" type="button" ng-click="close()">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</script>
+
+
+<!--蒙版-弹窗3-设置权限组-->
+<script type="text/ng-template" id="editActorList.html">
+    <div class="modal-header">
+        <h4></h4>
+    </div>
+    <div class="modal-body">
+        <form name="gymViewAddForm">
+            <section class="row">
+
+
+            </section>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn withripple btn-raised btn-primary" type="button" ng-click="save()"
+                            ng-disabled="!gymViewAddForm.$valid">确认
+                    </button>
+                    <button class="btn withripple btn-raised btn-warning" type="button" ng-click="close()">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</script>
