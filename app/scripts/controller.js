@@ -14,40 +14,6 @@ App.controller('MainController',['$scope', '$state', 'AuthService', function($sc
 }]);
 
 /*
- * @Author: 唐文雍
- * @Date:   2016-05-04 17:26:02
- * @Last Modified by:   snoob
- * @Last Modified time: 2017-1-4 18:18:35
- */
-'use strict';
-App.controller('UserLoginController', ['$scope', '$rootScope', '$state', 'AuthService', 'Session', 'msgBus', '$http', 'restful', '$interval', '$cookies', '$location', 'toastr', function($scope, $rootScope, $state, AuthService, Session, msgBus, $http, restful, $interval, $cookies, $location, toastr) {
-    //初始时将之前登录过的信息清空
-    $scope.load = function() {
-        Session.destroy();
-    };
-    $scope.credentials = {};
-    $scope.error = "";
-
-    $scope.login = function(credentials) {
-        $scope.loginPromise = AuthService.login(credentials).then(function(res) {
-            if (res.code == 1) {
-                toastr.error(res.msg);
-                return;
-            }
-            if (res.data.username) {
-                msgBus.emitMsg("login");
-
-                $state.go('dashboard');
-            } else {
-                $scope.error = data.msg || "超时";
-            }
-        });
-    };
-
-
-}]);
-
-/*
  * @Author: haoxb
  * @Date:   2017-6-7 9:01:54
  * @Last Modified by:   高帆
@@ -809,15 +775,15 @@ App.controller("AuthUserController", ['$scope', '$state', '$rootScope', '$http',
 			"username": $scope.data.username,
 			"name": $scope.data.name,
 			"mobile": $scope.data.mobile,
-			"status": $scope.data.status,
+			"status": $scope.data.status
 		};
 		$scope.authUserListPromise = $http({
 			url: $rootScope.api.authUserList,
 			method: 'post',
 			headers: {
-				'Content-Type': 'application/json',
+				'Content-Type': 'application/json'
 			},
-			data: params,
+			data: params
 		}).then(function (res) {
 			$scope.authUserListData = res.data.data;
 			$scope.totalCount = res.data.page_info.total;
@@ -8333,6 +8299,40 @@ App.controller('withdrawDepositController', ['$scope', '$state', '$rootScope', '
     };
     $scope.query();
 
+
+
+}]);
+
+/*
+ * @Author: 唐文雍
+ * @Date:   2016-05-04 17:26:02
+ * @Last Modified by:   snoob
+ * @Last Modified time: 2017-1-4 18:18:35
+ */
+'use strict';
+App.controller('UserLoginController', ['$scope', '$rootScope', '$state', 'AuthService', 'Session', 'msgBus', '$http', 'restful', '$interval', '$cookies', '$location', 'toastr', function($scope, $rootScope, $state, AuthService, Session, msgBus, $http, restful, $interval, $cookies, $location, toastr) {
+    //初始时将之前登录过的信息清空
+    $scope.load = function() {
+        Session.destroy();
+    };
+    $scope.credentials = {};
+    $scope.error = "";
+
+    $scope.login = function(credentials) {
+        $scope.loginPromise = AuthService.login(credentials).then(function(res) {
+            if (res.code == 1) {
+                toastr.error(res.msg);
+                return;
+            }
+            if (res.data.username) {
+                msgBus.emitMsg("login");
+
+                $state.go('dashboard');
+            } else {
+                $scope.error = data.msg || "超时";
+            }
+        });
+    };
 
 
 }]);

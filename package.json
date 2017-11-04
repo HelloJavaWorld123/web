@@ -33,7 +33,7 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "start": "http-server -a 0.0.0.0 -p 12001 -P http://121.201.68.220:8080/ -c-1"
+    "start": "http-server -a 0.0.0.0 -p 12001 -P http://10.0.20.102:8080"
   },
   "dependencies": {
     "angular-material": "^1.0.7",

@@ -89,15 +89,15 @@ App.controller("AuthUserController", ['$scope', '$state', '$rootScope', '$http',
 			"username": $scope.data.username,
 			"name": $scope.data.name,
 			"mobile": $scope.data.mobile,
-			"status": $scope.data.status,
+			"status": $scope.data.status
 		};
 		$scope.authUserListPromise = $http({
 			url: $rootScope.api.authUserList,
 			method: 'post',
 			headers: {
-				'Content-Type': 'application/json',
+				'Content-Type': 'application/json'
 			},
-			data: params,
+			data: params
 		}).then(function (res) {
 			$scope.authUserListData = res.data.data;
 			$scope.totalCount = res.data.page_info.total;
