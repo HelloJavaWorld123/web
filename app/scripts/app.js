@@ -6,6 +6,7 @@
  * @Last Modified by:   郝晓波
  * @Last Modified time: 2017-05-10 17:24:03
  */
+
 var App, modules;
 modules = ['ngAria', 'ngCookies', 'ngMessages', 'ngResource', 'ngRoute', 'ui.router', 'ngSanitize', 'ui.bootstrap',
     'ngTouch', 'ngProgress', 'ui.select', 'checklist-model', "ajoslin.promise-tracker", 'angularPromiseButtons', 'AdminFilters',
@@ -318,6 +319,13 @@ App.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
             templateUrl: 'app/views/Saas/updatepassword.html',
             controller: function($rootScope){
 
+            }
+        })
+        //场地方提现审核
+        .state('resourceList', {
+            url: '/Saas/resourceList',
+            templateUrl: 'app/views/Saas/resourceList.html',
+            controller: function ($rootScope) {
             }
         })
 }]);
