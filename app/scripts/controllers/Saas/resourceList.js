@@ -123,7 +123,6 @@ App.controller('resourceListController', ['$scope', '$state', '$rootScope', '$ht
                 // }
                 $scope.changeItemToArray(res.data.data,arr);
                 $scope.resourceListData = arr;
-                console.log( $scope.resourceListData)
                 // $scope.resourceListDataCount = res.data.page_info.total;
             } else {
                 toastr.error(res.msg, "获取列表失败");
@@ -135,7 +134,7 @@ App.controller('resourceListController', ['$scope', '$state', '$rootScope', '$ht
 
     $scope.resourceShow= function(item){
         item.up = !item.up;
-        $scope.changeChidirenShowStatus(item);
+        $scope.changeChidirenShowStatus(item, item.up);
     }
 
     $scope.changeItemToArray = function (data,arr,name) {
@@ -159,16 +158,19 @@ App.controller('resourceListController', ['$scope', '$state', '$rootScope', '$ht
             $scope.changeItemToArray(node.children,arr,node.name);
         }
     }
-    $scope.changeChidirenShowStatus = function (item) {
+    $scope.changeChidirenShowStatus = function (item,status) {
         if(item.children.length == 0){
             return;
         }
         var arr = item.children;
         for(var i=0; i<arr.length; i++){
             var node =arr[i];
-            node.show = !(node.show);
+            node.show = status;
+            if(node.up){
+                $scope.changeChidirenShowStatus(node,status);
+            }
+            // node.up = status;
 
-            $scope.changeChidirenShowStatus(node);
         }
 
     }
