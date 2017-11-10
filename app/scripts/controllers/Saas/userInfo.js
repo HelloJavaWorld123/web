@@ -70,7 +70,8 @@ App.controller('userInfoController', ['$scope', '$state', '$rootScope', '$http',
             "vipCard": $scope.data.vipCard,
             "mallId": $scope.data.mallId,
             "startTime": $rootScope.tools.dateToTimeStamp13Bit($scope.data.startTime),
-            "endTime": $rootScope.tools.dateToTimeStamp13Bit($scope.data.endTime)
+            "endTime": $rootScope.tools.dateToTimeStamp13Bit($scope.data.endTime),
+            "realType": 0,
         };
         $scope.userInfoListPromise = $http({
             url: $rootScope.api.getUserList,
