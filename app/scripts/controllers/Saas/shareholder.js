@@ -53,7 +53,7 @@ App.controller('shareholderController', ['$scope', '$state', '$rootScope', '$htt
             //dismissed
             $scope.query();
         })
-    }
+    };
 
 
     //弹窗修改按钮
@@ -150,7 +150,7 @@ App.controller("shareholderAddController", ['$scope', '$uibModalInstance', 'rest
             "accountType": $scope.data.accountType,
 
 
-        }
+        };
 
         restful.fetch($rootScope.api.shareholderAdd, "POST", params).then(function (res) {
             if (res.code == 2000) {
@@ -164,7 +164,7 @@ App.controller("shareholderAddController", ['$scope', '$uibModalInstance', 'rest
         }, function (rej) {
             console.info(rej);
         });
-    }
+    };
     $scope.close = function () {
         $uibModalInstance.dismiss('close');
     };
@@ -200,8 +200,6 @@ App.controller("shareholderAddController", ['$scope', '$uibModalInstance', 'rest
  */
 App.controller("editShareholderController", ['$scope', '$uibModalInstance', 'restful', '$state', '$rootScope', 'AllAreaSelector', '$uibModal', 'toastr', 'CommonData', 'lifeHouseAreaSelector', 'item',function ($scope, $uibModalInstance, restful, $state, $rootScope, AllAreaSelector, $uibModal, toastr, CommonData, lifeHouseAreaSelector,item) {
     $scope.data = {};
-
-
 
     //1：通过id查询场馆的信息
     var params = {

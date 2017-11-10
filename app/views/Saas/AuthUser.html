@@ -1,0 +1,297 @@
+<article ng-controller="AuthUserController" class="gymConfig continer-fluid">
+
+    <form action="" method="POST" ng-enter="query()" name="AuthUserListDataForm">
+        <section class="row">
+            <div class="form-group col-md-3">
+                <label class="col-md-2 text-right control-label" style="padding-left: 40px">账号：</label>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" ng-model="data.username">
+                </div>
+            </div>
+            <div class="form-group col-md-3">
+                <label class="col-md-3 text-right control-label" style="padding-left: 70px">姓名：</label>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" ng-model="data.name">
+                </div>
+            </div>
+            <div class="form-group col-md-3">
+                <label class="col-md-2 text-right control-label" style="padding-left: 20px">手机号：</label>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" ng-model="data.mobile">
+                </div>
+            </div>
+
+            <div class="form-group col-md-3">
+                <label class="col-md-2 control-label">账号状态：</label>
+                <div class="col-md-8">
+                    <ui-select ng-model="data.status" theme="bootstrap" on-select="getUserStatus($item)">
+                        <ui-select-match placeholder="全部">{{$select.selected.name}}
+                        </ui-select-match>
+                        <ui-select-choices
+                                repeat="item.id as item in userStatus | orderBy:'id' | filter: $select.search.name">
+                            <span ng-bind-html="item.name | highlight: $select.search"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <input type="hidden" name="status" value="{{data.status}}">
+            </div>
+        </section>
+
+        <!--中部-点击搜索-->
+        <div class="button-first" style="margin-left: 10px">
+            <button type="button" class="btn btn-raised btn-primary" ng-click="query()">查询</button>
+            <button type="button" class="btn btn-raised btn-default" ng-click="reset()">重置</button>
+            <button type="button" class="btn btn-raised btn-info" ng-click="addAuthUser()">新增</button>
+        </div>
+    </form>
+
+    <!--下部-查询列表-->
+        <div class="gymConfigWrapper col-lg-12">
+            <!-- 下部分 -->
+            <section>
+                <div class="table-responsive">
+                    <table class="table table-hover" >
+                        <thead class="table-head" >
+                        <tr class="active">
+
+                            <th style="text-align: center">序号</th>
+                            <th style="text-align: center">账号</th>
+                            <th style="text-align: center">姓名</th>
+                            <th style="text-align: center">手机号</th>
+                            <th style="text-align: center">角色</th>
+                            <th style="text-align: center">状态</th>
+                            <th style="text-align: center">创建时间</th>
+                            <th style="text-align: center">操作</th>
+                        </tr>
+                        </thead>
+
+                        <tbody ng-repeat="item in authUserListData" align="center">
+                        <tr>
+                            <td>{{$index+1+(((PageIndex||1)-1)*PageSize)}}</td>
+
+                            <td >{{item.username == null ? "--" : item.username}}</td>
+                            <td >{{item.name == null ? "--" : item.name}}</td>
+                            <td>{{item.mobile == null ? "--" : item.mobile}}</td>
+                            <td>{{item.roleNameStr == null ? "--" : item.roleNameStr}}</td>
+                            <td>{{item.status == 1 ? "停用" : "正常"}}</td>
+                            <td>{{item.createTime == null ? "--" : item.createTime | date: "yyyy-MM-dd HH:mm:ss"}}</td>
+                            <td>
+                                <a ng-click="authUserEdit(item)" class="pointer">编辑</a>&nbsp;&nbsp;&nbsp;
+
+
+                                <!-- 1 停用 2 正常-->
+                                <a ng-click="switchUserStatus(item)" class="pointer"
+                                   ng-if="item.status!=undefined&&item.status==1" ng-disabled="checklist"
+                                   confirm="确定恢复使用吗？" confirm-title="账号状态切换" confirm-ok="确定"
+                                   confirm-cancel="取消">正常 </a>
+
+
+                                <a ng-click="switchUserStatus(item)" class="pointer"
+                                   ng-if="item.status!=undefined&&item.status==2" ng-disabled="checklist"
+                                   confirm="确定停用该账号吗？" confirm-title="账号状态切换" confirm-ok="确定"
+                                   confirm-cancel="取消">停用</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div ng-if="!authUserListData.length" class="noData ng-scope">暂无数据</div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <select class="page-size" ng-model="PageSize" ng-change="pageChanged()">
+                            <option value="20" ng-selected="true">每页显示20条</option>
+                            <option value="40">每页显示40条</option>
+                            <option value="60">每页显示60条</option>
+                            <option value="80">每页显示80条</option>
+                            <option value="100">每页显示100条</option>
+                        </select>
+                        <uib-pagination ng-model="PageIndex" ng-change="pageChanged()" total-items="totalCount"
+                                        max-size="maxSize" items-per-page="PageSize" class="pagination-sm"
+                                        boundary-link-numbers="true" rotate="false" previous-text="上一页"
+                                        next-text="下一页">
+
+                        </uib-pagination>
+
+                    </div>
+                    <div class="col-md-1"><span
+                            class="totalTxt">总计：{{totalCount==null?"--":totalCount }} 条</span>
+                    </div>
+                    <div class="col-md-3 text-right">
+                        <span>跳转到</span>
+                        <input type="text" onafterpaste="this.value=this.value.replace(/\D/g,'')"
+                               onkeyup="this.value=this.value.replace(/\D/g,'')" ng-model="toPageNum"
+                               class="variant-form-control">
+                        <button ng-click="setPage()" class="to-page-num">确定</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+</article>
+
+<!--用户编辑弹窗-->
+<script type="text/ng-template" id="authUserViewEdit.html">
+    <div class="modal-header">
+        <h4>编辑用户</h4>
+    </div>
+    <div class="modal-body">
+        <form name="authUserEditForm">
+            <section class="row">
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label">姓名: </label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" ng-model="data.name" required maxlength="20" ng-trim="true">
+                    </div>
+                </div>
+
+                <!--选择角色-->
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 control-label text-right">选择角色: </label>
+                    <div class="col-md-9">
+                        <section class="row">
+                            <div class="form-group col-md-4">
+                                <div class="col-md-12">
+                                    <ui-select ng-model="data.id" theme="bootstrap" on-select="getRoles()" name="id" style="bottom: 30px" >
+                                        <ui-select-match placeholder="角色列表" >{{$select.selected.name}}</ui-select-match>
+                                        <ui-select-choices repeat="item.id as item in roles | orderBy:'id' | filter: $select.search.id" >
+                                            <span ng-bind-html="item.name | highlight: $select.search" ></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3" style="bottom: 20px">
+                                <button type="button" class="btn withripple btn-raised btn-primary chooseCity"
+                                        ng-click="chooseRole()">确定
+                                </button>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                <div class="form-group col-md-12" style="margin-top: 0">
+                    <label class="col-md-3 text-right control-label">已选角色: </label>
+                    <div class="col-md-9">
+                        <p class="cityTag" ng-repeat="nameC in roleNameStr track by $index  ">{{nameC}}<span
+                                ng-click="delRole($index)">&times;</span></p>
+                    </div>
+                </div>
+
+                <!--不可编辑-->
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label">账号: </label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" required ng-model="data.username" maxlength="20"
+                               placeholder="确定之后无法修改" disabled>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label">手机号码: </label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" required ng-model="data.mobile" maxlength="11"
+                               placeholder="11位手机号码" >
+                    </div>
+                </div>
+            </section>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn withripple btn-raised btn-primary" type="button" ng-click="save()"
+                            ng-disabled="!authUserEditForm.$valid">确定
+                    </button>
+                    <button class="btn withripple btn-raised btn-warning" type="button" ng-click="close()">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+
+<!--新增弹窗-->
+<script type="text/ng-template" id="authUserViewAdd.html">
+    <div class="modal-header">
+        <h4>新增用户</h4>
+    </div>
+    <div class="modal-body">
+        <form name="authUserAddForm">
+            <section class="row">
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label">姓名: </label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" ng-model="data.name" required maxlength="20">
+                    </div>
+                </div>
+
+                <!--选择角色-->
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 control-label text-right">选择角色: </label>
+                    <div class="col-md-9">
+                        <section class="row">
+                            <div class="form-group col-md-4">
+                                <div class="col-md-12">
+                                    <ui-select ng-model="data.id" theme="bootstrap" on-select="getRoles()" name="id" style="bottom: 30px">
+                                        <ui-select-match placeholder="角色列表">{{$select.selected.name}}
+                                        </ui-select-match>
+                                        <ui-select-choices
+                                                repeat="item.id as item in roles | orderBy:'id' | filter: $select.search.id">
+                                            <span ng-bind-html="item.name | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3" style="bottom: 20px">
+                                <button type="button" class="btn withripple btn-raised btn-primary chooseCity"
+                                        ng-click="chooseRole()">确定
+                                </button>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                <div class="form-group col-md-12" style="margin-top: 0px">
+                    <label class="col-md-3 text-right control-label">已选角色: </label>
+                    <div class="col-md-9">
+                        <p class="cityTag" ng-repeat="nameC in roleNameStr track by $index  ">{{nameC}}<span
+                                ng-click="delRole($index)">&times;</span></p>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label">账号: </label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" required ng-model="data.username" maxlength="20"
+                               placeholder="只要创建无法修改">
+                    </div>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label">密码: </label>
+                    <div class="col-md-9">
+                        <input type="password" class="form-control" ng-model="data.password" required maxlength="20" placeholder="20位以内的密码">
+                    </div>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 text-right control-label">手机号码: </label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" required ng-model="data.mobile" maxlength="11" minlength="11"
+                               placeholder="11位手机号码" data-toggle="tooltip" data-placement="right" title="请输入11位正确格式的手机号码">
+                    </div>
+                </div>
+            </section>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn withripple btn-raised btn-primary" data-toggle="tooltip" title="确定之后 账号无法修改" data-placement="top" type="button" ng-click="addUser()" ng-disabled="!authUserAddForm.$valid">确定</button>
+                    <button class="btn withripple btn-raised btn-warning" type="button" ng-click="close()">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>

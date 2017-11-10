@@ -210,66 +210,70 @@ angular.module("AdminService", [])
             //
             getNoDeliveryLifeHoustList: function (params) {
 
-                if (params == 100000) {
-                    return $http({
-                        url: $rootScope.api.getNoDeliveryLifeHoustList,
-                        method: "POST"
-                    }).then(function (response) {
-                        return response.data.data;
-                    });
-                    return;
-                }
-                //获取未发货馆名
-                return $http({
-                    url: $rootScope.api.getNoDeliveryLifeHoustList,
-                    method: "POST",
-                    data: params
-                }).then(function (response) {
-                    return response.data.data;
-                });
-            }
-
-        };
-        return selector;
-    }])
-    .factory('AllAreaSelector', ['$http', '$localStorage', '$q', '$rootScope', 'restful', function ($http, $localStorage, $q, $rootScope, restful) {
-        //生活馆省市联动
-        var selector = {
-            getProvinces: function () {
-                //获取所有省份
-                return restful.fetch($rootScope.api.getRegion, "POST", {"regionId": 100000});
-            },
-            getCitys: function (params) {
-                //获取所有市
-                return restful.fetch($rootScope.api.getRegion, "POST", {"regionId": Number(params)});
-            },
-            getCountys: function (params) {
-                //获取所有县
-                return restful.fetch($rootScope.api.getRegion, "POST", {"regionId": Number(params)});
-            }
-        };
-        return selector;
-    }])
-    .factory('ImageInfo', ['$q', function ($q) {
-        //获取file image 的信息，依赖angular-base64-upload
-        var deferred = $q.defer();
-        var info = {
-            getInfo: function (base64, key) {
-                this._getInfoByKey(base64, key).then(function (imageInfo) {
-                    if (imageInfo) {
-                        deferred.resolve(imageInfo);
-                    }
-                });
-                return deferred.promise;
-            },
-            _getInfoByKey: function (base64, key) {
-                var d = $q.defer();
-                var type = base64.filetype;
-                var code = base64.base64;
-                var size = base64.filesize;
-                var name = base64.filename;
-                var src = "data:" + type + ";base64," + code;
-
+				if (params == 100000) {
+					return $http({
+						url: $rootScope.api.getNoDeliveryLifeHoustList,
+						method: "POST"
+					}).then(function (response) {
+						return response.data.data;
+					});
+					return;
+				}
+				//获取未发货馆名
+				return $http({
+					url: $rootScope.api.getNoDeliveryLifeHoustList,
+					method: "POST",
+					data: params
+				}).then(function (response) {
+					return response.data.data;
+				});
+			},
+			getRoles: function () {
+				//获取所有角色
+				return $http({url: $rootScope.api.authRoleList, method: "post", data: {}}).then(function (response) {
+					return response.data.data;
+				});
+			}
+		};
+		return selector;
+	}])
+	.factory('AllAreaSelector', ['$http', '$localStorage', '$q', '$rootScope', 'restful', function ($http, $localStorage, $q, $rootScope, restful) {
+		//生活馆省市联动
+		var selector = {
+			getProvinces: function () {
+				//获取所有省份
+				return restful.fetch($rootScope.api.getRegion, "POST", {"regionId": 100000});
+			},
+			getCitys: function (params) {
+				//获取所有市
+				return restful.fetch($rootScope.api.getRegion, "POST", {"regionId": Number(params)});
+			},
+			getCountys: function (params) {
+				//获取所有县
+				return restful.fetch($rootScope.api.getRegion, "POST", {"regionId": Number(params)});
+			}
+		};
+		return selector;
+	}])
+	.factory('ImageInfo', ['$q', function ($q) {
+		//获取file image 的信息，依赖angular-base64-upload
+		var deferred = $q.defer();
+		var info = {
+			getInfo: function (base64, key) {
+				this._getInfoByKey(base64, key).then(function (imageInfo) {
+					if (imageInfo) {
+						deferred.resolve(imageInfo);
+					}
+				});
+				return deferred.promise;
+			},
+			_getInfoByKey: function (base64, key) {
+				var d = $q.defer();
+				var type = base64.filetype;
+				var code = base64.base64;
+				var size = base64.filesize;
+				var name = base64.filename;
+				var src = "data:" + type + ";base64," + code;
                 var img = new Image();
                 img.src = src;
                 img.onload = function () {
@@ -446,3 +450,20 @@ angular.module("AdminService", [])
         }
         return data;
     }])
+    .factory('urlService',function () {
+        var urlParam = {};
+
+		function set(data) {
+			urlParam = data;
+		}
+
+		function get(){
+			return urlParam;
+		}
+
+		return {
+			set: set,
+			get: get
+		}
+
+	})
